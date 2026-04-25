@@ -142,7 +142,19 @@ app.get('/auth/me', (req, res) => {
     el => el.item.identifier === req.user.id
   );
 
-  if (!userItem) return res.json({ authenticated: false });
+  if (!userItem) {
+    return res.json({
+      authenticated: true,
+      user: req.user,
+      profile: {
+        '@id': null,
+        role: 'lector',
+        displayName: req.user.name,
+        image: req.user.image,
+        description: ''
+      }
+    });
+  }
 
   res.json({
     authenticated: true,
