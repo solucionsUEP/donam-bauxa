@@ -5,7 +5,7 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { readJSON, writeJSON, writeJSONSafe, generateId } from './helpers/json.js';
+import { supabase } from './helpers/supabase.js';
 
 // Route modules
 import profileRoutes from './routes/profile.js';
@@ -17,8 +17,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
-
-const USERS_PATH = join(__dirname, 'server-data', 'users.json');
 
 // --- Passport setup ---
 
@@ -45,45 +43,35 @@ passport.use(new GoogleStrategy({
 }));
 
 async function findOrCreateUser(googleUser) {
-  const data = readJSON(USERS_PATH);
-  const existing = data.itemListElement.find(
-    el => el.item.identifier === googleUser.id
-  );
+  const { data: existing } = await supabase
+    .from('users')
+    .select('*')
+    .eq('google_id', googleUser.id)
+    .single();
 
   if (existing) {
-    // Update name/email/image from Google in case they changed
-    existing.item.name = googleUser.name;
-    existing.item.email = googleUser.email;
-    existing.item.image = googleUser.image;
-    writeJSON(USERS_PATH, data);
-    return existing.item;
+    await supabase
+      .from('users')
+      .update({ name: googleUser.name, email: googleUser.email, image: googleUser.image })
+      .eq('google_id', googleUser.id);
+    return existing;
   }
 
-  // Create new user with role 'lector'
-  await writeJSONSafe(USERS_PATH, async (data) => {
-    const { id, position } = generateId('user', data.itemListElement);
+  const { data: newUser } = await supabase
+    .from('users')
+    .insert({
+      google_id: googleUser.id,
+      name: googleUser.name,
+      email: googleUser.email,
+      image: googleUser.image || '',
+      role: 'lector',
+      display_name: googleUser.name,
+      description: ''
+    })
+    .select()
+    .single();
 
-    data.itemListElement.push({
-      '@type': 'ListItem',
-      position,
-      item: {
-        '@context': 'https://schema.org',
-        '@type': 'Person',
-        '@id': id,
-        identifier: googleUser.id,
-        name: googleUser.name,
-        email: googleUser.email,
-        image: googleUser.image,
-        jobTitle: 'lector',
-        description: '',
-        additionalProperty: [
-          { '@type': 'PropertyValue', name: 'displayName', value: googleUser.name }
-        ],
-        dateCreated: new Date().toISOString()
-      }
-    });
-    data.numberOfItems = data.itemListElement.length;
-  });
+  return newUser;
 }
 
 // --- Middleware ---
@@ -172,27 +160,22 @@ app.get('/auth/logout', (req, res) => {
   });
 });
 
-app.get('/auth/me', (req, res) => {
+app.get('/auth/me', async (req, res) => {
   const user = req.user || req.session?.user;
   if (!user) return res.json({ authenticated: false });
   req.user = user;
 
-  const users = readJSON(USERS_PATH);
-  const userItem = users.itemListElement.find(
-    el => el.item.identifier === req.user.id
-  );
+  const { data: userRow } = await supabase
+    .from('users')
+    .select('*')
+    .eq('google_id', user.id)
+    .single();
 
-  if (!userItem) {
+  if (!userRow) {
     return res.json({
       authenticated: true,
       user: req.user,
-      profile: {
-        '@id': null,
-        role: 'lector',
-        displayName: req.user.name,
-        image: req.user.image,
-        description: ''
-      }
+      profile: { '@id': null, role: 'lector', displayName: user.name, image: user.image, description: '' }
     });
   }
 
@@ -200,11 +183,11 @@ app.get('/auth/me', (req, res) => {
     authenticated: true,
     user: req.user,
     profile: {
-      '@id': userItem.item['@id'],
-      role: userItem.item.jobTitle,
-      displayName: userItem.item.additionalProperty?.find(p => p.name === 'displayName')?.value || userItem.item.name,
-      image: userItem.item.image,
-      description: userItem.item.description
+      '@id': userRow.google_id,
+      role: userRow.role,
+      displayName: userRow.display_name || userRow.name,
+      image: userRow.image,
+      description: userRow.description
     }
   });
 });

@@ -1,21 +1,30 @@
 import { Router } from 'express';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { readJSON, writeJSONSafe } from '../helpers/json.js';
+import { supabase, rowToProfile } from '../helpers/supabase.js';
 import { requireRole } from '../middleware/auth.js';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const USERS_PATH = join(__dirname, '..', 'server-data', 'users.json');
 
 const router = Router();
 
-// GET /api/admin/users — list all users
-router.get('/', requireRole('admin'), (_req, res) => {
-  const data = readJSON(USERS_PATH);
-  res.json(data);
+router.get('/', requireRole('admin'), async (_req, res) => {
+  const { data: users, error } = await supabase
+    .from('users')
+    .select('*')
+    .order('created_at');
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  res.json({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Usuaris registrats',
+    numberOfItems: users.length,
+    itemListElement: users.map((u, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: rowToProfile(u)
+    }))
+  });
 });
 
-// PUT /api/admin/users/:id/role — change user role
 router.put('/:id/role', requireRole('admin'), async (req, res) => {
   const { id } = req.params;
   const { role } = req.body;
@@ -25,42 +34,30 @@ router.put('/:id/role', requireRole('admin'), async (req, res) => {
     return res.status(400).json({ error: `Rol invàlid. Rols vàlids: ${validRoles.join(', ')}` });
   }
 
-  let updatedUser;
-  await writeJSONSafe(USERS_PATH, async (data) => {
-    const userItem = data.itemListElement.find(el => el.item['@id'] === id);
-    if (!userItem) return;
-    userItem.item.jobTitle = role;
-    updatedUser = userItem.item;
-  });
+  const { data: updated, error } = await supabase
+    .from('users')
+    .update({ role })
+    .eq('google_id', id)
+    .select()
+    .single();
 
-  if (!updatedUser) {
-    return res.status(404).json({ error: 'Usuari no trobat' });
-  }
-  res.json({ success: true, user: updatedUser });
+  if (error || !updated) return res.status(404).json({ error: 'Usuari no trobat' });
+  res.json({ success: true, user: rowToProfile(updated) });
 });
 
-// DELETE /api/admin/users/:id — delete user
 router.delete('/:id', requireRole('admin'), async (req, res) => {
   const { id } = req.params;
 
-  // Prevent self-deletion
   if (req.userProfile['@id'] === id) {
     return res.status(400).json({ error: 'No pots eliminar-te a tu mateix' });
   }
 
-  let found = false;
-  await writeJSONSafe(USERS_PATH, async (data) => {
-    const index = data.itemListElement.findIndex(el => el.item['@id'] === id);
-    if (index === -1) return;
-    data.itemListElement.splice(index, 1);
-    data.numberOfItems = data.itemListElement.length;
-    data.itemListElement.forEach((el, i) => { el.position = i + 1; });
-    found = true;
-  });
+  const { error } = await supabase
+    .from('users')
+    .delete()
+    .eq('google_id', id);
 
-  if (!found) {
-    return res.status(404).json({ error: 'Usuari no trobat' });
-  }
+  if (error) return res.status(404).json({ error: 'Usuari no trobat' });
   res.json({ success: true });
 });
 
