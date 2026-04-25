@@ -1,9 +1,13 @@
+if (!window.supabase) {
+  console.error('[config] window.supabase no definit! El script CDN no ha carregat.');
+}
 const { createClient } = window.supabase;
 
 const SUPABASE_URL = 'https://bczgsjpqbterxwegqgho.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_pC8DdXjqtBwsCbqz8sFjww_Dh34Jb7Z';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+console.log('[config] Supabase client creat OK');
 
 const host = window.location.hostname;
 export const BACKEND_URL = (host === 'localhost' || host === 'donam-bauxa.vercel.app')

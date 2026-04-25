@@ -428,14 +428,27 @@ document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
 
   // Actualitza el navbar automàticament quan canvia la sessió de Supabase
-  supabase.auth.onAuthStateChange(() => checkAuth());
+  supabase.auth.onAuthStateChange((event, session) => {
+    console.log('[auth] onAuthStateChange:', event, session?.user?.email);
+    checkAuth();
+  });
 
   // Login amb Google via Supabase
-  document.getElementById('loginBtn')?.addEventListener('click', () => {
-    supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin }
-    });
+  const loginBtn = document.getElementById('loginBtn');
+  console.log('[auth] loginBtn trobat:', !!loginBtn);
+  loginBtn?.addEventListener('click', async () => {
+    console.log('[auth] loginBtn clicat');
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
+      });
+      console.log('[auth] signInWithOAuth:', data, error);
+      if (error) alert('Error inici de sessió: ' + error.message);
+    } catch (e) {
+      console.error('[auth] Error inesperat:', e);
+      alert('Error: ' + e.message);
+    }
   });
 
   // Logout
