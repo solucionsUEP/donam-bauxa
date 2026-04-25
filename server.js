@@ -94,6 +94,18 @@ if (isProduction) {
   app.set('trust proxy', 1);
 }
 
+// Redirigir visites a Vercel cap al domini oficial
+if (isProduction) {
+  app.use((req, res, next) => {
+    const isVercelDomain = req.hostname === 'donam-bauxa.vercel.app';
+    const isApiOrAuth = req.path.startsWith('/api') || req.path.startsWith('/auth');
+    if (isVercelDomain && !isApiOrAuth) {
+      return res.redirect(301, `https://donambauxa.online${req.path}`);
+    }
+    next();
+  });
+}
+
 // CORS per permetre peticions des del frontend a DonDominio
 const allowedOrigins = [
   'https://donambauxa.online',
