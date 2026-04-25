@@ -159,15 +159,23 @@ app.get('/auth/google', passport.authenticate('google', {
 
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: `${FRONTEND_URL}/#home` }),
-  (_req, res) => res.redirect(`${FRONTEND_URL}/#home`)
+  (req, res) => {
+    if (req.user) req.session.user = req.user;
+    res.redirect(`${FRONTEND_URL}/#home`);
+  }
 );
 
 app.get('/auth/logout', (req, res) => {
-  req.logout(() => res.redirect(`${FRONTEND_URL}/#home`));
+  req.logout(() => {
+    req.session.user = null;
+    res.redirect(`${FRONTEND_URL}/#home`);
+  });
 });
 
 app.get('/auth/me', (req, res) => {
-  if (!req.user) return res.json({ authenticated: false });
+  const user = req.user || req.session?.user;
+  if (!user) return res.json({ authenticated: false });
+  req.user = user;
 
   const users = readJSON(USERS_PATH);
   const userItem = users.itemListElement.find(
