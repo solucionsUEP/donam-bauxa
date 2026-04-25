@@ -4,7 +4,7 @@
  */
 
 import { clearDataCache } from './dataLoader.js';
-import { BACKEND_URL, apiFetch } from '../config.js';
+import { supabase, BACKEND_URL, apiFetch } from '../config.js';
 
 /** @type {{ authenticated: boolean, user: Object|null, profile: Object|null }|null} */
 let authState = null;
@@ -19,20 +19,17 @@ export function getAuthState() {
  */
 export async function checkAuth() {
   try {
-    const res = await fetch(BACKEND_URL + '/auth/me', { credentials: 'include' });
-    authState = await res.json();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      authState = { authenticated: false, user: null, profile: null };
+    } else {
+      const res = await fetch(BACKEND_URL + '/auth/me', {
+        headers: { 'Authorization': `Bearer ${session.access_token}` }
+      });
+      authState = await res.json();
+    }
   } catch {
     authState = { authenticated: false, user: null, profile: null };
-  }
-
-  // Update auth links if backend is external
-  if (BACKEND_URL) {
-    document.querySelectorAll('a[href="/auth/google"]').forEach(el => {
-      el.href = BACKEND_URL + '/auth/google';
-    });
-    document.querySelectorAll('a[href="/auth/logout"]').forEach(el => {
-      el.href = BACKEND_URL + '/auth/logout';
-    });
   }
 
   const navLogin = document.getElementById('navLogin');

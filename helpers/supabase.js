@@ -10,8 +10,8 @@ export function rowToProfile(row) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    '@id': row.google_id,
-    identifier: row.google_id,
+    '@id': row.id,
+    identifier: row.id,
     name: row.name,
     email: row.email,
     image: row.image || '',

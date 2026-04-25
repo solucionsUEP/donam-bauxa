@@ -10,7 +10,7 @@ router.get('/', requireAuth, (req, res) => {
 
 router.put('/', requireAuth, async (req, res) => {
   const { displayName, description } = req.body;
-  const googleId = req.userProfile['@id'];
+  const userId = req.userProfile['@id'];
 
   const updates = {};
   if (displayName !== undefined) updates.display_name = displayName;
@@ -19,7 +19,7 @@ router.put('/', requireAuth, async (req, res) => {
   const { data: updated, error } = await supabase
     .from('users')
     .update(updates)
-    .eq('google_id', googleId)
+    .eq('id', userId)
     .select()
     .single();
 

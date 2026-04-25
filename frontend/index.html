@@ -69,16 +69,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="mainNav">
-        <script>
-          if (location.hostname !== 'localhost') {
-            document.addEventListener('DOMContentLoaded', () => {
-              const B = 'https://donam-bauxa.vercel.app';
-              document.querySelectorAll('a[href="/auth/google"]').forEach(el => el.href = B + '/auth/google');
-              document.querySelectorAll('a[href="/auth/logout"]').forEach(el => el.href = B + '/auth/logout');
-            });
-          }
-        </script>
-        <ul class="navbar-nav ms-auto align-items-lg-center">
+<ul class="navbar-nav ms-auto align-items-lg-center">
           <li class="nav-item">
             <a class="nav-link active" href="#home"><i class="bi bi-house-door"></i> Inici</a>
           </li>
@@ -99,9 +90,9 @@
           </li>
           <!-- Login button (visible when not authenticated) -->
           <li class="nav-item" id="navLogin">
-            <a class="nav-link btn btn-bauxa-outline btn-sm ms-lg-2" href="/auth/google">
+            <button class="nav-link btn btn-bauxa-outline btn-sm ms-lg-2" id="loginBtn">
               <i class="bi bi-google"></i> Iniciar Sessio
-            </a>
+            </button>
           </li>
           <!-- User dropdown (visible when authenticated) -->
           <li class="nav-item dropdown d-none" id="navUser">
@@ -115,7 +106,7 @@
               <li id="navSolicituds" class="d-none"><a class="dropdown-item" href="#solicituds"><i class="bi bi-pencil-square"></i> Solicituds</a></li>
               <li id="navAdmin" class="d-none"><a class="dropdown-item" href="#admin"><i class="bi bi-gear"></i> Administracio</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" href="/auth/logout"><i class="bi bi-box-arrow-right"></i> Tancar Sessio</a></li>
+              <li><button class="dropdown-item text-danger" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Tancar Sessio</button></li>
             </ul>
           </li>
         </ul>

@@ -37,7 +37,7 @@ router.put('/:id/role', requireRole('admin'), async (req, res) => {
   const { data: updated, error } = await supabase
     .from('users')
     .update({ role })
-    .eq('google_id', id)
+    .eq('id', id)
     .select()
     .single();
 
@@ -55,7 +55,7 @@ router.delete('/:id', requireRole('admin'), async (req, res) => {
   const { error } = await supabase
     .from('users')
     .delete()
-    .eq('google_id', id);
+    .eq('id', id);
 
   if (error) return res.status(404).json({ error: 'Usuari no trobat' });
   res.json({ success: true });

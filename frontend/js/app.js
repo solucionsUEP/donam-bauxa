@@ -21,6 +21,7 @@ import { initMap, addEventMarkers, fitToMarkers } from './modules/mapModule.js';
 import { initRouter, registerRoutes, registerMapCleanup } from './router.js';
 import { getFavorites as getFavoritesForType } from './modules/favorites.js';
 import { initAdmin, checkAuth } from './modules/admin.js';
+import { supabase } from './config.js';
 import { initProfile } from './modules/profile.js';
 import { initSolicituds } from './modules/solicituds.js';
 
@@ -425,6 +426,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check auth state for admin nav
   checkAuth();
+
+  // Actualitza el navbar automàticament quan canvia la sessió de Supabase
+  supabase.auth.onAuthStateChange(() => checkAuth());
+
+  // Login amb Google via Supabase
+  document.getElementById('loginBtn')?.addEventListener('click', () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin }
+    });
+  });
+
+  // Logout
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    checkAuth();
+  });
 
   document.addEventListener('admin:contentChanged', () => {
     dataLoaded = false;
