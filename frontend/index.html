@@ -69,6 +69,15 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="mainNav">
+        <script>
+          if (location.hostname !== 'localhost') {
+            document.addEventListener('DOMContentLoaded', () => {
+              const B = 'https://donam-bauxa.vercel.app';
+              document.querySelectorAll('a[href="/auth/google"]').forEach(el => el.href = B + '/auth/google');
+              document.querySelectorAll('a[href="/auth/logout"]').forEach(el => el.href = B + '/auth/logout');
+            });
+          }
+        </script>
         <ul class="navbar-nav ms-auto align-items-lg-center">
           <li class="nav-item">
             <a class="nav-link active" href="#home"><i class="bi bi-house-door"></i> Inici</a>
