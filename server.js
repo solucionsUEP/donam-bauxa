@@ -16,6 +16,7 @@ import requestsRoutes from './routes/requests.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = process.env.FRONTEND_URL || `http://localhost:${PORT}`;
 
 const USERS_PATH = join(__dirname, 'server-data', 'users.json');
 
@@ -93,12 +94,31 @@ if (isProduction) {
   app.set('trust proxy', 1);
 }
 
+// CORS per permetre peticions des del frontend a DonDominio
+const allowedOrigins = [
+  'https://donambauxa.online',
+  'https://www.donambauxa.online',
+  `http://localhost:${PORT}`
+];
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
 app.use(cookieSession({
   name: 'donam-bauxa-session',
   keys: [process.env.SESSION_SECRET || 'dev-secret-canvia-en-produccio'],
   maxAge: 24 * 60 * 60 * 1000, // 24h
   secure: isProduction,
-  sameSite: 'lax'
+  sameSite: isProduction ? 'none' : 'lax'
 }));
 
 // Passport compatibility shim: cookie-session no implementa regenerate/save
@@ -126,12 +146,12 @@ app.get('/auth/google', passport.authenticate('google', {
 }));
 
 app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/#home' }),
-  (_req, res) => res.redirect('/#home')
+  passport.authenticate('google', { failureRedirect: `${FRONTEND_URL}/#home` }),
+  (_req, res) => res.redirect(`${FRONTEND_URL}/#home`)
 );
 
 app.get('/auth/logout', (req, res) => {
-  req.logout(() => res.redirect('/#home'));
+  req.logout(() => res.redirect(`${FRONTEND_URL}/#home`));
 });
 
 app.get('/auth/me', (req, res) => {

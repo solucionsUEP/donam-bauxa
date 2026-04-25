@@ -4,6 +4,7 @@
  */
 
 import { getAuthState } from './admin.js';
+import { BACKEND_URL } from '../config.js';
 
 function showProfileAlert(message, type) {
   const el = document.getElementById('profileAlert');
@@ -30,7 +31,7 @@ export async function initProfile() {
 
   // Load profile data
   try {
-    const res = await fetch('/api/profile');
+    const res = await fetch(BACKEND_URL + '/api/profile', { credentials: 'include' });
     const data = await res.json();
     const profile = data.profile;
 
@@ -62,8 +63,9 @@ export async function initProfile() {
     const description = document.getElementById('profileBio').value.trim();
 
     try {
-      const res = await fetch('/api/profile', {
+      const res = await fetch(BACKEND_URL + '/api/profile', {
         method: 'PUT',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ displayName, description })
       });

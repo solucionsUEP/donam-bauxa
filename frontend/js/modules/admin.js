@@ -4,6 +4,7 @@
  */
 
 import { clearDataCache } from './dataLoader.js';
+import { BACKEND_URL, apiFetch } from '../config.js';
 
 /** @type {{ authenticated: boolean, user: Object|null, profile: Object|null }|null} */
 let authState = null;
@@ -18,10 +19,20 @@ export function getAuthState() {
  */
 export async function checkAuth() {
   try {
-    const res = await fetch('/auth/me');
+    const res = await fetch(BACKEND_URL + '/auth/me', { credentials: 'include' });
     authState = await res.json();
   } catch {
     authState = { authenticated: false, user: null, profile: null };
+  }
+
+  // Update auth links if backend is external
+  if (BACKEND_URL) {
+    document.querySelectorAll('a[href="/auth/google"]').forEach(el => {
+      el.href = BACKEND_URL + '/auth/google';
+    });
+    document.querySelectorAll('a[href="/auth/logout"]').forEach(el => {
+      el.href = BACKEND_URL + '/auth/logout';
+    });
   }
 
   const navLogin = document.getElementById('navLogin');
@@ -68,15 +79,6 @@ function showAlert(message, type) {
   }
 }
 
-async function apiFetch(url, options = {}) {
-  const res = await fetch(url, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options.headers }
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Error desconegut');
-  return data;
-}
 
 // --- Content table rendering ---
 

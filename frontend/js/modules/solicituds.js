@@ -5,6 +5,7 @@
  */
 
 import { getAuthState } from './admin.js';
+import { apiFetch } from '../config.js';
 
 function showAlert(message, type) {
   const el = document.getElementById('solicitudsAlert');
@@ -15,16 +16,6 @@ function showAlert(message, type) {
   el.style.display = 'block';
   // Never auto-dismiss — user closes manually
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-
-async function apiFetch(url, options = {}) {
-  const res = await fetch(url, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options.headers }
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Error desconegut');
-  return data;
 }
 
 // --- Status labels ---
