@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import session from 'express-session';
+import cookieSession from 'cookie-session';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { join, dirname } from 'path';
@@ -93,16 +93,24 @@ if (isProduction) {
   app.set('trust proxy', 1);
 }
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'dev-secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 24 * 60 * 60 * 1000,
-    secure: isProduction,
-    sameSite: 'lax'
-  }
+app.use(cookieSession({
+  name: 'donam-bauxa-session',
+  keys: [process.env.SESSION_SECRET || 'dev-secret-canvia-en-produccio'],
+  maxAge: 24 * 60 * 60 * 1000, // 24h
+  secure: isProduction,
+  sameSite: 'lax'
 }));
+
+// Passport compatibility shim: cookie-session no implementa regenerate/save
+app.use((req, _res, next) => {
+  if (req.session && !req.session.regenerate) {
+    req.session.regenerate = (cb) => { cb(); };
+  }
+  if (req.session && !req.session.save) {
+    req.session.save = (cb) => { cb(); };
+  }
+  next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -157,8 +165,12 @@ app.use('/api/admin/users', usersRoutes);
 app.use('/api/requests', requestsRoutes);
 app.use('/api/admin/requests', requestsRoutes);
 
-// --- Start ---
+// --- Start (only in local dev; Vercel uses the exported app) ---
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  });
+}
+
+export default app;
