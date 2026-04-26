@@ -1,0 +1,393 @@
+{
+  "questionnaires": [
+    {
+      "id": "q-pop90",
+      "section": "music",
+      "name": "Pop dels 90",
+      "badge": "90s POP",
+      "color1": "#4A1030",
+      "color2": "#8A2255",
+      "image": { "webp": "img/qst-pop90.webp", "jpg": "img/qst-pop90.jpg" }
+    },
+    {
+      "id": "q-espanyol",
+      "section": "music",
+      "name": "Escena Espanyola",
+      "badge": "POP ESP.",
+      "color1": "#7A2010",
+      "color2": "#C45A3C",
+      "image": { "webp": "img/qst-espanyol.webp", "jpg": "img/qst-espanyol.jpg" }
+    },
+    {
+      "id": "q-rock",
+      "section": "picture",
+      "name": "Clàssics del Rock",
+      "badge": "ROCK",
+      "color1": "#0F1E30",
+      "color2": "#1A3A60",
+      "image": { "webp": "img/qst-rock.webp", "jpg": "img/qst-rock.jpg" }
+    },
+    {
+      "id": "q-electronic",
+      "section": "picture",
+      "name": "Electrònica & Dance",
+      "badge": "DANCE",
+      "color1": "#0D1F2D",
+      "color2": "#1B4965",
+      "image": { "webp": "img/qst-electronic.webp", "jpg": "img/qst-electronic.jpg" }
+    },
+    {
+      "id": "q-hiphop",
+      "section": "video",
+      "name": "Hip-Hop & R&B",
+      "badge": "HIP-HOP",
+      "color1": "#0D0D18",
+      "color2": "#1E1E38",
+      "image": { "webp": "img/qst-hiphop.webp", "jpg": "img/qst-hiphop.jpg" }
+    },
+    {
+      "id": "q-llati",
+      "section": "video",
+      "name": "Pop Llatí",
+      "badge": "REGGAETON",
+      "color1": "#6A3500",
+      "color2": "#C46800",
+      "image": { "webp": "img/qst-llati.webp", "jpg": "img/qst-llati.jpg" }
+    }
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "type": "music",
+      "questionnaire": ["q-pop90"],
+      "src": { "mp3": "audio/q1.mp3" },
+      "options": ["Madonna", "Whitney Houston", "Mariah Carey", "Janet Jackson"],
+      "answer": 0,
+      "category": "90s Pop"
+    },
+    {
+      "id": 2,
+      "type": "music",
+      "questionnaire": ["q-rock", "q-pop90"],
+      "src": { "mp3": "audio/q2.mp3" },
+      "options": ["Pearl Jam", "Alice in Chains", "Soundgarden", "Nirvana"],
+      "answer": 2,
+      "category": "Grunge"
+    },
+    {
+      "id": 3,
+      "type": "music",
+      "questionnaire": [],
+      "src": { "mp3": "audio/q3.mp3" },
+      "options": ["ABBA", "Bee Gees", "Blondie", "Fleetwood Mac"],
+      "answer": 1,
+      "category": "Dècada dels 70"
+    },
+    {
+      "id": 4,
+      "type": "music",
+      "questionnaire": ["q-rock"],
+      "src": { "mp3": "audio/q4.mp3" },
+      "options": ["Michael Jackson", "Prince", "David Bowie", "Freddie Mercury"],
+      "answer": 3,
+      "category": "Rock Clàssic"
+    },
+    {
+      "id": 5,
+      "type": "music",
+      "questionnaire": ["q-espanyol"],
+      "src": { "mp3": "audio/q5.mp3" },
+      "options": ["Aitana", "Ana Mena", "Rosalía", "Nathy Peluso"],
+      "answer": 2,
+      "category": "Pop Espanyol"
+    },
+    {
+      "id": 6,
+      "type": "music",
+      "questionnaire": [],
+      "src": { "mp3": "audio/q6.mp3" },
+      "options": ["Beyoncé", "Rihanna", "Lady Gaga", "Adele"],
+      "answer": 1,
+      "category": "2000s Pop"
+    },
+    {
+      "id": 7,
+      "type": "picture",
+      "questionnaire": ["q-rock"],
+      "src": { "webp": "img/q7.webp", "jpg": "img/q7.jpg" },
+      "options": ["The Beatles", "The Rolling Stones", "The Who", "Led Zeppelin"],
+      "answer": 0,
+      "category": "Rock Clàssic"
+    },
+    {
+      "id": 8,
+      "type": "picture",
+      "questionnaire": ["q-rock"],
+      "src": { "webp": "img/q8.webp", "jpg": "img/q8.jpg" },
+      "options": ["Bob Dylan", "Neil Young", "Tom Petty", "Bruce Springsteen"],
+      "answer": 3,
+      "category": "Rock Americà"
+    },
+    {
+      "id": 9,
+      "type": "picture",
+      "questionnaire": ["q-electronic"],
+      "src": { "webp": "img/q9.webp", "jpg": "img/q9.jpg" },
+      "options": ["Daft Punk", "Chemical Brothers", "Prodigy", "Fatboy Slim"],
+      "answer": 0,
+      "category": "Electrònica"
+    },
+    {
+      "id": 10,
+      "type": "picture",
+      "questionnaire": [],
+      "src": { "webp": "img/q10.webp", "jpg": "img/q10.jpg" },
+      "options": ["Amy Winehouse", "Duffy", "Adele", "Lily Allen"],
+      "answer": 2,
+      "category": "Soul / Pop"
+    },
+    {
+      "id": 11,
+      "type": "picture",
+      "questionnaire": ["q-pop90"],
+      "src": { "webp": "img/q11.webp", "jpg": "img/q11.jpg" },
+      "options": ["Oasis", "Blur", "Radiohead", "Pulp"],
+      "answer": 1,
+      "category": "Britpop"
+    },
+    {
+      "id": 12,
+      "type": "video",
+      "questionnaire": ["q-llati"],
+      "src": { "webm": "video/q12.webm", "mp4": "video/q12.mp4" },
+      "options": ["Jennifer Lopez", "Gloria Estefan", "Shakira", "Selena"],
+      "answer": 2,
+      "category": "Pop Llatí"
+    },
+    {
+      "id": 13,
+      "type": "video",
+      "questionnaire": ["q-hiphop"],
+      "src": { "webm": "video/q13.webm", "mp4": "video/q13.mp4" },
+      "options": ["Eminem", "Jay-Z", "Kanye West", "50 Cent"],
+      "answer": 1,
+      "category": "Hip-Hop"
+    },
+    {
+      "id": 14,
+      "type": "video",
+      "questionnaire": [],
+      "src": { "webm": "video/q14.webm", "mp4": "video/q14.mp4" },
+      "options": ["Coldplay", "U2", "Muse", "Snow Patrol"],
+      "answer": 2,
+      "category": "Rock Alternatiu"
+    },
+    {
+      "id": 15,
+      "type": "video",
+      "questionnaire": [],
+      "src": { "webm": "video/q15.webm", "mp4": "video/q15.mp4" },
+      "options": ["Ed Sheeran", "Sam Smith", "James Bay", "George Ezra"],
+      "answer": 3,
+      "category": "Indie Pop"
+    },
+    {
+      "id": 16,
+      "type": "music",
+      "questionnaire": ["q-rock"],
+      "src": { "mp3": "audio/q16.mp3" },
+      "options": ["Black Sabbath", "Led Zeppelin", "Deep Purple", "Uriah Heep"],
+      "answer": 1,
+      "category": "Rock Clàssic"
+    },
+    {
+      "id": 17,
+      "type": "picture",
+      "questionnaire": ["q-rock"],
+      "src": { "webp": "img/q17.webp", "jpg": "img/q17.jpg" },
+      "options": ["The Kinks", "The Yardbirds", "The Rolling Stones", "The Animals"],
+      "answer": 2,
+      "category": "Rock Clàssic"
+    },
+    {
+      "id": 18,
+      "type": "music",
+      "questionnaire": ["q-rock"],
+      "src": { "mp3": "audio/q18.mp3" },
+      "options": ["KISS", "Motörhead", "Thin Lizzy", "AC/DC"],
+      "answer": 3,
+      "category": "Rock Clàssic"
+    },
+    {
+      "id": 19,
+      "type": "music",
+      "questionnaire": ["q-pop90"],
+      "src": { "mp3": "audio/q19.mp3" },
+      "options": ["Christina Aguilera", "Britney Spears", "Mandy Moore", "Jessica Simpson"],
+      "answer": 1,
+      "category": "90s Pop"
+    },
+    {
+      "id": 20,
+      "type": "picture",
+      "questionnaire": ["q-pop90"],
+      "src": { "webp": "img/q20.webp", "jpg": "img/q20.jpg" },
+      "options": ["Destiny's Child", "TLC", "En Vogue", "Spice Girls"],
+      "answer": 3,
+      "category": "90s Pop"
+    },
+    {
+      "id": 21,
+      "type": "music",
+      "questionnaire": ["q-pop90"],
+      "src": { "mp3": "audio/q21.mp3" },
+      "options": ["NSYNC", "New Kids on the Block", "Backstreet Boys", "98 Degrees"],
+      "answer": 2,
+      "category": "90s Pop"
+    },
+    {
+      "id": 22,
+      "type": "music",
+      "questionnaire": ["q-espanyol"],
+      "src": { "mp3": "audio/q22.mp3" },
+      "options": ["Alejandro Sanz", "Miguel Bosé", "Enrique Iglesias", "Luis Miguel"],
+      "answer": 0,
+      "category": "Pop Espanyol"
+    },
+    {
+      "id": 23,
+      "type": "music",
+      "questionnaire": ["q-espanyol"],
+      "src": { "mp3": "audio/q23.mp3" },
+      "options": ["Duki", "Bad Gyal", "Nathy Peluso", "C. Tangana"],
+      "answer": 3,
+      "category": "Pop Espanyol"
+    },
+    {
+      "id": 24,
+      "type": "music",
+      "questionnaire": ["q-espanyol"],
+      "src": { "mp3": "audio/q24.mp3" },
+      "options": ["Love of Lesbian", "Vetusta Morla", "Lori Meyers", "Varry Brava"],
+      "answer": 1,
+      "category": "Pop Espanyol"
+    },
+    {
+      "id": 25,
+      "type": "music",
+      "questionnaire": ["q-espanyol"],
+      "src": { "mp3": "audio/q25.mp3" },
+      "options": ["Els Pets", "Sopa de Cabra", "Joan Manuel Serrat", "Manel"],
+      "answer": 3,
+      "category": "Pop Espanyol"
+    },
+    {
+      "id": 26,
+      "type": "music",
+      "questionnaire": ["q-hiphop"],
+      "src": { "mp3": "audio/q26.mp3" },
+      "options": ["Jay-Z", "Nas", "Eminem", "Rakim"],
+      "answer": 2,
+      "category": "Hip-Hop"
+    },
+    {
+      "id": 27,
+      "type": "video",
+      "questionnaire": ["q-hiphop"],
+      "src": { "webm": "video/q27.webm", "mp4": "video/q27.mp4" },
+      "options": ["Drake", "Kendrick Lamar", "J. Cole", "Travis Scott"],
+      "answer": 1,
+      "category": "Hip-Hop"
+    },
+    {
+      "id": 28,
+      "type": "music",
+      "questionnaire": ["q-hiphop"],
+      "src": { "mp3": "audio/q28.mp3" },
+      "options": ["50 Cent", "Kanye West", "Lil Wayne", "T.I."],
+      "answer": 1,
+      "category": "Hip-Hop"
+    },
+    {
+      "id": 29,
+      "type": "video",
+      "questionnaire": ["q-hiphop"],
+      "src": { "webm": "video/q29.webm", "mp4": "video/q29.mp4" },
+      "options": ["The Weeknd", "Future", "Drake", "Post Malone"],
+      "answer": 2,
+      "category": "Hip-Hop"
+    },
+    {
+      "id": 30,
+      "type": "picture",
+      "questionnaire": ["q-electronic"],
+      "src": { "webp": "img/q30.webp", "jpg": "img/q30.jpg" },
+      "options": ["Fatboy Slim", "Chemical Brothers", "Massive Attack", "The Prodigy"],
+      "answer": 1,
+      "category": "Electrònica"
+    },
+    {
+      "id": 31,
+      "type": "video",
+      "questionnaire": ["q-electronic"],
+      "src": { "webm": "video/q31.webm", "mp4": "video/q31.mp4" },
+      "options": ["Orbital", "Underworld", "The Prodigy", "Aphex Twin"],
+      "answer": 2,
+      "category": "Electrònica"
+    },
+    {
+      "id": 32,
+      "type": "picture",
+      "questionnaire": ["q-electronic"],
+      "src": { "webp": "img/q32.webp", "jpg": "img/q32.jpg" },
+      "options": ["Tiësto", "Calvin Harris", "Skrillex", "Deadmau5"],
+      "answer": 3,
+      "category": "Electrònica"
+    },
+    {
+      "id": 33,
+      "type": "video",
+      "questionnaire": ["q-electronic"],
+      "src": { "webm": "video/q33.webm", "mp4": "video/q33.mp4" },
+      "options": ["Daft Punk", "Justice", "Skrillex", "Diplo"],
+      "answer": 2,
+      "category": "Electrònica"
+    },
+    {
+      "id": 34,
+      "type": "video",
+      "questionnaire": ["q-llati"],
+      "src": { "webm": "video/q34.webm", "mp4": "video/q34.mp4" },
+      "options": ["J Balvin", "Anuel AA", "Bad Bunny", "Ozuna"],
+      "answer": 2,
+      "category": "Pop Llatí"
+    },
+    {
+      "id": 35,
+      "type": "music",
+      "questionnaire": ["q-llati"],
+      "src": { "mp3": "audio/q35.mp3" },
+      "options": ["Maluma", "J Balvin", "Daddy Yankee", "Nicky Jam"],
+      "answer": 1,
+      "category": "Pop Llatí"
+    },
+    {
+      "id": 36,
+      "type": "video",
+      "questionnaire": ["q-llati"],
+      "src": { "webm": "video/q36.webm", "mp4": "video/q36.mp4" },
+      "options": ["Karol G", "Maluma", "Becky G", "Nathy Peluso"],
+      "answer": 1,
+      "category": "Pop Llatí"
+    },
+    {
+      "id": 37,
+      "type": "music",
+      "questionnaire": ["q-llati"],
+      "src": { "mp3": "audio/q37.mp3" },
+      "options": ["Romeo Santos", "Marc Anthony", "Prince Royce", "Juan Luis Guerra"],
+      "answer": 1,
+      "category": "Pop Llatí"
+    }
+  ]
+}

@@ -24,6 +24,7 @@ import { initAdmin, checkAuth } from './modules/admin.js';
 import { supabase } from './config.js';
 import { initProfile } from './modules/profile.js';
 import { initSolicituds } from './modules/solicituds.js';
+import { initJoc } from './modules/joc.js';
 
 /* ------------------------------------------------------------------ */
 /*  Shared state                                                       */
@@ -474,7 +475,8 @@ document.addEventListener('DOMContentLoaded', () => {
     favorits: initFavorits,
     profile: initProfile,
     solicituds: initSolicituds,
-    admin: initAdmin
+    admin: initAdmin,
+    joc: initJoc
   });
 
   // Register map cleanup
