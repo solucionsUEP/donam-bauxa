@@ -38,7 +38,7 @@
           "@id": "artist-1",
           "name": "Antonia Font"
         },
-        "image": "assets/images/events/antonia-font-concert.jpg",
+        "image": "assets/images/events/antonia-font-concert-de-reunio.jpg",
         "offers": {
           "@type": "Offer",
           "price": "35.00",
@@ -108,7 +108,7 @@
             "name": "Anegats"
           }
         ],
-        "image": "assets/images/events/fora-vila-sounds.jpg",
+        "image": "assets/images/events/festival-fora-vila-sounds.jpg",
         "offers": {
           "@type": "Offer",
           "price": "25.00",
@@ -159,7 +159,7 @@
           "@id": "artist-12",
           "name": "Brams de Tramuntana"
         },
-        "image": "assets/images/events/jazz-serra.jpg",
+        "image": "assets/images/events/jazz-a-la-serra-brams-de-tramuntana.jpg",
         "offers": {
           "@type": "Offer",
           "price": "20.00",
@@ -221,7 +221,7 @@
             "name": "Donallop"
           }
         ],
-        "image": "assets/images/events/sant-sebastia.jpg",
+        "image": "assets/images/events/festes-de-sant-sebastia-revetla.jpg",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -272,7 +272,7 @@
           "@id": "artist-9",
           "name": "Joan Miquel Oliver"
         },
-        "image": "assets/images/events/jmo-gira.jpg",
+        "image": "assets/images/events/joan-miquel-oliver-gira-electric.jpg",
         "offers": {
           "@type": "Offer",
           "price": "18.00",
@@ -323,7 +323,7 @@
           "@id": "artist-10",
           "name": "Xeremiers de Sa Calatrava"
         },
-        "image": "assets/images/events/nit-xeremies.jpg",
+        "image": "assets/images/events/nit-de-xeremies-a-valldemossa.jpg",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -385,7 +385,7 @@
             "name": "La Femme Contradiction"
           }
         ],
-        "image": "assets/images/events/mallorca-live.jpg",
+        "image": "assets/images/events/mallorca-live-festival-2026.jpg",
         "offers": {
           "@type": "Offer",
           "price": "65.00",
@@ -437,7 +437,7 @@
           "@id": "artist-2",
           "name": "Maria del Mar Bonet"
         },
-        "image": "assets/images/events/bonet-recital.jpg",
+        "image": "assets/images/events/maria-del-mar-bonet-recital-mediterrani.jpg",
         "offers": {
           "@type": "Offer",
           "price": "30.00",
@@ -487,7 +487,7 @@
           "@id": "artist-7",
           "name": "Zulu Zulu"
         },
-        "image": "assets/images/events/fira-manacor.jpg",
+        "image": "assets/images/events/fira-de-manacor-nit-de-rumba.jpg",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -537,7 +537,7 @@
           "@id": "artist-8",
           "name": "Cap pela"
         },
-        "image": "assets/images/events/cap-pela-night.jpg",
+        "image": "assets/images/events/cap-pela-a-cappella-night.jpg",
         "offers": {
           "@type": "Offer",
           "price": "15.00",
@@ -587,7 +587,7 @@
           "@id": "artist-4",
           "name": "Donallop"
         },
-        "image": "assets/images/events/donallop-inca.jpg",
+        "image": "assets/images/events/donallop-festa-major-d-inca.jpg",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -638,7 +638,7 @@
           "@id": "artist-11",
           "name": "La Femme Contradiction"
         },
-        "image": "assets/images/events/electro-balear.jpg",
+        "image": "assets/images/events/electro-balear-night.jpg",
         "offers": {
           "@type": "Offer",
           "price": "12.00",
@@ -688,7 +688,7 @@
           "@id": "artist-6",
           "name": "Al-Mayurqa"
         },
-        "image": "assets/images/events/al-mayurqa-45.jpg",
+        "image": "assets/images/events/al-mayurqa-45-anys-de-musica.jpg",
         "offers": {
           "@type": "Offer",
           "price": "22.00",
@@ -738,7 +738,7 @@
           "@id": "artist-3",
           "name": "Anegats"
         },
-        "image": "assets/images/events/anegats-pollenca.jpg",
+        "image": "assets/images/events/anegats-rock-a-pollenca.jpg",
         "offers": {
           "@type": "Offer",
           "price": "15.00",
@@ -788,7 +788,7 @@
           "@id": "artist-5",
           "name": "Mans de Brec"
         },
-        "image": "assets/images/events/ball-folk-sineu.jpg",
+        "image": "assets/images/events/mans-de-brec-nit-de-ball-folk.jpg",
         "offers": {
           "@type": "Offer",
           "price": "0",

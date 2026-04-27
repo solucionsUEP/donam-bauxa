@@ -31,7 +31,9 @@ function normalizeQuestion(schemaQuestion) {
 
   if (mediaType === 'AudioObject') {
     type = 'music';
-    src  = { mp3: schemaQuestion.associatedMedia.contentUrl };
+    const url = schemaQuestion.associatedMedia.contentUrl;
+    const fmt = schemaQuestion.associatedMedia.encodingFormat || 'audio/mpeg';
+    src  = { url, format: fmt };
   } else if (mediaType === 'ImageObject') {
     type = 'picture';
     src  = {};
@@ -131,7 +133,7 @@ function renderMedia(question) {
       <div class="joc-media-wrapper joc-media-wrapper--audio">
         <div class="joc-audio-icon" aria-hidden="true"><i class="bi bi-music-note-beamed"></i></div>
         <audio class="joc-audio" controls autoplay aria-label="Fragment de música per endevinar">
-          <source src="${escapeHtml(src.mp3)}" type="audio/mpeg">
+          <source src="${escapeHtml(src.url)}" type="${escapeHtml(src.format)}">
         </audio>
       </div>`;
   }

@@ -3,7 +3,7 @@
   "@type": "ItemList",
   "name": "Qüestionaris del Joc Musical",
   "description": "Col·lecció de qüestionaris temàtics per al joc de música de Dona'm Bauxa",
-  "numberOfItems": 6,
+  "numberOfItems": 16,
   "itemListElement": [
     {
       "@type": "ListItem",
@@ -19,17 +19,37 @@
         "image": {
           "@type": "ImageObject",
           "encoding": [
-            { "@type": "ImageObject", "contentUrl": "img/qst-pop90.webp", "encodingFormat": "image/webp" },
-            { "@type": "ImageObject", "contentUrl": "img/qst-pop90.jpg",  "encodingFormat": "image/jpeg" }
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-pop90.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-pop90.jpg",
+              "encodingFormat": "image/jpeg"
+            }
           ]
         },
         "hasPart": [
-          { "@id": "question-1" },
-          { "@id": "question-2" },
-          { "@id": "question-11" },
-          { "@id": "question-19" },
-          { "@id": "question-20" },
-          { "@id": "question-21" }
+          {
+            "@id": "question-1"
+          },
+          {
+            "@id": "question-2"
+          },
+          {
+            "@id": "question-11"
+          },
+          {
+            "@id": "question-19"
+          },
+          {
+            "@id": "question-20"
+          },
+          {
+            "@id": "question-21"
+          }
         ]
       }
     },
@@ -47,16 +67,34 @@
         "image": {
           "@type": "ImageObject",
           "encoding": [
-            { "@type": "ImageObject", "contentUrl": "img/qst-espanyol.webp", "encodingFormat": "image/webp" },
-            { "@type": "ImageObject", "contentUrl": "img/qst-espanyol.jpg",  "encodingFormat": "image/jpeg" }
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-espanyol.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-espanyol.jpg",
+              "encodingFormat": "image/jpeg"
+            }
           ]
         },
         "hasPart": [
-          { "@id": "question-5" },
-          { "@id": "question-22" },
-          { "@id": "question-23" },
-          { "@id": "question-24" },
-          { "@id": "question-25" }
+          {
+            "@id": "question-5"
+          },
+          {
+            "@id": "question-22"
+          },
+          {
+            "@id": "question-23"
+          },
+          {
+            "@id": "question-24"
+          },
+          {
+            "@id": "question-25"
+          }
         ]
       }
     },
@@ -74,18 +112,40 @@
         "image": {
           "@type": "ImageObject",
           "encoding": [
-            { "@type": "ImageObject", "contentUrl": "img/qst-rock.webp", "encodingFormat": "image/webp" },
-            { "@type": "ImageObject", "contentUrl": "img/qst-rock.jpg",  "encodingFormat": "image/jpeg" }
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-rock.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-rock.jpg",
+              "encodingFormat": "image/jpeg"
+            }
           ]
         },
         "hasPart": [
-          { "@id": "question-2" },
-          { "@id": "question-4" },
-          { "@id": "question-7" },
-          { "@id": "question-8" },
-          { "@id": "question-16" },
-          { "@id": "question-17" },
-          { "@id": "question-18" }
+          {
+            "@id": "question-2"
+          },
+          {
+            "@id": "question-4"
+          },
+          {
+            "@id": "question-7"
+          },
+          {
+            "@id": "question-8"
+          },
+          {
+            "@id": "question-16"
+          },
+          {
+            "@id": "question-17"
+          },
+          {
+            "@id": "question-18"
+          }
         ]
       }
     },
@@ -103,16 +163,34 @@
         "image": {
           "@type": "ImageObject",
           "encoding": [
-            { "@type": "ImageObject", "contentUrl": "img/qst-electronic.webp", "encodingFormat": "image/webp" },
-            { "@type": "ImageObject", "contentUrl": "img/qst-electronic.jpg",  "encodingFormat": "image/jpeg" }
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-electronic.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-electronic.jpg",
+              "encodingFormat": "image/jpeg"
+            }
           ]
         },
         "hasPart": [
-          { "@id": "question-9" },
-          { "@id": "question-30" },
-          { "@id": "question-31" },
-          { "@id": "question-32" },
-          { "@id": "question-33" }
+          {
+            "@id": "question-9"
+          },
+          {
+            "@id": "question-30"
+          },
+          {
+            "@id": "question-31"
+          },
+          {
+            "@id": "question-32"
+          },
+          {
+            "@id": "question-33"
+          }
         ]
       }
     },
@@ -130,16 +208,34 @@
         "image": {
           "@type": "ImageObject",
           "encoding": [
-            { "@type": "ImageObject", "contentUrl": "img/qst-hiphop.webp", "encodingFormat": "image/webp" },
-            { "@type": "ImageObject", "contentUrl": "img/qst-hiphop.jpg",  "encodingFormat": "image/jpeg" }
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-hiphop.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-hiphop.jpg",
+              "encodingFormat": "image/jpeg"
+            }
           ]
         },
         "hasPart": [
-          { "@id": "question-13" },
-          { "@id": "question-26" },
-          { "@id": "question-27" },
-          { "@id": "question-28" },
-          { "@id": "question-29" }
+          {
+            "@id": "question-13"
+          },
+          {
+            "@id": "question-26"
+          },
+          {
+            "@id": "question-27"
+          },
+          {
+            "@id": "question-28"
+          },
+          {
+            "@id": "question-29"
+          }
         ]
       }
     },
@@ -157,16 +253,1258 @@
         "image": {
           "@type": "ImageObject",
           "encoding": [
-            { "@type": "ImageObject", "contentUrl": "img/qst-llati.webp", "encodingFormat": "image/webp" },
-            { "@type": "ImageObject", "contentUrl": "img/qst-llati.jpg",  "encodingFormat": "image/jpeg" }
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-llati.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "img/qst-llati.jpg",
+              "encodingFormat": "image/jpeg"
+            }
           ]
         },
         "hasPart": [
-          { "@id": "question-12" },
-          { "@id": "question-34" },
-          { "@id": "question-35" },
-          { "@id": "question-36" },
-          { "@id": "question-37" }
+          {
+            "@id": "question-12"
+          },
+          {
+            "@id": "question-34"
+          },
+          {
+            "@id": "question-35"
+          },
+          {
+            "@id": "question-36"
+          },
+          {
+            "@id": "question-37"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca",
+        "name": "Música de Mallorca",
+        "badge": "MALLORCA",
+        "section": "music",
+        "color1": "#1B4965",
+        "color2": "#2D6A8F",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/events/antonia-font-concert-de-reunio.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/events/antonia-font-concert-de-reunio.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-antonia-font-img"
+          },
+          {
+            "@id": "question-mallorca-antonia-font-audio"
+          },
+          {
+            "@id": "question-mallorca-antonia-font-video"
+          },
+          {
+            "@id": "question-mallorca-anegats-img"
+          },
+          {
+            "@id": "question-mallorca-anegats-audio"
+          },
+          {
+            "@id": "question-mallorca-anegats-video"
+          },
+          {
+            "@id": "question-mallorca-donallop-img"
+          },
+          {
+            "@id": "question-mallorca-donallop-audio"
+          },
+          {
+            "@id": "question-mallorca-mans-de-bre-img"
+          },
+          {
+            "@id": "question-mallorca-al-mayurqa-img"
+          },
+          {
+            "@id": "question-mallorca-al-mayurqa-audio"
+          },
+          {
+            "@id": "question-mallorca-zulu-zulu-img"
+          },
+          {
+            "@id": "question-mallorca-zulu-zulu-audio"
+          },
+          {
+            "@id": "question-mallorca-zulu-zulu-video"
+          },
+          {
+            "@id": "question-mallorca-cap-pela-img"
+          },
+          {
+            "@id": "question-mallorca-cap-pela-audio"
+          },
+          {
+            "@id": "question-mallorca-cap-pela-video"
+          },
+          {
+            "@id": "question-mallorca-joan-miquel-oliver-img"
+          },
+          {
+            "@id": "question-mallorca-joan-miquel-oliver-audio"
+          },
+          {
+            "@id": "question-mallorca-joan-miquel-oliver-video"
+          },
+          {
+            "@id": "question-mallorca-xeremiers-de-sa-calatrava-img"
+          },
+          {
+            "@id": "question-mallorca-xeremiers-de-sa-calatrava-audio"
+          },
+          {
+            "@id": "question-mallorca-la-femme-contradiction-img"
+          },
+          {
+            "@id": "question-mallorca-la-femme-contradiction-audio"
+          },
+          {
+            "@id": "question-mallorca-brams-de-tramuntana-img"
+          },
+          {
+            "@id": "question-mallorca-brams-de-tramuntana-audio"
+          },
+          {
+            "@id": "question-mallorca-cabre-loke-img"
+          },
+          {
+            "@id": "question-mallorca-cabre-loke-audio"
+          },
+          {
+            "@id": "question-mallorca-caspary-img"
+          },
+          {
+            "@id": "question-mallorca-caspary-audio"
+          },
+          {
+            "@id": "question-mallorca-ca-m-riba-img"
+          },
+          {
+            "@id": "question-mallorca-ca-m-riba-audio"
+          },
+          {
+            "@id": "question-mallorca-ca-m-riba-video"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-img"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-audio"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-video"
+          },
+          {
+            "@id": "question-mallorca-da-souza-img"
+          },
+          {
+            "@id": "question-mallorca-da-souza-audio"
+          },
+          {
+            "@id": "question-mallorca-da-souza-video"
+          },
+          {
+            "@id": "question-mallorca-els-amics-de-les-arts-img"
+          },
+          {
+            "@id": "question-mallorca-els-amics-de-les-arts-audio"
+          },
+          {
+            "@id": "question-mallorca-els-amics-de-les-arts-video"
+          },
+          {
+            "@id": "question-mallorca-fades-img"
+          },
+          {
+            "@id": "question-mallorca-fades-audio"
+          },
+          {
+            "@id": "question-mallorca-fades-video"
+          },
+          {
+            "@id": "question-mallorca-ja-t-ho-dire-img"
+          },
+          {
+            "@id": "question-mallorca-ja-t-ho-dire-audio"
+          },
+          {
+            "@id": "question-mallorca-k-zu-img"
+          },
+          {
+            "@id": "question-mallorca-k-zu-audio"
+          },
+          {
+            "@id": "question-mallorca-k-zu-video"
+          },
+          {
+            "@id": "question-mallorca-llu-s-cabot-img"
+          },
+          {
+            "@id": "question-mallorca-llu-s-cabot-audio"
+          },
+          {
+            "@id": "question-mallorca-maria-hein-img"
+          },
+          {
+            "@id": "question-mallorca-maria-hein-audio"
+          },
+          {
+            "@id": "question-mallorca-maria-hein-video"
+          },
+          {
+            "@id": "question-mallorca-mdmar-img"
+          },
+          {
+            "@id": "question-mallorca-mdmar-audio"
+          },
+          {
+            "@id": "question-mallorca-mdmar-video"
+          },
+          {
+            "@id": "question-mallorca-maria-jaume-img"
+          },
+          {
+            "@id": "question-mallorca-maria-jaume-audio"
+          },
+          {
+            "@id": "question-mallorca-maria-jaume-video"
+          },
+          {
+            "@id": "question-mallorca-miquel-serra-img"
+          },
+          {
+            "@id": "question-mallorca-miquel-serra-audio"
+          },
+          {
+            "@id": "question-mallorca-miquel-serra-video"
+          },
+          {
+            "@id": "question-mallorca-nastallat-img"
+          },
+          {
+            "@id": "question-mallorca-nastallat-audio"
+          },
+          {
+            "@id": "question-mallorca-nastallat-video"
+          },
+          {
+            "@id": "question-mallorca-negre-img"
+          },
+          {
+            "@id": "question-mallorca-negre-audio"
+          },
+          {
+            "@id": "question-mallorca-negre-video"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-img"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-audio"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-video"
+          },
+          {
+            "@id": "question-mallorca-ocults-img"
+          },
+          {
+            "@id": "question-mallorca-ocults-audio"
+          },
+          {
+            "@id": "question-mallorca-ocults-video"
+          },
+          {
+            "@id": "question-mallorca-oprimits-img"
+          },
+          {
+            "@id": "question-mallorca-oprimits-audio"
+          },
+          {
+            "@id": "question-mallorca-oprimits-video"
+          },
+          {
+            "@id": "question-mallorca-ossifar-img"
+          },
+          {
+            "@id": "question-mallorca-ossifar-video"
+          },
+          {
+            "@id": "question-mallorca-panellet-img"
+          },
+          {
+            "@id": "question-mallorca-panellet-audio"
+          },
+          {
+            "@id": "question-mallorca-plan-et-img"
+          },
+          {
+            "@id": "question-mallorca-plan-et-audio"
+          },
+          {
+            "@id": "question-mallorca-plan-et-video"
+          },
+          {
+            "@id": "question-mallorca-projecte-mut-img"
+          },
+          {
+            "@id": "question-mallorca-projecte-mut-audio"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-img"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-audio"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-video"
+          },
+          {
+            "@id": "question-mallorca-reggaetonpare-img"
+          },
+          {
+            "@id": "question-mallorca-reggaetonpare-audio"
+          },
+          {
+            "@id": "question-mallorca-re-na-img"
+          },
+          {
+            "@id": "question-mallorca-re-na-audio"
+          },
+          {
+            "@id": "question-mallorca-re-na-video"
+          },
+          {
+            "@id": "question-mallorca-rudymentari-img"
+          },
+          {
+            "@id": "question-mallorca-rudymentari-audio"
+          },
+          {
+            "@id": "question-mallorca-rudymentari-video"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-img"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-audio"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-video"
+          },
+          {
+            "@id": "question-mallorca-sa-m-img"
+          },
+          {
+            "@id": "question-mallorca-sa-m-audio"
+          },
+          {
+            "@id": "question-mallorca-sa-m-video"
+          },
+          {
+            "@id": "question-mallorca-ses-bubotes-img"
+          },
+          {
+            "@id": "question-mallorca-ses-bubotes-audio"
+          },
+          {
+            "@id": "question-mallorca-ses-b-sties-de-mongofre-img"
+          },
+          {
+            "@id": "question-mallorca-ses-b-sties-de-mongofre-audio"
+          },
+          {
+            "@id": "question-mallorca-suc-i-sopes-img"
+          },
+          {
+            "@id": "question-mallorca-suc-i-sopes-audio"
+          },
+          {
+            "@id": "question-mallorca-valtonyc-img"
+          },
+          {
+            "@id": "question-mallorca-valtonyc-audio"
+          },
+          {
+            "@id": "question-mallorca-verlaat-img"
+          },
+          {
+            "@id": "question-mallorca-verlaat-audio"
+          },
+          {
+            "@id": "question-mallorca-verlaat-video"
+          },
+          {
+            "@id": "question-mallorca-xanguito-img"
+          },
+          {
+            "@id": "question-mallorca-xanguito-audio"
+          },
+          {
+            "@id": "question-mallorca-xanguito-video"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca-indie-audio",
+        "name": "Indie Balear 🎵",
+        "badge": "INDIE",
+        "section": "music",
+        "color1": "#2D1B4E",
+        "color2": "#6B3FA0",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-antonia-font-audio"
+          },
+          {
+            "@id": "question-mallorca-joan-miquel-oliver-audio"
+          },
+          {
+            "@id": "question-mallorca-caspary-audio"
+          },
+          {
+            "@id": "question-mallorca-ca-m-riba-audio"
+          },
+          {
+            "@id": "question-mallorca-da-souza-audio"
+          },
+          {
+            "@id": "question-mallorca-llu-s-cabot-audio"
+          },
+          {
+            "@id": "question-mallorca-maria-hein-audio"
+          },
+          {
+            "@id": "question-mallorca-maria-jaume-audio"
+          },
+          {
+            "@id": "question-mallorca-miquel-serra-audio"
+          },
+          {
+            "@id": "question-mallorca-negre-audio"
+          },
+          {
+            "@id": "question-mallorca-re-na-audio"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-audio"
+          },
+          {
+            "@id": "question-mallorca-sa-m-audio"
+          },
+          {
+            "@id": "question-mallorca-verlaat-audio"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca-rock-audio",
+        "name": "Rock Mallorquí 🎸",
+        "badge": "ROCK",
+        "section": "music",
+        "color1": "#1A0A0A",
+        "color2": "#8B0000",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-antonia-font-audio"
+          },
+          {
+            "@id": "question-mallorca-anegats-audio"
+          },
+          {
+            "@id": "question-mallorca-cabre-loke-audio"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-audio"
+          },
+          {
+            "@id": "question-mallorca-da-souza-audio"
+          },
+          {
+            "@id": "question-mallorca-ja-t-ho-dire-audio"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-audio"
+          },
+          {
+            "@id": "question-mallorca-ocults-audio"
+          },
+          {
+            "@id": "question-mallorca-oprimits-audio"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-audio"
+          },
+          {
+            "@id": "question-mallorca-reggaetonpare-audio"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-audio"
+          },
+          {
+            "@id": "question-mallorca-sa-m-audio"
+          },
+          {
+            "@id": "question-mallorca-suc-i-sopes-audio"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca-folk-audio",
+        "name": "Folk i Tradició 🪕",
+        "badge": "FOLK",
+        "section": "music",
+        "color1": "#2B1D0E",
+        "color2": "#8B6914",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/donallop.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/donallop.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-donallop-audio"
+          },
+          {
+            "@id": "question-mallorca-al-mayurqa-audio"
+          },
+          {
+            "@id": "question-mallorca-xeremiers-de-sa-calatrava-audio"
+          },
+          {
+            "@id": "question-mallorca-ca-m-riba-audio"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-audio"
+          },
+          {
+            "@id": "question-mallorca-els-amics-de-les-arts-audio"
+          },
+          {
+            "@id": "question-mallorca-llu-s-cabot-audio"
+          },
+          {
+            "@id": "question-mallorca-mdmar-audio"
+          },
+          {
+            "@id": "question-mallorca-maria-jaume-audio"
+          },
+          {
+            "@id": "question-mallorca-miquel-serra-audio"
+          },
+          {
+            "@id": "question-mallorca-nastallat-audio"
+          },
+          {
+            "@id": "question-mallorca-projecte-mut-audio"
+          },
+          {
+            "@id": "question-mallorca-ses-b-sties-de-mongofre-audio"
+          },
+          {
+            "@id": "question-mallorca-xanguito-audio"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca-indie-img",
+        "name": "Cares Indie 📸",
+        "badge": "INDIE",
+        "section": "picture",
+        "color1": "#0D2137",
+        "color2": "#1B4965",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-antonia-font-img"
+          },
+          {
+            "@id": "question-mallorca-donallop-img"
+          },
+          {
+            "@id": "question-mallorca-cap-pela-img"
+          },
+          {
+            "@id": "question-mallorca-joan-miquel-oliver-img"
+          },
+          {
+            "@id": "question-mallorca-caspary-img"
+          },
+          {
+            "@id": "question-mallorca-ca-m-riba-img"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-img"
+          },
+          {
+            "@id": "question-mallorca-da-souza-img"
+          },
+          {
+            "@id": "question-mallorca-els-amics-de-les-arts-img"
+          },
+          {
+            "@id": "question-mallorca-fades-img"
+          },
+          {
+            "@id": "question-mallorca-ja-t-ho-dire-img"
+          },
+          {
+            "@id": "question-mallorca-llu-s-cabot-img"
+          },
+          {
+            "@id": "question-mallorca-maria-hein-img"
+          },
+          {
+            "@id": "question-mallorca-mdmar-img"
+          },
+          {
+            "@id": "question-mallorca-maria-jaume-img"
+          },
+          {
+            "@id": "question-mallorca-miquel-serra-img"
+          },
+          {
+            "@id": "question-mallorca-negre-img"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-img"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-img"
+          },
+          {
+            "@id": "question-mallorca-reggaetonpare-img"
+          },
+          {
+            "@id": "question-mallorca-re-na-img"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-img"
+          },
+          {
+            "@id": "question-mallorca-sa-m-img"
+          },
+          {
+            "@id": "question-mallorca-suc-i-sopes-img"
+          },
+          {
+            "@id": "question-mallorca-verlaat-img"
+          },
+          {
+            "@id": "question-mallorca-xanguito-img"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca-rock-img",
+        "name": "Cares del Rock 🤘",
+        "badge": "ROCK",
+        "section": "picture",
+        "color1": "#0A0A1A",
+        "color2": "#333366",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-antonia-font-img"
+          },
+          {
+            "@id": "question-mallorca-anegats-img"
+          },
+          {
+            "@id": "question-mallorca-zulu-zulu-img"
+          },
+          {
+            "@id": "question-mallorca-cabre-loke-img"
+          },
+          {
+            "@id": "question-mallorca-caspary-img"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-img"
+          },
+          {
+            "@id": "question-mallorca-da-souza-img"
+          },
+          {
+            "@id": "question-mallorca-ja-t-ho-dire-img"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-img"
+          },
+          {
+            "@id": "question-mallorca-ocults-img"
+          },
+          {
+            "@id": "question-mallorca-oprimits-img"
+          },
+          {
+            "@id": "question-mallorca-ossifar-img"
+          },
+          {
+            "@id": "question-mallorca-panellet-img"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-img"
+          },
+          {
+            "@id": "question-mallorca-reggaetonpare-img"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-img"
+          },
+          {
+            "@id": "question-mallorca-sa-m-img"
+          },
+          {
+            "@id": "question-mallorca-suc-i-sopes-img"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca-illa-img",
+        "name": "Artistes de l'Illa 🏝️",
+        "badge": "ILLES",
+        "section": "picture",
+        "color1": "#0B3D2E",
+        "color2": "#1A7A5A",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-antonia-font-img"
+          },
+          {
+            "@id": "question-mallorca-anegats-img"
+          },
+          {
+            "@id": "question-mallorca-donallop-img"
+          },
+          {
+            "@id": "question-mallorca-mans-de-bre-img"
+          },
+          {
+            "@id": "question-mallorca-al-mayurqa-img"
+          },
+          {
+            "@id": "question-mallorca-zulu-zulu-img"
+          },
+          {
+            "@id": "question-mallorca-cap-pela-img"
+          },
+          {
+            "@id": "question-mallorca-joan-miquel-oliver-img"
+          },
+          {
+            "@id": "question-mallorca-xeremiers-de-sa-calatrava-img"
+          },
+          {
+            "@id": "question-mallorca-la-femme-contradiction-img"
+          },
+          {
+            "@id": "question-mallorca-brams-de-tramuntana-img"
+          },
+          {
+            "@id": "question-mallorca-cabre-loke-img"
+          },
+          {
+            "@id": "question-mallorca-caspary-img"
+          },
+          {
+            "@id": "question-mallorca-ca-m-riba-img"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-img"
+          },
+          {
+            "@id": "question-mallorca-da-souza-img"
+          },
+          {
+            "@id": "question-mallorca-fades-img"
+          },
+          {
+            "@id": "question-mallorca-ja-t-ho-dire-img"
+          },
+          {
+            "@id": "question-mallorca-llu-s-cabot-img"
+          },
+          {
+            "@id": "question-mallorca-maria-hein-img"
+          },
+          {
+            "@id": "question-mallorca-mdmar-img"
+          },
+          {
+            "@id": "question-mallorca-maria-jaume-img"
+          },
+          {
+            "@id": "question-mallorca-miquel-serra-img"
+          },
+          {
+            "@id": "question-mallorca-nastallat-img"
+          },
+          {
+            "@id": "question-mallorca-negre-img"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-img"
+          },
+          {
+            "@id": "question-mallorca-ocults-img"
+          },
+          {
+            "@id": "question-mallorca-oprimits-img"
+          },
+          {
+            "@id": "question-mallorca-ossifar-img"
+          },
+          {
+            "@id": "question-mallorca-plan-et-img"
+          },
+          {
+            "@id": "question-mallorca-projecte-mut-img"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-img"
+          },
+          {
+            "@id": "question-mallorca-reggaetonpare-img"
+          },
+          {
+            "@id": "question-mallorca-re-na-img"
+          },
+          {
+            "@id": "question-mallorca-rudymentari-img"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-img"
+          },
+          {
+            "@id": "question-mallorca-sa-m-img"
+          },
+          {
+            "@id": "question-mallorca-ses-bubotes-img"
+          },
+          {
+            "@id": "question-mallorca-ses-b-sties-de-mongofre-img"
+          },
+          {
+            "@id": "question-mallorca-suc-i-sopes-img"
+          },
+          {
+            "@id": "question-mallorca-valtonyc-img"
+          },
+          {
+            "@id": "question-mallorca-verlaat-img"
+          },
+          {
+            "@id": "question-mallorca-xanguito-img"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca-pop-video",
+        "name": "Videoclips Pop 🎬",
+        "badge": "POP",
+        "section": "video",
+        "color1": "#3D0A2E",
+        "color2": "#8B1A6A",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-antonia-font-video"
+          },
+          {
+            "@id": "question-mallorca-cap-pela-video"
+          },
+          {
+            "@id": "question-mallorca-joan-miquel-oliver-video"
+          },
+          {
+            "@id": "question-mallorca-ca-m-riba-video"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-video"
+          },
+          {
+            "@id": "question-mallorca-da-souza-video"
+          },
+          {
+            "@id": "question-mallorca-els-amics-de-les-arts-video"
+          },
+          {
+            "@id": "question-mallorca-fades-video"
+          },
+          {
+            "@id": "question-mallorca-maria-hein-video"
+          },
+          {
+            "@id": "question-mallorca-mdmar-video"
+          },
+          {
+            "@id": "question-mallorca-maria-jaume-video"
+          },
+          {
+            "@id": "question-mallorca-miquel-serra-video"
+          },
+          {
+            "@id": "question-mallorca-negre-video"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-video"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-video"
+          },
+          {
+            "@id": "question-mallorca-re-na-video"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-video"
+          },
+          {
+            "@id": "question-mallorca-verlaat-video"
+          },
+          {
+            "@id": "question-mallorca-xanguito-video"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca-rock-video",
+        "name": "Videoclips Rock 🎥",
+        "badge": "ROCK",
+        "section": "video",
+        "color1": "#1A0505",
+        "color2": "#5C1010",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-antonia-font-video"
+          },
+          {
+            "@id": "question-mallorca-anegats-video"
+          },
+          {
+            "@id": "question-mallorca-zulu-zulu-video"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-video"
+          },
+          {
+            "@id": "question-mallorca-da-souza-video"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-video"
+          },
+          {
+            "@id": "question-mallorca-ocults-video"
+          },
+          {
+            "@id": "question-mallorca-oprimits-video"
+          },
+          {
+            "@id": "question-mallorca-ossifar-video"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-video"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-video"
+          },
+          {
+            "@id": "question-mallorca-sa-m-video"
+          }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-mallorca-mix-video",
+        "name": "Videoclips Balears 🎞️",
+        "badge": "BALEARS",
+        "section": "video",
+        "color1": "#0D1F2D",
+        "color2": "#2D6A8F",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.webp",
+              "encodingFormat": "image/webp"
+            },
+            {
+              "@type": "ImageObject",
+              "contentUrl": "assets/images/artists/antonia-font.jpg",
+              "encodingFormat": "image/jpeg"
+            }
+          ]
+        },
+        "hasPart": [
+          {
+            "@id": "question-mallorca-antonia-font-video"
+          },
+          {
+            "@id": "question-mallorca-anegats-video"
+          },
+          {
+            "@id": "question-mallorca-zulu-zulu-video"
+          },
+          {
+            "@id": "question-mallorca-cap-pela-video"
+          },
+          {
+            "@id": "question-mallorca-joan-miquel-oliver-video"
+          },
+          {
+            "@id": "question-mallorca-ca-m-riba-video"
+          },
+          {
+            "@id": "question-mallorca-cris-juanico-video"
+          },
+          {
+            "@id": "question-mallorca-da-souza-video"
+          },
+          {
+            "@id": "question-mallorca-els-amics-de-les-arts-video"
+          },
+          {
+            "@id": "question-mallorca-fades-video"
+          },
+          {
+            "@id": "question-mallorca-k-zu-video"
+          },
+          {
+            "@id": "question-mallorca-maria-hein-video"
+          },
+          {
+            "@id": "question-mallorca-mdmar-video"
+          },
+          {
+            "@id": "question-mallorca-maria-jaume-video"
+          },
+          {
+            "@id": "question-mallorca-miquel-serra-video"
+          },
+          {
+            "@id": "question-mallorca-nastallat-video"
+          },
+          {
+            "@id": "question-mallorca-negre-video"
+          },
+          {
+            "@id": "question-mallorca-or-o-erra-video"
+          },
+          {
+            "@id": "question-mallorca-ocults-video"
+          },
+          {
+            "@id": "question-mallorca-oprimits-video"
+          },
+          {
+            "@id": "question-mallorca-ossifar-video"
+          },
+          {
+            "@id": "question-mallorca-plan-et-video"
+          },
+          {
+            "@id": "question-mallorca-p-l-de-gall-video"
+          },
+          {
+            "@id": "question-mallorca-re-na-video"
+          },
+          {
+            "@id": "question-mallorca-rudymentari-video"
+          },
+          {
+            "@id": "question-mallorca-salvatge-cor-video"
+          },
+          {
+            "@id": "question-mallorca-sa-m-video"
+          },
+          {
+            "@id": "question-mallorca-verlaat-video"
+          },
+          {
+            "@id": "question-mallorca-xanguito-video"
+          }
         ]
       }
     }
