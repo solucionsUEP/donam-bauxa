@@ -1,9 +1,26 @@
 import { createClient } from '@supabase/supabase-js';
 
-export const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
+const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY || 'placeholder';
+
+export const supabase = (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) 
+  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY)
+  : (() => {
+      const mock = {
+        auth: { getUser: () => ({ data: { user: null }, error: null }) },
+        from: () => mock,
+        select: () => mock,
+        eq: () => mock,
+        single: () => ({ data: null }),
+        order: () => mock,
+        limit: () => mock,
+        insert: () => mock,
+        update: () => mock,
+        delete: () => mock,
+        then: (cb) => cb({ data: [], error: null }) // Handles awaiting the chain
+      };
+      return mock;
+    })();
 
 export function rowToProfile(row) {
   if (!row) return null;

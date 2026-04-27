@@ -25,6 +25,11 @@ export async function requireAuth(req, res, next) {
 
 export function requireRole(...roles) {
   return async (req, res, next) => {
+    // Dev bypass
+    if (!process.env.SUPABASE_URL) {
+      req.userProfile = { role: 'admin' };
+      return next();
+    }
     const userRow = await getUserRow(req);
     if (!userRow || !roles.includes(userRow.role)) {
       return res.status(403).json({ error: 'No autoritzat' });

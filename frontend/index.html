@@ -818,6 +818,10 @@
                         type="button" role="tab"><i class="bi bi-newspaper"></i> Noticies</button>
               </li>
               <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-quizzes" data-bs-toggle="tab" data-bs-target="#panel-quizzes"
+                        type="button" role="tab"><i class="bi bi-controller"></i> Qüestionaris</button>
+              </li>
+              <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-requests" data-bs-toggle="tab" data-bs-target="#panel-requests"
                         type="button" role="tab">
                   <i class="bi bi-pencil-square"></i> Solicituds
@@ -1096,6 +1100,150 @@
                     <button class="btn btn-danger btn-sm me-2" id="rejectRequestBtn"><i class="bi bi-x-lg"></i> Rebutjar</button>
                     <button class="btn btn-bauxa-outline btn-sm" id="closeRequestDetail">Tancar</button>
                   </div>
+                </div>
+              </div>
+
+              <!-- Quizzes Panel -->
+              <div class="tab-pane fade" id="panel-quizzes" role="tabpanel">
+
+                <!-- Questionnaires Sub-Section -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h2 class="h5 mb-0">Gestió de Qüestionaris</h2>
+                  <button class="btn btn-bauxa btn-sm" id="adminNewQuiz">
+                    <i class="bi bi-plus-lg"></i> Nou Qüestionari
+                  </button>
+                </div>
+                <div id="adminQuizzesList" class="table-responsive">
+                  <!-- Dynamically loaded -->
+                </div>
+
+                <div id="adminQuizForm" style="display:none;" class="card-bauxa mt-3 p-3">
+                  <h3 class="h6 mb-3" id="adminQuizFormTitle">Nou Qüestionari</h3>
+                  <form id="addQuizForm">
+                    <input type="hidden" id="editQuizId">
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label for="quizName" class="form-label small fw-semibold">Nom</label>
+                        <input type="text" class="form-control form-control-bauxa" id="quizName" required>
+                      </div>
+                      <div class="col-md-3">
+                        <label for="quizBadge" class="form-label small fw-semibold">Badge</label>
+                        <input type="text" class="form-control form-control-bauxa" id="quizBadge" placeholder="ROCK, INDIE...">
+                      </div>
+                      <div class="col-md-3">
+                        <label for="quizSection" class="form-label small fw-semibold">Secció</label>
+                        <select class="form-select form-select-bauxa" id="quizSection">
+                          <option value="music">Música (Audio)</option>
+                          <option value="picture">Imatge</option>
+                          <option value="video">Vídeo</option>
+                        </select>
+                      </div>
+                      <div class="col-md-3">
+                        <label for="quizColor1" class="form-label small fw-semibold">Color 1</label>
+                        <input type="color" class="form-control form-control-color" id="quizColor1" value="#1B4965">
+                      </div>
+                      <div class="col-md-3">
+                        <label for="quizColor2" class="form-label small fw-semibold">Color 2</label>
+                        <input type="color" class="form-control form-control-color" id="quizColor2" value="#2D6A8F">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="quizImageJpg" class="form-label small fw-semibold">Imatge JPG (path)</label>
+                        <input type="text" class="form-control form-control-bauxa" id="quizImageJpg" placeholder="assets/images/artists/nom.jpg">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="quizImageWebp" class="form-label small fw-semibold">Imatge WebP (path)</label>
+                        <input type="text" class="form-control form-control-bauxa" id="quizImageWebp" placeholder="assets/images/artists/nom.webp">
+                      </div>
+
+                      <!-- Question assignment -->
+                      <div class="col-12">
+                        <label class="form-label small fw-semibold">Preguntes assignades</label>
+                        <div id="quizQuestionCheckboxes" class="border rounded p-2" style="max-height:250px;overflow-y:auto;background:var(--color-bg-alt);">
+                          <p class="text-muted small mb-0">Carregant preguntes...</p>
+                        </div>
+                      </div>
+
+                      <div class="col-12 d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-bauxa btn-sm"><i class="bi bi-check-lg"></i> Guardar</button>
+                        <button type="button" class="btn btn-bauxa-outline btn-sm" id="cancelQuizForm">Cancel·lar</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Questions Sub-Section -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h2 class="h5 mb-0">Gestió de Preguntes</h2>
+                  <button class="btn btn-bauxa btn-sm" id="adminNewQuestion">
+                    <i class="bi bi-plus-lg"></i> Nova Pregunta
+                  </button>
+                </div>
+                <div id="adminQuestionsList" class="table-responsive">
+                  <!-- Dynamically loaded -->
+                </div>
+
+                <div id="adminQuestionForm" style="display:none;" class="card-bauxa mt-3 p-3">
+                  <h3 class="h6 mb-3" id="adminQuestionFormTitle">Nova Pregunta</h3>
+                  <form id="addQuestionForm">
+                    <input type="hidden" id="editQuestionId">
+                    <div class="row g-3">
+                      <div class="col-md-4">
+                        <label for="questionCategory" class="form-label small fw-semibold">Categoria</label>
+                        <input type="text" class="form-control form-control-bauxa" id="questionCategory" placeholder="Artistes de Mallorca" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label for="questionText" class="form-label small fw-semibold">Text de la pregunta</label>
+                        <input type="text" class="form-control form-control-bauxa" id="questionText" placeholder="Qui és aquest artista?">
+                      </div>
+                      <div class="col-md-4">
+                        <label for="questionMediaType" class="form-label small fw-semibold">Tipus de media</label>
+                        <select class="form-select form-select-bauxa" id="questionMediaType">
+                          <option value="audio">Àudio</option>
+                          <option value="image">Imatge</option>
+                          <option value="video">Vídeo</option>
+                        </select>
+                      </div>
+                      <div class="col-md-12" id="questionMediaUrlGroup">
+                        <label for="questionMediaUrl" class="form-label small fw-semibold">URL/Path del media</label>
+                        <input type="text" class="form-control form-control-bauxa" id="questionMediaUrl" placeholder="assets/audio/artista.m4a" required>
+                      </div>
+                      <div class="col-md-6" id="questionMediaUrl2Group" style="display:none;">
+                        <label for="questionMediaUrl2" class="form-label small fw-semibold">URL/Path secundari (WebP/WebM)</label>
+                        <input type="text" class="form-control form-control-bauxa" id="questionMediaUrl2" placeholder="assets/images/artists/artista.webp">
+                      </div>
+                      <div class="col-md-6">
+                        <label for="questionOption0" class="form-label small fw-semibold">Opció A</label>
+                        <input type="text" class="form-control form-control-bauxa" id="questionOption0" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="questionOption1" class="form-label small fw-semibold">Opció B</label>
+                        <input type="text" class="form-control form-control-bauxa" id="questionOption1" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="questionOption2" class="form-label small fw-semibold">Opció C</label>
+                        <input type="text" class="form-control form-control-bauxa" id="questionOption2" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="questionOption3" class="form-label small fw-semibold">Opció D</label>
+                        <input type="text" class="form-control form-control-bauxa" id="questionOption3" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="questionCorrect" class="form-label small fw-semibold">Resposta correcta</label>
+                        <select class="form-select form-select-bauxa" id="questionCorrect">
+                          <option value="0">A</option>
+                          <option value="1">B</option>
+                          <option value="2">C</option>
+                          <option value="3">D</option>
+                        </select>
+                      </div>
+                      <div class="col-12 d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-bauxa btn-sm"><i class="bi bi-check-lg"></i> Guardar</button>
+                        <button type="button" class="btn btn-bauxa-outline btn-sm" id="cancelQuestionForm">Cancel·lar</button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
               </div>
 

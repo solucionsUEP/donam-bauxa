@@ -588,6 +588,179 @@ async function viewRequestDetail(requestId) {
   }
 }
 
+// --- Quiz/Question management ---
+
+let cachedQuestions = [];
+
+function renderQuizTable(items) {
+  if (!items.length) return '<p class="text-muted">No hi ha qüestionaris.</p>';
+  let html = `<table class="table table-sm"><thead><tr><th>ID</th><th>Nom</th><th>Badge</th><th>Secció</th><th>Preguntes</th><th>Accions</th></tr></thead><tbody>`;
+  for (const el of items) {
+    const item = el.item;
+    html += `<tr>
+      <td><small>${item['@id']}</small></td><td>${item.name}</td>
+      <td><span class="badge-genre">${item.badge || ''}</span></td><td>${item.section || ''}</td>
+      <td>${item.hasPart?.length || 0}</td>
+      <td>
+        <button class="btn btn-sm btn-bauxa-outline me-1 admin-edit-quiz" data-id="${item['@id']}"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-sm btn-outline-danger admin-delete-quiz" data-id="${item['@id']}"><i class="bi bi-trash"></i></button>
+      </td></tr>`;
+  }
+  return html + '</tbody></table>';
+}
+
+function renderQuestionTable(items) {
+  if (!items.length) return '<p class="text-muted">No hi ha preguntes.</p>';
+  let html = `<table class="table table-sm"><thead><tr><th>ID</th><th>Categoria</th><th>Tipus</th><th>Correcta</th><th>Accions</th></tr></thead><tbody>`;
+  for (const el of items) {
+    const item = el.item;
+    const mt = item.associatedMedia?.['@type'] || '?';
+    const icon = mt === 'AudioObject' ? '🎵' : mt === 'ImageObject' ? '📸' : '🎬';
+    const accepted = item.acceptedAnswer?.['@id'] || '';
+    const correct = (item.suggestedAnswer || []).find(a => a['@id'] === accepted);
+    html += `<tr>
+      <td><small>${item['@id']}</small></td><td>${item.about?.name || ''}</td>
+      <td>${icon}</td><td><small>${correct?.text || '?'}</small></td>
+      <td>
+        <button class="btn btn-sm btn-bauxa-outline me-1 admin-edit-question" data-id="${item['@id']}"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-sm btn-outline-danger admin-delete-question" data-id="${item['@id']}"><i class="bi bi-trash"></i></button>
+      </td></tr>`;
+  }
+  return html + '</tbody></table>';
+}
+
+async function loadQuizzesList() {
+  try {
+    const data = await apiFetch('/api/admin/questionnaires');
+    document.getElementById('adminQuizzesList').innerHTML = renderQuizTable(data.itemListElement || []);
+    bindQuizActions(data.itemListElement || []);
+  } catch (err) { showAlert('Error: ' + err.message, 'danger'); }
+}
+
+async function loadQuestionsList() {
+  try {
+    const data = await apiFetch('/api/admin/questions');
+    cachedQuestions = data.itemListElement || [];
+    document.getElementById('adminQuestionsList').innerHTML = renderQuestionTable(cachedQuestions);
+    bindQuestionActions(cachedQuestions);
+  } catch (err) { showAlert('Error: ' + err.message, 'danger'); }
+}
+
+function bindQuizActions(items) {
+  document.querySelectorAll('.admin-edit-quiz').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = items.find(el => el.item['@id'] === btn.dataset.id)?.item;
+      if (item) openQuizForm(item);
+    });
+  });
+  document.querySelectorAll('.admin-delete-quiz').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Eliminar qüestionari?')) return;
+      try {
+        await apiFetch(`/api/admin/questionnaires/${btn.dataset.id}`, { method: 'DELETE' });
+        showAlert('Eliminat', 'success'); loadQuizzesList();
+      } catch (err) { showAlert(err.message, 'danger'); }
+    });
+  });
+}
+
+function bindQuestionActions(items) {
+  document.querySelectorAll('.admin-edit-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = items.find(el => el.item['@id'] === btn.dataset.id)?.item;
+      if (item) openQuestionForm(item);
+    });
+  });
+  document.querySelectorAll('.admin-delete-question').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Eliminar pregunta?')) return;
+      try {
+        await apiFetch(`/api/admin/questions/${btn.dataset.id}`, { method: 'DELETE' });
+        showAlert('Eliminada', 'success'); loadQuestionsList();
+      } catch (err) { showAlert(err.message, 'danger'); }
+    });
+  });
+}
+
+function populateQuestionCheckboxes(selectedIds = []) {
+  const container = document.getElementById('quizQuestionCheckboxes');
+  if (!container || !cachedQuestions.length) { if (container) container.innerHTML = '<p class="text-muted small mb-0">Cap pregunta disponible.</p>'; return; }
+  const sel = new Set(selectedIds);
+  container.innerHTML = cachedQuestions.map(el => {
+    const q = el.item;
+    const mt = q.associatedMedia?.['@type'] || '';
+    const icon = mt === 'AudioObject' ? '🎵' : mt === 'ImageObject' ? '📸' : '🎬';
+    const accepted = q.acceptedAnswer?.['@id'] || '';
+    const correct = (q.suggestedAnswer || []).find(a => a['@id'] === accepted);
+    return `<div class="form-check"><input class="form-check-input" type="checkbox" value="${q['@id']}" id="qc-${q['@id']}" ${sel.has(q['@id']) ? 'checked' : ''}>
+      <label class="form-check-label small" for="qc-${q['@id']}">${icon} ${q.about?.name || ''} — ${correct?.text || q['@id']}</label></div>`;
+  }).join('');
+}
+
+function openQuizForm(item) {
+  document.getElementById('editQuizId').value = item?.['@id'] || '';
+  document.getElementById('quizName').value = item?.name || '';
+  document.getElementById('quizBadge').value = item?.badge || '';
+  document.getElementById('quizSection').value = item?.section || 'music';
+  document.getElementById('quizColor1').value = item?.color1 || '#1B4965';
+  document.getElementById('quizColor2').value = item?.color2 || '#2D6A8F';
+  const enc = item?.image?.encoding || [];
+  document.getElementById('quizImageJpg').value = enc.find(e => e.encodingFormat === 'image/jpeg')?.contentUrl || '';
+  document.getElementById('quizImageWebp').value = enc.find(e => e.encodingFormat === 'image/webp')?.contentUrl || '';
+  populateQuestionCheckboxes((item?.hasPart || []).map(r => r['@id']));
+  document.getElementById('adminQuizFormTitle').textContent = item ? 'Editar Qüestionari' : 'Nou Qüestionari';
+  document.getElementById('adminQuizForm').style.display = 'block';
+}
+
+function collectQuizFormData() {
+  const checked = []; document.querySelectorAll('#quizQuestionCheckboxes input:checked').forEach(cb => checked.push({ '@id': cb.value }));
+  const data = { '@type': 'Quiz', name: document.getElementById('quizName').value.trim(), badge: document.getElementById('quizBadge').value.trim(),
+    section: document.getElementById('quizSection').value, color1: document.getElementById('quizColor1').value, color2: document.getElementById('quizColor2').value, hasPart: checked };
+  const jpg = document.getElementById('quizImageJpg').value.trim(), webp = document.getElementById('quizImageWebp').value.trim();
+  if (jpg || webp) { data.image = { '@type': 'ImageObject', encoding: [] }; if (webp) data.image.encoding.push({ '@type': 'ImageObject', contentUrl: webp, encodingFormat: 'image/webp' }); if (jpg) data.image.encoding.push({ '@type': 'ImageObject', contentUrl: jpg, encodingFormat: 'image/jpeg' }); }
+  return data;
+}
+
+function openQuestionForm(item) {
+  document.getElementById('editQuestionId').value = item?.['@id'] || '';
+  document.getElementById('questionCategory').value = item?.about?.name || '';
+  document.getElementById('questionText').value = item?.text || '';
+  const mt = item?.associatedMedia?.['@type'] || 'AudioObject';
+  const map = { AudioObject: 'audio', ImageObject: 'image', VideoObject: 'video' };
+  document.getElementById('questionMediaType').value = map[mt] || 'audio';
+  if (mt === 'AudioObject') {
+    document.getElementById('questionMediaUrl').value = item?.associatedMedia?.contentUrl || '';
+    document.getElementById('questionMediaUrl2Group').style.display = 'none';
+  } else {
+    const enc = item?.associatedMedia?.encoding || [];
+    document.getElementById('questionMediaUrl').value = enc.find(e => e.encodingFormat?.includes('jpeg') || e.encodingFormat?.includes('mp4'))?.contentUrl || '';
+    document.getElementById('questionMediaUrl2').value = enc.find(e => e.encodingFormat?.includes('webp') || e.encodingFormat?.includes('webm'))?.contentUrl || '';
+    document.getElementById('questionMediaUrl2Group').style.display = '';
+  }
+  const answers = [...(item?.suggestedAnswer || [])].sort((a, b) => a.position - b.position);
+  for (let i = 0; i < 4; i++) document.getElementById(`questionOption${i}`).value = answers[i]?.text || '';
+  const correctIdx = answers.findIndex(a => a['@id'] === item?.acceptedAnswer?.['@id']);
+  document.getElementById('questionCorrect').value = correctIdx >= 0 ? correctIdx : 0;
+  document.getElementById('adminQuestionFormTitle').textContent = item ? 'Editar Pregunta' : 'Nova Pregunta';
+  document.getElementById('adminQuestionForm').style.display = 'block';
+  document.getElementById('questionMediaUrl2Group').style.display = document.getElementById('questionMediaType').value !== 'audio' ? '' : 'none';
+}
+
+function collectQuestionFormData() {
+  const type = document.getElementById('questionMediaType').value;
+  const url1 = document.getElementById('questionMediaUrl').value.trim();
+  const url2 = document.getElementById('questionMediaUrl2').value.trim();
+  let associatedMedia;
+  if (type === 'audio') { associatedMedia = { '@type': 'AudioObject', contentUrl: url1, encodingFormat: url1.endsWith('.mp3') ? 'audio/mpeg' : 'audio/mp4' }; }
+  else if (type === 'image') { associatedMedia = { '@type': 'ImageObject', encoding: [] }; if (url2) associatedMedia.encoding.push({ '@type': 'ImageObject', contentUrl: url2, encodingFormat: 'image/webp' }); if (url1) associatedMedia.encoding.push({ '@type': 'ImageObject', contentUrl: url1, encodingFormat: 'image/jpeg' }); }
+  else { associatedMedia = { '@type': 'VideoObject', encoding: [] }; if (url2) associatedMedia.encoding.push({ '@type': 'VideoObject', contentUrl: url2, encodingFormat: 'video/webm' }); if (url1) associatedMedia.encoding.push({ '@type': 'VideoObject', contentUrl: url1, encodingFormat: 'video/mp4' }); }
+  const options = [];
+  for (let i = 0; i < 4; i++) { const aid = `ans-${Date.now()}-${i}`; options.push({ '@type': 'Answer', '@id': aid, position: i, text: document.getElementById(`questionOption${i}`).value.trim() }); }
+  const ci = parseInt(document.getElementById('questionCorrect').value, 10);
+  return { '@type': 'Question', about: { '@type': 'DefinedTerm', name: document.getElementById('questionCategory').value.trim() },
+    text: document.getElementById('questionText').value.trim(), associatedMedia, suggestedAnswer: options, acceptedAnswer: { '@id': options[ci]['@id'] } };
+}
+
 // --- Init Admin ---
 
 export async function initAdmin() {
@@ -641,20 +814,12 @@ export async function initAdmin() {
     e.preventDefault();
     const editId = document.getElementById('editArtistId').value;
     const data = collectArtistFormData();
-
     try {
-      if (editId) {
-        await apiFetch(`/api/admin/artists/${editId}`, { method: 'PUT', body: JSON.stringify(data) });
-        showAlert('Artista actualitzat correctament', 'success');
-      } else {
-        await apiFetch('/api/admin/artists', { method: 'POST', body: JSON.stringify(data) });
-        showAlert('Artista creat correctament', 'success');
-      }
+      if (editId) { await apiFetch(`/api/admin/artists/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Artista actualitzat correctament', 'success'); }
+      else { await apiFetch('/api/admin/artists', { method: 'POST', body: JSON.stringify(data) }); showAlert('Artista creat correctament', 'success'); }
       document.getElementById('adminArtistForm').style.display = 'none';
       loadContentList('artists', 'adminArtistsList');
-    } catch (err) {
-      showAlert(err.message, 'danger');
-    }
+    } catch (err) { showAlert(err.message, 'danger'); }
   });
 
   // --- Event form bindings ---
@@ -673,20 +838,12 @@ export async function initAdmin() {
     e.preventDefault();
     const editId = document.getElementById('editEventId').value;
     const data = collectEventFormData();
-
     try {
-      if (editId) {
-        await apiFetch(`/api/admin/events/${editId}`, { method: 'PUT', body: JSON.stringify(data) });
-        showAlert('Esdeveniment actualitzat correctament', 'success');
-      } else {
-        await apiFetch('/api/admin/events', { method: 'POST', body: JSON.stringify(data) });
-        showAlert('Esdeveniment creat correctament', 'success');
-      }
+      if (editId) { await apiFetch(`/api/admin/events/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Esdeveniment actualitzat correctament', 'success'); }
+      else { await apiFetch('/api/admin/events', { method: 'POST', body: JSON.stringify(data) }); showAlert('Esdeveniment creat correctament', 'success'); }
       document.getElementById('adminEventForm').style.display = 'none';
       loadContentList('events', 'adminEventsList');
-    } catch (err) {
-      showAlert(err.message, 'danger');
-    }
+    } catch (err) { showAlert(err.message, 'danger'); }
   });
 
   // --- News form bindings ---
@@ -705,20 +862,60 @@ export async function initAdmin() {
     e.preventDefault();
     const editId = document.getElementById('editNewsId').value;
     const data = collectNewsFormData();
-
     try {
-      if (editId) {
-        await apiFetch(`/api/admin/news/${editId}`, { method: 'PUT', body: JSON.stringify(data) });
-        showAlert('Noticia actualitzada correctament', 'success');
-      } else {
-        await apiFetch('/api/admin/news', { method: 'POST', body: JSON.stringify(data) });
-        showAlert('Noticia creada correctament', 'success');
-      }
+      if (editId) { await apiFetch(`/api/admin/news/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Noticia actualitzada correctament', 'success'); }
+      else { await apiFetch('/api/admin/news', { method: 'POST', body: JSON.stringify(data) }); showAlert('Noticia creada correctament', 'success'); }
       document.getElementById('adminNewsForm').style.display = 'none';
       loadContentList('news', 'adminNewsList');
-    } catch (err) {
-      showAlert(err.message, 'danger');
-    }
+    } catch (err) { showAlert(err.message, 'danger'); }
+  });
+
+  // --- Quiz form bindings ---
+  document.getElementById('adminNewQuiz')?.addEventListener('click', () => {
+    document.getElementById('addQuizForm')?.reset();
+    openQuizForm(null);
+  });
+
+  document.getElementById('cancelQuizForm')?.addEventListener('click', () => {
+    document.getElementById('adminQuizForm').style.display = 'none';
+  });
+
+  document.getElementById('addQuizForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const editId = document.getElementById('editQuizId').value;
+    const data = collectQuizFormData();
+    try {
+      if (editId) { await apiFetch(`/api/admin/questionnaires/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Qüestionari actualitzat', 'success'); }
+      else { await apiFetch('/api/admin/questionnaires', { method: 'POST', body: JSON.stringify(data) }); showAlert('Qüestionari creat', 'success'); }
+      document.getElementById('adminQuizForm').style.display = 'none';
+      loadQuizzesList();
+    } catch (err) { showAlert(err.message, 'danger'); }
+  });
+
+  // --- Question form bindings ---
+  document.getElementById('adminNewQuestion')?.addEventListener('click', () => {
+    document.getElementById('addQuestionForm')?.reset();
+    openQuestionForm(null);
+  });
+
+  document.getElementById('cancelQuestionForm')?.addEventListener('click', () => {
+    document.getElementById('adminQuestionForm').style.display = 'none';
+  });
+
+  document.getElementById('questionMediaType')?.addEventListener('change', () => {
+    document.getElementById('questionMediaUrl2Group').style.display = document.getElementById('questionMediaType').value !== 'audio' ? '' : 'none';
+  });
+
+  document.getElementById('addQuestionForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const editId = document.getElementById('editQuestionId').value;
+    const data = collectQuestionFormData();
+    try {
+      if (editId) { await apiFetch(`/api/admin/questions/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Pregunta actualitzada', 'success'); }
+      else { await apiFetch('/api/admin/questions', { method: 'POST', body: JSON.stringify(data) }); showAlert('Pregunta creada', 'success'); }
+      document.getElementById('adminQuestionForm').style.display = 'none';
+      loadQuestionsList();
+    } catch (err) { showAlert(err.message, 'danger'); }
   });
 
   // --- Requests filter ---
@@ -729,4 +926,8 @@ export async function initAdmin() {
   // --- Tab change listeners to reload data ---
   document.getElementById('tab-requests')?.addEventListener('shown.bs.tab', loadAdminRequests);
   document.getElementById('tab-users')?.addEventListener('shown.bs.tab', loadUsers);
+  document.getElementById('tab-quizzes')?.addEventListener('shown.bs.tab', () => {
+    loadQuestionsList().then(() => loadQuizzesList());
+  });
 }
+

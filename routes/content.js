@@ -10,13 +10,17 @@ const DATA_DIR = join(__dirname, '..', 'frontend', 'data');
 const PATHS = {
   artists: join(DATA_DIR, 'artists.json'),
   events: join(DATA_DIR, 'events.json'),
-  news: join(DATA_DIR, 'news.json')
+  news: join(DATA_DIR, 'news.json'),
+  questionnaires: join(DATA_DIR, 'questionnaires.json'),
+  questions: join(DATA_DIR, 'questions.json')
 };
 
 const ENTITY_PREFIXES = {
   artists: 'artist',
   events: 'event',
-  news: 'news'
+  news: 'news',
+  questionnaires: 'quiz',
+  questions: 'question'
 };
 
 const router = Router();
@@ -140,5 +144,7 @@ function contentRoutes(entityType) {
 contentRoutes('artists');
 contentRoutes('events');
 contentRoutes('news');
+contentRoutes('questionnaires');
+contentRoutes('questions');
 
 export default router;

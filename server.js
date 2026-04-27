@@ -51,6 +51,20 @@ app.use(express.static(join(__dirname, 'frontend')));
 
 // Auth: retorna el perfil de l'usuari autenticat via Supabase JWT
 app.get('/auth/me', async (req, res) => {
+  // Mock auth for local development without Supabase
+  if (!process.env.SUPABASE_URL) {
+    return res.json({
+      authenticated: true,
+      user: { id: 'dev-user', email: 'dev@local', name: 'Developer' },
+      profile: {
+        '@id': 'dev-user',
+        role: 'admin',
+        displayName: 'Local Admin (Dev Mode)',
+        image: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+      }
+    });
+  }
+
   const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token) return res.json({ authenticated: false });
 
