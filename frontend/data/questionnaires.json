@@ -1,0 +1,174 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Qüestionaris del Joc Musical",
+  "description": "Col·lecció de qüestionaris temàtics per al joc de música de Dona'm Bauxa",
+  "numberOfItems": 6,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-pop90",
+        "name": "Pop dels 90",
+        "badge": "90s POP",
+        "section": "music",
+        "color1": "#4A1030",
+        "color2": "#8A2255",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/qst-pop90.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/qst-pop90.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "hasPart": [
+          { "@id": "question-1" },
+          { "@id": "question-2" },
+          { "@id": "question-11" },
+          { "@id": "question-19" },
+          { "@id": "question-20" },
+          { "@id": "question-21" }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-espanyol",
+        "name": "Escena Espanyola",
+        "badge": "POP ESP.",
+        "section": "music",
+        "color1": "#7A2010",
+        "color2": "#C45A3C",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/qst-espanyol.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/qst-espanyol.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "hasPart": [
+          { "@id": "question-5" },
+          { "@id": "question-22" },
+          { "@id": "question-23" },
+          { "@id": "question-24" },
+          { "@id": "question-25" }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-rock",
+        "name": "Clàssics del Rock",
+        "badge": "ROCK",
+        "section": "picture",
+        "color1": "#0F1E30",
+        "color2": "#1A3A60",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/qst-rock.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/qst-rock.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "hasPart": [
+          { "@id": "question-2" },
+          { "@id": "question-4" },
+          { "@id": "question-7" },
+          { "@id": "question-8" },
+          { "@id": "question-16" },
+          { "@id": "question-17" },
+          { "@id": "question-18" }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-electronic",
+        "name": "Electrònica & Dance",
+        "badge": "DANCE",
+        "section": "picture",
+        "color1": "#0D1F2D",
+        "color2": "#1B4965",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/qst-electronic.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/qst-electronic.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "hasPart": [
+          { "@id": "question-9" },
+          { "@id": "question-30" },
+          { "@id": "question-31" },
+          { "@id": "question-32" },
+          { "@id": "question-33" }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-hiphop",
+        "name": "Hip-Hop & R&B",
+        "badge": "HIP-HOP",
+        "section": "video",
+        "color1": "#0D0D18",
+        "color2": "#1E1E38",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/qst-hiphop.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/qst-hiphop.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "hasPart": [
+          { "@id": "question-13" },
+          { "@id": "question-26" },
+          { "@id": "question-27" },
+          { "@id": "question-28" },
+          { "@id": "question-29" }
+        ]
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "item": {
+        "@type": "Quiz",
+        "@id": "q-llati",
+        "name": "Pop Llatí",
+        "badge": "REGGAETON",
+        "section": "video",
+        "color1": "#6A3500",
+        "color2": "#C46800",
+        "image": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/qst-llati.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/qst-llati.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "hasPart": [
+          { "@id": "question-12" },
+          { "@id": "question-34" },
+          { "@id": "question-35" },
+          { "@id": "question-36" },
+          { "@id": "question-37" }
+        ]
+      }
+    }
+  ]
+}

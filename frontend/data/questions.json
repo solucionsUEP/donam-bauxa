@@ -1,393 +1,824 @@
 {
-  "questionnaires": [
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Repositori de Preguntes Musicals",
+  "description": "Conjunt de preguntes de tipus àudio, imatge i vídeo per al joc de música",
+  "numberOfItems": 37,
+  "itemListElement": [
     {
-      "id": "q-pop90",
-      "section": "music",
-      "name": "Pop dels 90",
-      "badge": "90s POP",
-      "color1": "#4A1030",
-      "color2": "#8A2255",
-      "image": { "webp": "img/qst-pop90.webp", "jpg": "img/qst-pop90.jpg" }
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "Question",
+        "@id": "question-1",
+        "about": { "@type": "DefinedTerm", "name": "90s Pop" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q1.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-1-a0", "position": 0, "text": "Madonna" },
+          { "@type": "Answer", "@id": "question-1-a1", "position": 1, "text": "Whitney Houston" },
+          { "@type": "Answer", "@id": "question-1-a2", "position": 2, "text": "Mariah Carey" },
+          { "@type": "Answer", "@id": "question-1-a3", "position": 3, "text": "Janet Jackson" }
+        ],
+        "acceptedAnswer": { "@id": "question-1-a0" }
+      }
     },
     {
-      "id": "q-espanyol",
-      "section": "music",
-      "name": "Escena Espanyola",
-      "badge": "POP ESP.",
-      "color1": "#7A2010",
-      "color2": "#C45A3C",
-      "image": { "webp": "img/qst-espanyol.webp", "jpg": "img/qst-espanyol.jpg" }
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "Question",
+        "@id": "question-2",
+        "about": { "@type": "DefinedTerm", "name": "Grunge" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q2.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-2-a0", "position": 0, "text": "Pearl Jam" },
+          { "@type": "Answer", "@id": "question-2-a1", "position": 1, "text": "Alice in Chains" },
+          { "@type": "Answer", "@id": "question-2-a2", "position": 2, "text": "Soundgarden" },
+          { "@type": "Answer", "@id": "question-2-a3", "position": 3, "text": "Nirvana" }
+        ],
+        "acceptedAnswer": { "@id": "question-2-a2" }
+      }
     },
     {
-      "id": "q-rock",
-      "section": "picture",
-      "name": "Clàssics del Rock",
-      "badge": "ROCK",
-      "color1": "#0F1E30",
-      "color2": "#1A3A60",
-      "image": { "webp": "img/qst-rock.webp", "jpg": "img/qst-rock.jpg" }
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@type": "Question",
+        "@id": "question-3",
+        "about": { "@type": "DefinedTerm", "name": "Dècada dels 70" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q3.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-3-a0", "position": 0, "text": "ABBA" },
+          { "@type": "Answer", "@id": "question-3-a1", "position": 1, "text": "Bee Gees" },
+          { "@type": "Answer", "@id": "question-3-a2", "position": 2, "text": "Blondie" },
+          { "@type": "Answer", "@id": "question-3-a3", "position": 3, "text": "Fleetwood Mac" }
+        ],
+        "acceptedAnswer": { "@id": "question-3-a1" }
+      }
     },
     {
-      "id": "q-electronic",
-      "section": "picture",
-      "name": "Electrònica & Dance",
-      "badge": "DANCE",
-      "color1": "#0D1F2D",
-      "color2": "#1B4965",
-      "image": { "webp": "img/qst-electronic.webp", "jpg": "img/qst-electronic.jpg" }
+      "@type": "ListItem",
+      "position": 4,
+      "item": {
+        "@type": "Question",
+        "@id": "question-4",
+        "about": { "@type": "DefinedTerm", "name": "Rock Clàssic" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q4.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-4-a0", "position": 0, "text": "Michael Jackson" },
+          { "@type": "Answer", "@id": "question-4-a1", "position": 1, "text": "Prince" },
+          { "@type": "Answer", "@id": "question-4-a2", "position": 2, "text": "David Bowie" },
+          { "@type": "Answer", "@id": "question-4-a3", "position": 3, "text": "Freddie Mercury" }
+        ],
+        "acceptedAnswer": { "@id": "question-4-a3" }
+      }
     },
     {
-      "id": "q-hiphop",
-      "section": "video",
-      "name": "Hip-Hop & R&B",
-      "badge": "HIP-HOP",
-      "color1": "#0D0D18",
-      "color2": "#1E1E38",
-      "image": { "webp": "img/qst-hiphop.webp", "jpg": "img/qst-hiphop.jpg" }
+      "@type": "ListItem",
+      "position": 5,
+      "item": {
+        "@type": "Question",
+        "@id": "question-5",
+        "about": { "@type": "DefinedTerm", "name": "Pop Espanyol" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q5.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-5-a0", "position": 0, "text": "Aitana" },
+          { "@type": "Answer", "@id": "question-5-a1", "position": 1, "text": "Ana Mena" },
+          { "@type": "Answer", "@id": "question-5-a2", "position": 2, "text": "Rosalía" },
+          { "@type": "Answer", "@id": "question-5-a3", "position": 3, "text": "Nathy Peluso" }
+        ],
+        "acceptedAnswer": { "@id": "question-5-a2" }
+      }
     },
     {
-      "id": "q-llati",
-      "section": "video",
-      "name": "Pop Llatí",
-      "badge": "REGGAETON",
-      "color1": "#6A3500",
-      "color2": "#C46800",
-      "image": { "webp": "img/qst-llati.webp", "jpg": "img/qst-llati.jpg" }
-    }
-  ],
-  "questions": [
-    {
-      "id": 1,
-      "type": "music",
-      "questionnaire": ["q-pop90"],
-      "src": { "mp3": "audio/q1.mp3" },
-      "options": ["Madonna", "Whitney Houston", "Mariah Carey", "Janet Jackson"],
-      "answer": 0,
-      "category": "90s Pop"
+      "@type": "ListItem",
+      "position": 6,
+      "item": {
+        "@type": "Question",
+        "@id": "question-6",
+        "about": { "@type": "DefinedTerm", "name": "2000s Pop" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q6.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-6-a0", "position": 0, "text": "Beyoncé" },
+          { "@type": "Answer", "@id": "question-6-a1", "position": 1, "text": "Rihanna" },
+          { "@type": "Answer", "@id": "question-6-a2", "position": 2, "text": "Lady Gaga" },
+          { "@type": "Answer", "@id": "question-6-a3", "position": 3, "text": "Adele" }
+        ],
+        "acceptedAnswer": { "@id": "question-6-a1" }
+      }
     },
     {
-      "id": 2,
-      "type": "music",
-      "questionnaire": ["q-rock", "q-pop90"],
-      "src": { "mp3": "audio/q2.mp3" },
-      "options": ["Pearl Jam", "Alice in Chains", "Soundgarden", "Nirvana"],
-      "answer": 2,
-      "category": "Grunge"
+      "@type": "ListItem",
+      "position": 7,
+      "item": {
+        "@type": "Question",
+        "@id": "question-7",
+        "about": { "@type": "DefinedTerm", "name": "Rock Clàssic" },
+        "associatedMedia": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/q7.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/q7.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-7-a0", "position": 0, "text": "The Beatles" },
+          { "@type": "Answer", "@id": "question-7-a1", "position": 1, "text": "The Rolling Stones" },
+          { "@type": "Answer", "@id": "question-7-a2", "position": 2, "text": "The Who" },
+          { "@type": "Answer", "@id": "question-7-a3", "position": 3, "text": "Led Zeppelin" }
+        ],
+        "acceptedAnswer": { "@id": "question-7-a0" }
+      }
     },
     {
-      "id": 3,
-      "type": "music",
-      "questionnaire": [],
-      "src": { "mp3": "audio/q3.mp3" },
-      "options": ["ABBA", "Bee Gees", "Blondie", "Fleetwood Mac"],
-      "answer": 1,
-      "category": "Dècada dels 70"
+      "@type": "ListItem",
+      "position": 8,
+      "item": {
+        "@type": "Question",
+        "@id": "question-8",
+        "about": { "@type": "DefinedTerm", "name": "Rock Americà" },
+        "associatedMedia": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/q8.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/q8.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-8-a0", "position": 0, "text": "Bob Dylan" },
+          { "@type": "Answer", "@id": "question-8-a1", "position": 1, "text": "Neil Young" },
+          { "@type": "Answer", "@id": "question-8-a2", "position": 2, "text": "Tom Petty" },
+          { "@type": "Answer", "@id": "question-8-a3", "position": 3, "text": "Bruce Springsteen" }
+        ],
+        "acceptedAnswer": { "@id": "question-8-a3" }
+      }
     },
     {
-      "id": 4,
-      "type": "music",
-      "questionnaire": ["q-rock"],
-      "src": { "mp3": "audio/q4.mp3" },
-      "options": ["Michael Jackson", "Prince", "David Bowie", "Freddie Mercury"],
-      "answer": 3,
-      "category": "Rock Clàssic"
+      "@type": "ListItem",
+      "position": 9,
+      "item": {
+        "@type": "Question",
+        "@id": "question-9",
+        "about": { "@type": "DefinedTerm", "name": "Electrònica" },
+        "associatedMedia": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/q9.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/q9.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-9-a0", "position": 0, "text": "Daft Punk" },
+          { "@type": "Answer", "@id": "question-9-a1", "position": 1, "text": "Chemical Brothers" },
+          { "@type": "Answer", "@id": "question-9-a2", "position": 2, "text": "Prodigy" },
+          { "@type": "Answer", "@id": "question-9-a3", "position": 3, "text": "Fatboy Slim" }
+        ],
+        "acceptedAnswer": { "@id": "question-9-a0" }
+      }
     },
     {
-      "id": 5,
-      "type": "music",
-      "questionnaire": ["q-espanyol"],
-      "src": { "mp3": "audio/q5.mp3" },
-      "options": ["Aitana", "Ana Mena", "Rosalía", "Nathy Peluso"],
-      "answer": 2,
-      "category": "Pop Espanyol"
+      "@type": "ListItem",
+      "position": 10,
+      "item": {
+        "@type": "Question",
+        "@id": "question-10",
+        "about": { "@type": "DefinedTerm", "name": "Soul / Pop" },
+        "associatedMedia": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/q10.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/q10.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-10-a0", "position": 0, "text": "Amy Winehouse" },
+          { "@type": "Answer", "@id": "question-10-a1", "position": 1, "text": "Duffy" },
+          { "@type": "Answer", "@id": "question-10-a2", "position": 2, "text": "Adele" },
+          { "@type": "Answer", "@id": "question-10-a3", "position": 3, "text": "Lily Allen" }
+        ],
+        "acceptedAnswer": { "@id": "question-10-a2" }
+      }
     },
     {
-      "id": 6,
-      "type": "music",
-      "questionnaire": [],
-      "src": { "mp3": "audio/q6.mp3" },
-      "options": ["Beyoncé", "Rihanna", "Lady Gaga", "Adele"],
-      "answer": 1,
-      "category": "2000s Pop"
+      "@type": "ListItem",
+      "position": 11,
+      "item": {
+        "@type": "Question",
+        "@id": "question-11",
+        "about": { "@type": "DefinedTerm", "name": "Britpop" },
+        "associatedMedia": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/q11.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/q11.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-11-a0", "position": 0, "text": "Oasis" },
+          { "@type": "Answer", "@id": "question-11-a1", "position": 1, "text": "Blur" },
+          { "@type": "Answer", "@id": "question-11-a2", "position": 2, "text": "Radiohead" },
+          { "@type": "Answer", "@id": "question-11-a3", "position": 3, "text": "Pulp" }
+        ],
+        "acceptedAnswer": { "@id": "question-11-a1" }
+      }
     },
     {
-      "id": 7,
-      "type": "picture",
-      "questionnaire": ["q-rock"],
-      "src": { "webp": "img/q7.webp", "jpg": "img/q7.jpg" },
-      "options": ["The Beatles", "The Rolling Stones", "The Who", "Led Zeppelin"],
-      "answer": 0,
-      "category": "Rock Clàssic"
+      "@type": "ListItem",
+      "position": 12,
+      "item": {
+        "@type": "Question",
+        "@id": "question-12",
+        "about": { "@type": "DefinedTerm", "name": "Pop Llatí" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q12.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q12.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-12-a0", "position": 0, "text": "Jennifer Lopez" },
+          { "@type": "Answer", "@id": "question-12-a1", "position": 1, "text": "Gloria Estefan" },
+          { "@type": "Answer", "@id": "question-12-a2", "position": 2, "text": "Shakira" },
+          { "@type": "Answer", "@id": "question-12-a3", "position": 3, "text": "Selena" }
+        ],
+        "acceptedAnswer": { "@id": "question-12-a2" }
+      }
     },
     {
-      "id": 8,
-      "type": "picture",
-      "questionnaire": ["q-rock"],
-      "src": { "webp": "img/q8.webp", "jpg": "img/q8.jpg" },
-      "options": ["Bob Dylan", "Neil Young", "Tom Petty", "Bruce Springsteen"],
-      "answer": 3,
-      "category": "Rock Americà"
+      "@type": "ListItem",
+      "position": 13,
+      "item": {
+        "@type": "Question",
+        "@id": "question-13",
+        "about": { "@type": "DefinedTerm", "name": "Hip-Hop" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q13.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q13.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-13-a0", "position": 0, "text": "Eminem" },
+          { "@type": "Answer", "@id": "question-13-a1", "position": 1, "text": "Jay-Z" },
+          { "@type": "Answer", "@id": "question-13-a2", "position": 2, "text": "Kanye West" },
+          { "@type": "Answer", "@id": "question-13-a3", "position": 3, "text": "50 Cent" }
+        ],
+        "acceptedAnswer": { "@id": "question-13-a1" }
+      }
     },
     {
-      "id": 9,
-      "type": "picture",
-      "questionnaire": ["q-electronic"],
-      "src": { "webp": "img/q9.webp", "jpg": "img/q9.jpg" },
-      "options": ["Daft Punk", "Chemical Brothers", "Prodigy", "Fatboy Slim"],
-      "answer": 0,
-      "category": "Electrònica"
+      "@type": "ListItem",
+      "position": 14,
+      "item": {
+        "@type": "Question",
+        "@id": "question-14",
+        "about": { "@type": "DefinedTerm", "name": "Rock Alternatiu" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q14.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q14.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-14-a0", "position": 0, "text": "Coldplay" },
+          { "@type": "Answer", "@id": "question-14-a1", "position": 1, "text": "U2" },
+          { "@type": "Answer", "@id": "question-14-a2", "position": 2, "text": "Muse" },
+          { "@type": "Answer", "@id": "question-14-a3", "position": 3, "text": "Snow Patrol" }
+        ],
+        "acceptedAnswer": { "@id": "question-14-a2" }
+      }
     },
     {
-      "id": 10,
-      "type": "picture",
-      "questionnaire": [],
-      "src": { "webp": "img/q10.webp", "jpg": "img/q10.jpg" },
-      "options": ["Amy Winehouse", "Duffy", "Adele", "Lily Allen"],
-      "answer": 2,
-      "category": "Soul / Pop"
+      "@type": "ListItem",
+      "position": 15,
+      "item": {
+        "@type": "Question",
+        "@id": "question-15",
+        "about": { "@type": "DefinedTerm", "name": "Indie Pop" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q15.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q15.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-15-a0", "position": 0, "text": "Ed Sheeran" },
+          { "@type": "Answer", "@id": "question-15-a1", "position": 1, "text": "Sam Smith" },
+          { "@type": "Answer", "@id": "question-15-a2", "position": 2, "text": "James Bay" },
+          { "@type": "Answer", "@id": "question-15-a3", "position": 3, "text": "George Ezra" }
+        ],
+        "acceptedAnswer": { "@id": "question-15-a3" }
+      }
     },
     {
-      "id": 11,
-      "type": "picture",
-      "questionnaire": ["q-pop90"],
-      "src": { "webp": "img/q11.webp", "jpg": "img/q11.jpg" },
-      "options": ["Oasis", "Blur", "Radiohead", "Pulp"],
-      "answer": 1,
-      "category": "Britpop"
+      "@type": "ListItem",
+      "position": 16,
+      "item": {
+        "@type": "Question",
+        "@id": "question-16",
+        "about": { "@type": "DefinedTerm", "name": "Rock Clàssic" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q16.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-16-a0", "position": 0, "text": "Black Sabbath" },
+          { "@type": "Answer", "@id": "question-16-a1", "position": 1, "text": "Led Zeppelin" },
+          { "@type": "Answer", "@id": "question-16-a2", "position": 2, "text": "Deep Purple" },
+          { "@type": "Answer", "@id": "question-16-a3", "position": 3, "text": "Uriah Heep" }
+        ],
+        "acceptedAnswer": { "@id": "question-16-a1" }
+      }
     },
     {
-      "id": 12,
-      "type": "video",
-      "questionnaire": ["q-llati"],
-      "src": { "webm": "video/q12.webm", "mp4": "video/q12.mp4" },
-      "options": ["Jennifer Lopez", "Gloria Estefan", "Shakira", "Selena"],
-      "answer": 2,
-      "category": "Pop Llatí"
+      "@type": "ListItem",
+      "position": 17,
+      "item": {
+        "@type": "Question",
+        "@id": "question-17",
+        "about": { "@type": "DefinedTerm", "name": "Rock Clàssic" },
+        "associatedMedia": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/q17.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/q17.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-17-a0", "position": 0, "text": "The Kinks" },
+          { "@type": "Answer", "@id": "question-17-a1", "position": 1, "text": "The Yardbirds" },
+          { "@type": "Answer", "@id": "question-17-a2", "position": 2, "text": "The Rolling Stones" },
+          { "@type": "Answer", "@id": "question-17-a3", "position": 3, "text": "The Animals" }
+        ],
+        "acceptedAnswer": { "@id": "question-17-a2" }
+      }
     },
     {
-      "id": 13,
-      "type": "video",
-      "questionnaire": ["q-hiphop"],
-      "src": { "webm": "video/q13.webm", "mp4": "video/q13.mp4" },
-      "options": ["Eminem", "Jay-Z", "Kanye West", "50 Cent"],
-      "answer": 1,
-      "category": "Hip-Hop"
+      "@type": "ListItem",
+      "position": 18,
+      "item": {
+        "@type": "Question",
+        "@id": "question-18",
+        "about": { "@type": "DefinedTerm", "name": "Rock Clàssic" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q18.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-18-a0", "position": 0, "text": "KISS" },
+          { "@type": "Answer", "@id": "question-18-a1", "position": 1, "text": "Motörhead" },
+          { "@type": "Answer", "@id": "question-18-a2", "position": 2, "text": "Thin Lizzy" },
+          { "@type": "Answer", "@id": "question-18-a3", "position": 3, "text": "AC/DC" }
+        ],
+        "acceptedAnswer": { "@id": "question-18-a3" }
+      }
     },
     {
-      "id": 14,
-      "type": "video",
-      "questionnaire": [],
-      "src": { "webm": "video/q14.webm", "mp4": "video/q14.mp4" },
-      "options": ["Coldplay", "U2", "Muse", "Snow Patrol"],
-      "answer": 2,
-      "category": "Rock Alternatiu"
+      "@type": "ListItem",
+      "position": 19,
+      "item": {
+        "@type": "Question",
+        "@id": "question-19",
+        "about": { "@type": "DefinedTerm", "name": "90s Pop" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q19.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-19-a0", "position": 0, "text": "Christina Aguilera" },
+          { "@type": "Answer", "@id": "question-19-a1", "position": 1, "text": "Britney Spears" },
+          { "@type": "Answer", "@id": "question-19-a2", "position": 2, "text": "Mandy Moore" },
+          { "@type": "Answer", "@id": "question-19-a3", "position": 3, "text": "Jessica Simpson" }
+        ],
+        "acceptedAnswer": { "@id": "question-19-a1" }
+      }
     },
     {
-      "id": 15,
-      "type": "video",
-      "questionnaire": [],
-      "src": { "webm": "video/q15.webm", "mp4": "video/q15.mp4" },
-      "options": ["Ed Sheeran", "Sam Smith", "James Bay", "George Ezra"],
-      "answer": 3,
-      "category": "Indie Pop"
+      "@type": "ListItem",
+      "position": 20,
+      "item": {
+        "@type": "Question",
+        "@id": "question-20",
+        "about": { "@type": "DefinedTerm", "name": "90s Pop" },
+        "associatedMedia": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/q20.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/q20.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-20-a0", "position": 0, "text": "Destiny's Child" },
+          { "@type": "Answer", "@id": "question-20-a1", "position": 1, "text": "TLC" },
+          { "@type": "Answer", "@id": "question-20-a2", "position": 2, "text": "En Vogue" },
+          { "@type": "Answer", "@id": "question-20-a3", "position": 3, "text": "Spice Girls" }
+        ],
+        "acceptedAnswer": { "@id": "question-20-a3" }
+      }
     },
     {
-      "id": 16,
-      "type": "music",
-      "questionnaire": ["q-rock"],
-      "src": { "mp3": "audio/q16.mp3" },
-      "options": ["Black Sabbath", "Led Zeppelin", "Deep Purple", "Uriah Heep"],
-      "answer": 1,
-      "category": "Rock Clàssic"
+      "@type": "ListItem",
+      "position": 21,
+      "item": {
+        "@type": "Question",
+        "@id": "question-21",
+        "about": { "@type": "DefinedTerm", "name": "90s Pop" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q21.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-21-a0", "position": 0, "text": "NSYNC" },
+          { "@type": "Answer", "@id": "question-21-a1", "position": 1, "text": "New Kids on the Block" },
+          { "@type": "Answer", "@id": "question-21-a2", "position": 2, "text": "Backstreet Boys" },
+          { "@type": "Answer", "@id": "question-21-a3", "position": 3, "text": "98 Degrees" }
+        ],
+        "acceptedAnswer": { "@id": "question-21-a2" }
+      }
     },
     {
-      "id": 17,
-      "type": "picture",
-      "questionnaire": ["q-rock"],
-      "src": { "webp": "img/q17.webp", "jpg": "img/q17.jpg" },
-      "options": ["The Kinks", "The Yardbirds", "The Rolling Stones", "The Animals"],
-      "answer": 2,
-      "category": "Rock Clàssic"
+      "@type": "ListItem",
+      "position": 22,
+      "item": {
+        "@type": "Question",
+        "@id": "question-22",
+        "about": { "@type": "DefinedTerm", "name": "Pop Espanyol" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q22.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-22-a0", "position": 0, "text": "Alejandro Sanz" },
+          { "@type": "Answer", "@id": "question-22-a1", "position": 1, "text": "Miguel Bosé" },
+          { "@type": "Answer", "@id": "question-22-a2", "position": 2, "text": "Enrique Iglesias" },
+          { "@type": "Answer", "@id": "question-22-a3", "position": 3, "text": "Luis Miguel" }
+        ],
+        "acceptedAnswer": { "@id": "question-22-a0" }
+      }
     },
     {
-      "id": 18,
-      "type": "music",
-      "questionnaire": ["q-rock"],
-      "src": { "mp3": "audio/q18.mp3" },
-      "options": ["KISS", "Motörhead", "Thin Lizzy", "AC/DC"],
-      "answer": 3,
-      "category": "Rock Clàssic"
+      "@type": "ListItem",
+      "position": 23,
+      "item": {
+        "@type": "Question",
+        "@id": "question-23",
+        "about": { "@type": "DefinedTerm", "name": "Pop Espanyol" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q23.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-23-a0", "position": 0, "text": "Duki" },
+          { "@type": "Answer", "@id": "question-23-a1", "position": 1, "text": "Bad Gyal" },
+          { "@type": "Answer", "@id": "question-23-a2", "position": 2, "text": "Nathy Peluso" },
+          { "@type": "Answer", "@id": "question-23-a3", "position": 3, "text": "C. Tangana" }
+        ],
+        "acceptedAnswer": { "@id": "question-23-a3" }
+      }
     },
     {
-      "id": 19,
-      "type": "music",
-      "questionnaire": ["q-pop90"],
-      "src": { "mp3": "audio/q19.mp3" },
-      "options": ["Christina Aguilera", "Britney Spears", "Mandy Moore", "Jessica Simpson"],
-      "answer": 1,
-      "category": "90s Pop"
+      "@type": "ListItem",
+      "position": 24,
+      "item": {
+        "@type": "Question",
+        "@id": "question-24",
+        "about": { "@type": "DefinedTerm", "name": "Pop Espanyol" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q24.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-24-a0", "position": 0, "text": "Love of Lesbian" },
+          { "@type": "Answer", "@id": "question-24-a1", "position": 1, "text": "Vetusta Morla" },
+          { "@type": "Answer", "@id": "question-24-a2", "position": 2, "text": "Lori Meyers" },
+          { "@type": "Answer", "@id": "question-24-a3", "position": 3, "text": "Varry Brava" }
+        ],
+        "acceptedAnswer": { "@id": "question-24-a1" }
+      }
     },
     {
-      "id": 20,
-      "type": "picture",
-      "questionnaire": ["q-pop90"],
-      "src": { "webp": "img/q20.webp", "jpg": "img/q20.jpg" },
-      "options": ["Destiny's Child", "TLC", "En Vogue", "Spice Girls"],
-      "answer": 3,
-      "category": "90s Pop"
+      "@type": "ListItem",
+      "position": 25,
+      "item": {
+        "@type": "Question",
+        "@id": "question-25",
+        "about": { "@type": "DefinedTerm", "name": "Pop Espanyol" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q25.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-25-a0", "position": 0, "text": "Els Pets" },
+          { "@type": "Answer", "@id": "question-25-a1", "position": 1, "text": "Sopa de Cabra" },
+          { "@type": "Answer", "@id": "question-25-a2", "position": 2, "text": "Joan Manuel Serrat" },
+          { "@type": "Answer", "@id": "question-25-a3", "position": 3, "text": "Manel" }
+        ],
+        "acceptedAnswer": { "@id": "question-25-a3" }
+      }
     },
     {
-      "id": 21,
-      "type": "music",
-      "questionnaire": ["q-pop90"],
-      "src": { "mp3": "audio/q21.mp3" },
-      "options": ["NSYNC", "New Kids on the Block", "Backstreet Boys", "98 Degrees"],
-      "answer": 2,
-      "category": "90s Pop"
+      "@type": "ListItem",
+      "position": 26,
+      "item": {
+        "@type": "Question",
+        "@id": "question-26",
+        "about": { "@type": "DefinedTerm", "name": "Hip-Hop" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q26.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-26-a0", "position": 0, "text": "Jay-Z" },
+          { "@type": "Answer", "@id": "question-26-a1", "position": 1, "text": "Nas" },
+          { "@type": "Answer", "@id": "question-26-a2", "position": 2, "text": "Eminem" },
+          { "@type": "Answer", "@id": "question-26-a3", "position": 3, "text": "Rakim" }
+        ],
+        "acceptedAnswer": { "@id": "question-26-a2" }
+      }
     },
     {
-      "id": 22,
-      "type": "music",
-      "questionnaire": ["q-espanyol"],
-      "src": { "mp3": "audio/q22.mp3" },
-      "options": ["Alejandro Sanz", "Miguel Bosé", "Enrique Iglesias", "Luis Miguel"],
-      "answer": 0,
-      "category": "Pop Espanyol"
+      "@type": "ListItem",
+      "position": 27,
+      "item": {
+        "@type": "Question",
+        "@id": "question-27",
+        "about": { "@type": "DefinedTerm", "name": "Hip-Hop" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q27.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q27.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-27-a0", "position": 0, "text": "Drake" },
+          { "@type": "Answer", "@id": "question-27-a1", "position": 1, "text": "Kendrick Lamar" },
+          { "@type": "Answer", "@id": "question-27-a2", "position": 2, "text": "J. Cole" },
+          { "@type": "Answer", "@id": "question-27-a3", "position": 3, "text": "Travis Scott" }
+        ],
+        "acceptedAnswer": { "@id": "question-27-a1" }
+      }
     },
     {
-      "id": 23,
-      "type": "music",
-      "questionnaire": ["q-espanyol"],
-      "src": { "mp3": "audio/q23.mp3" },
-      "options": ["Duki", "Bad Gyal", "Nathy Peluso", "C. Tangana"],
-      "answer": 3,
-      "category": "Pop Espanyol"
+      "@type": "ListItem",
+      "position": 28,
+      "item": {
+        "@type": "Question",
+        "@id": "question-28",
+        "about": { "@type": "DefinedTerm", "name": "Hip-Hop" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q28.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-28-a0", "position": 0, "text": "50 Cent" },
+          { "@type": "Answer", "@id": "question-28-a1", "position": 1, "text": "Kanye West" },
+          { "@type": "Answer", "@id": "question-28-a2", "position": 2, "text": "Lil Wayne" },
+          { "@type": "Answer", "@id": "question-28-a3", "position": 3, "text": "T.I." }
+        ],
+        "acceptedAnswer": { "@id": "question-28-a1" }
+      }
     },
     {
-      "id": 24,
-      "type": "music",
-      "questionnaire": ["q-espanyol"],
-      "src": { "mp3": "audio/q24.mp3" },
-      "options": ["Love of Lesbian", "Vetusta Morla", "Lori Meyers", "Varry Brava"],
-      "answer": 1,
-      "category": "Pop Espanyol"
+      "@type": "ListItem",
+      "position": 29,
+      "item": {
+        "@type": "Question",
+        "@id": "question-29",
+        "about": { "@type": "DefinedTerm", "name": "Hip-Hop" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q29.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q29.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-29-a0", "position": 0, "text": "The Weeknd" },
+          { "@type": "Answer", "@id": "question-29-a1", "position": 1, "text": "Future" },
+          { "@type": "Answer", "@id": "question-29-a2", "position": 2, "text": "Drake" },
+          { "@type": "Answer", "@id": "question-29-a3", "position": 3, "text": "Post Malone" }
+        ],
+        "acceptedAnswer": { "@id": "question-29-a2" }
+      }
     },
     {
-      "id": 25,
-      "type": "music",
-      "questionnaire": ["q-espanyol"],
-      "src": { "mp3": "audio/q25.mp3" },
-      "options": ["Els Pets", "Sopa de Cabra", "Joan Manuel Serrat", "Manel"],
-      "answer": 3,
-      "category": "Pop Espanyol"
+      "@type": "ListItem",
+      "position": 30,
+      "item": {
+        "@type": "Question",
+        "@id": "question-30",
+        "about": { "@type": "DefinedTerm", "name": "Electrònica" },
+        "associatedMedia": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/q30.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/q30.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-30-a0", "position": 0, "text": "Fatboy Slim" },
+          { "@type": "Answer", "@id": "question-30-a1", "position": 1, "text": "Chemical Brothers" },
+          { "@type": "Answer", "@id": "question-30-a2", "position": 2, "text": "Massive Attack" },
+          { "@type": "Answer", "@id": "question-30-a3", "position": 3, "text": "The Prodigy" }
+        ],
+        "acceptedAnswer": { "@id": "question-30-a1" }
+      }
     },
     {
-      "id": 26,
-      "type": "music",
-      "questionnaire": ["q-hiphop"],
-      "src": { "mp3": "audio/q26.mp3" },
-      "options": ["Jay-Z", "Nas", "Eminem", "Rakim"],
-      "answer": 2,
-      "category": "Hip-Hop"
+      "@type": "ListItem",
+      "position": 31,
+      "item": {
+        "@type": "Question",
+        "@id": "question-31",
+        "about": { "@type": "DefinedTerm", "name": "Electrònica" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q31.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q31.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-31-a0", "position": 0, "text": "Orbital" },
+          { "@type": "Answer", "@id": "question-31-a1", "position": 1, "text": "Underworld" },
+          { "@type": "Answer", "@id": "question-31-a2", "position": 2, "text": "The Prodigy" },
+          { "@type": "Answer", "@id": "question-31-a3", "position": 3, "text": "Aphex Twin" }
+        ],
+        "acceptedAnswer": { "@id": "question-31-a2" }
+      }
     },
     {
-      "id": 27,
-      "type": "video",
-      "questionnaire": ["q-hiphop"],
-      "src": { "webm": "video/q27.webm", "mp4": "video/q27.mp4" },
-      "options": ["Drake", "Kendrick Lamar", "J. Cole", "Travis Scott"],
-      "answer": 1,
-      "category": "Hip-Hop"
+      "@type": "ListItem",
+      "position": 32,
+      "item": {
+        "@type": "Question",
+        "@id": "question-32",
+        "about": { "@type": "DefinedTerm", "name": "Electrònica" },
+        "associatedMedia": {
+          "@type": "ImageObject",
+          "encoding": [
+            { "@type": "ImageObject", "contentUrl": "img/q32.webp", "encodingFormat": "image/webp" },
+            { "@type": "ImageObject", "contentUrl": "img/q32.jpg",  "encodingFormat": "image/jpeg" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-32-a0", "position": 0, "text": "Tiësto" },
+          { "@type": "Answer", "@id": "question-32-a1", "position": 1, "text": "Calvin Harris" },
+          { "@type": "Answer", "@id": "question-32-a2", "position": 2, "text": "Skrillex" },
+          { "@type": "Answer", "@id": "question-32-a3", "position": 3, "text": "Deadmau5" }
+        ],
+        "acceptedAnswer": { "@id": "question-32-a3" }
+      }
     },
     {
-      "id": 28,
-      "type": "music",
-      "questionnaire": ["q-hiphop"],
-      "src": { "mp3": "audio/q28.mp3" },
-      "options": ["50 Cent", "Kanye West", "Lil Wayne", "T.I."],
-      "answer": 1,
-      "category": "Hip-Hop"
+      "@type": "ListItem",
+      "position": 33,
+      "item": {
+        "@type": "Question",
+        "@id": "question-33",
+        "about": { "@type": "DefinedTerm", "name": "Electrònica" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q33.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q33.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-33-a0", "position": 0, "text": "Daft Punk" },
+          { "@type": "Answer", "@id": "question-33-a1", "position": 1, "text": "Justice" },
+          { "@type": "Answer", "@id": "question-33-a2", "position": 2, "text": "Skrillex" },
+          { "@type": "Answer", "@id": "question-33-a3", "position": 3, "text": "Diplo" }
+        ],
+        "acceptedAnswer": { "@id": "question-33-a2" }
+      }
     },
     {
-      "id": 29,
-      "type": "video",
-      "questionnaire": ["q-hiphop"],
-      "src": { "webm": "video/q29.webm", "mp4": "video/q29.mp4" },
-      "options": ["The Weeknd", "Future", "Drake", "Post Malone"],
-      "answer": 2,
-      "category": "Hip-Hop"
+      "@type": "ListItem",
+      "position": 34,
+      "item": {
+        "@type": "Question",
+        "@id": "question-34",
+        "about": { "@type": "DefinedTerm", "name": "Pop Llatí" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q34.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q34.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-34-a0", "position": 0, "text": "J Balvin" },
+          { "@type": "Answer", "@id": "question-34-a1", "position": 1, "text": "Anuel AA" },
+          { "@type": "Answer", "@id": "question-34-a2", "position": 2, "text": "Bad Bunny" },
+          { "@type": "Answer", "@id": "question-34-a3", "position": 3, "text": "Ozuna" }
+        ],
+        "acceptedAnswer": { "@id": "question-34-a2" }
+      }
     },
     {
-      "id": 30,
-      "type": "picture",
-      "questionnaire": ["q-electronic"],
-      "src": { "webp": "img/q30.webp", "jpg": "img/q30.jpg" },
-      "options": ["Fatboy Slim", "Chemical Brothers", "Massive Attack", "The Prodigy"],
-      "answer": 1,
-      "category": "Electrònica"
+      "@type": "ListItem",
+      "position": 35,
+      "item": {
+        "@type": "Question",
+        "@id": "question-35",
+        "about": { "@type": "DefinedTerm", "name": "Pop Llatí" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q35.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-35-a0", "position": 0, "text": "Maluma" },
+          { "@type": "Answer", "@id": "question-35-a1", "position": 1, "text": "J Balvin" },
+          { "@type": "Answer", "@id": "question-35-a2", "position": 2, "text": "Daddy Yankee" },
+          { "@type": "Answer", "@id": "question-35-a3", "position": 3, "text": "Nicky Jam" }
+        ],
+        "acceptedAnswer": { "@id": "question-35-a1" }
+      }
     },
     {
-      "id": 31,
-      "type": "video",
-      "questionnaire": ["q-electronic"],
-      "src": { "webm": "video/q31.webm", "mp4": "video/q31.mp4" },
-      "options": ["Orbital", "Underworld", "The Prodigy", "Aphex Twin"],
-      "answer": 2,
-      "category": "Electrònica"
+      "@type": "ListItem",
+      "position": 36,
+      "item": {
+        "@type": "Question",
+        "@id": "question-36",
+        "about": { "@type": "DefinedTerm", "name": "Pop Llatí" },
+        "associatedMedia": {
+          "@type": "VideoObject",
+          "encoding": [
+            { "@type": "VideoObject", "contentUrl": "video/q36.webm", "encodingFormat": "video/webm" },
+            { "@type": "VideoObject", "contentUrl": "video/q36.mp4",  "encodingFormat": "video/mp4" }
+          ]
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-36-a0", "position": 0, "text": "Karol G" },
+          { "@type": "Answer", "@id": "question-36-a1", "position": 1, "text": "Maluma" },
+          { "@type": "Answer", "@id": "question-36-a2", "position": 2, "text": "Becky G" },
+          { "@type": "Answer", "@id": "question-36-a3", "position": 3, "text": "Nathy Peluso" }
+        ],
+        "acceptedAnswer": { "@id": "question-36-a1" }
+      }
     },
     {
-      "id": 32,
-      "type": "picture",
-      "questionnaire": ["q-electronic"],
-      "src": { "webp": "img/q32.webp", "jpg": "img/q32.jpg" },
-      "options": ["Tiësto", "Calvin Harris", "Skrillex", "Deadmau5"],
-      "answer": 3,
-      "category": "Electrònica"
-    },
-    {
-      "id": 33,
-      "type": "video",
-      "questionnaire": ["q-electronic"],
-      "src": { "webm": "video/q33.webm", "mp4": "video/q33.mp4" },
-      "options": ["Daft Punk", "Justice", "Skrillex", "Diplo"],
-      "answer": 2,
-      "category": "Electrònica"
-    },
-    {
-      "id": 34,
-      "type": "video",
-      "questionnaire": ["q-llati"],
-      "src": { "webm": "video/q34.webm", "mp4": "video/q34.mp4" },
-      "options": ["J Balvin", "Anuel AA", "Bad Bunny", "Ozuna"],
-      "answer": 2,
-      "category": "Pop Llatí"
-    },
-    {
-      "id": 35,
-      "type": "music",
-      "questionnaire": ["q-llati"],
-      "src": { "mp3": "audio/q35.mp3" },
-      "options": ["Maluma", "J Balvin", "Daddy Yankee", "Nicky Jam"],
-      "answer": 1,
-      "category": "Pop Llatí"
-    },
-    {
-      "id": 36,
-      "type": "video",
-      "questionnaire": ["q-llati"],
-      "src": { "webm": "video/q36.webm", "mp4": "video/q36.mp4" },
-      "options": ["Karol G", "Maluma", "Becky G", "Nathy Peluso"],
-      "answer": 1,
-      "category": "Pop Llatí"
-    },
-    {
-      "id": 37,
-      "type": "music",
-      "questionnaire": ["q-llati"],
-      "src": { "mp3": "audio/q37.mp3" },
-      "options": ["Romeo Santos", "Marc Anthony", "Prince Royce", "Juan Luis Guerra"],
-      "answer": 1,
-      "category": "Pop Llatí"
+      "@type": "ListItem",
+      "position": 37,
+      "item": {
+        "@type": "Question",
+        "@id": "question-37",
+        "about": { "@type": "DefinedTerm", "name": "Pop Llatí" },
+        "associatedMedia": {
+          "@type": "AudioObject",
+          "contentUrl": "audio/q37.mp3",
+          "encodingFormat": "audio/mpeg"
+        },
+        "suggestedAnswer": [
+          { "@type": "Answer", "@id": "question-37-a0", "position": 0, "text": "Romeo Santos" },
+          { "@type": "Answer", "@id": "question-37-a1", "position": 1, "text": "Marc Anthony" },
+          { "@type": "Answer", "@id": "question-37-a2", "position": 2, "text": "Prince Royce" },
+          { "@type": "Answer", "@id": "question-37-a3", "position": 3, "text": "Juan Luis Guerra" }
+        ],
+        "acceptedAnswer": { "@id": "question-37-a1" }
+      }
     }
   ]
 }

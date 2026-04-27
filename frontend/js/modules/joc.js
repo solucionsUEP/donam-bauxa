@@ -22,6 +22,63 @@ export const gameState = {
 };
 
 /* ------------------------------------------------------------------ */
+/*  Schema.org normalizers                                             */
+/* ------------------------------------------------------------------ */
+
+function normalizeQuestion(schemaQuestion) {
+  const mediaType = schemaQuestion.associatedMedia?.['@type'];
+  let type, src;
+
+  if (mediaType === 'AudioObject') {
+    type = 'music';
+    src  = { mp3: schemaQuestion.associatedMedia.contentUrl };
+  } else if (mediaType === 'ImageObject') {
+    type = 'picture';
+    src  = {};
+    for (const enc of schemaQuestion.associatedMedia.encoding || []) {
+      if (enc.encodingFormat === 'image/webp')  src.webp = enc.contentUrl;
+      if (enc.encodingFormat === 'image/jpeg')  src.jpg  = enc.contentUrl;
+    }
+  } else if (mediaType === 'VideoObject') {
+    type = 'video';
+    src  = {};
+    for (const enc of schemaQuestion.associatedMedia.encoding || []) {
+      if (enc.encodingFormat === 'video/webm')  src.webm = enc.contentUrl;
+      if (enc.encodingFormat === 'video/mp4')   src.mp4  = enc.contentUrl;
+    }
+  }
+
+  const answers    = [...(schemaQuestion.suggestedAnswer || [])].sort((a, b) => a.position - b.position);
+  const acceptedId = schemaQuestion.acceptedAnswer?.['@id'];
+
+  return {
+    id:       schemaQuestion['@id'],
+    type,
+    src,
+    options:  answers.map(a => a.text),
+    answer:   answers.findIndex(a => a['@id'] === acceptedId),
+    category: schemaQuestion.about?.name ?? ''
+  };
+}
+
+function normalizeQuestionnaire(schemaQuiz) {
+  const imgEncodings = schemaQuiz.image?.encoding ?? [];
+  return {
+    id:          schemaQuiz['@id'],
+    name:        schemaQuiz.name,
+    badge:       schemaQuiz.badge,
+    section:     schemaQuiz.section,
+    color1:      schemaQuiz.color1,
+    color2:      schemaQuiz.color2,
+    image: {
+      webp: imgEncodings.find(e => e.encodingFormat === 'image/webp')?.contentUrl ?? null,
+      jpg:  imgEncodings.find(e => e.encodingFormat === 'image/jpeg')?.contentUrl ?? null
+    },
+    questionIds: (schemaQuiz.hasPart ?? []).map(ref => ref['@id'])
+  };
+}
+
+/* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
@@ -56,9 +113,8 @@ function showWarning(message) {
 
 function getQuestionPool() {
   if (gameState.questionnaire) {
-    return gameState.allQuestions.filter(
-      q => Array.isArray(q.questionnaire) && q.questionnaire.includes(gameState.questionnaire.id)
-    );
+    const ids = new Set(gameState.questionnaire.questionIds);
+    return gameState.allQuestions.filter(q => ids.has(q.id));
   }
   return [...gameState.allQuestions]; // random mode: use everything
 }
@@ -108,9 +164,7 @@ function renderMedia(question) {
 /* ------------------------------------------------------------------ */
 
 function questionnaireCount(qid) {
-  return gameState.allQuestions.filter(
-    q => Array.isArray(q.questionnaire) && q.questionnaire.includes(qid)
-  ).length;
+  return gameState.questionnaires.find(q => q.id === qid)?.questionIds?.length ?? 0;
 }
 
 function presetBtn({ mode = null, questionnaireId = null, length, label, ariaLabel }) {
@@ -465,12 +519,18 @@ function attachSetupListeners() {
 export async function initJoc() {
   if (!gameState.allQuestions.length) {
     try {
-      const data = await fetch('data/questions.json').then(r => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      });
-      gameState.allQuestions   = data.questions      || [];
-      gameState.questionnaires = data.questionnaires || [];
+      const [qData, qdData] = await Promise.all([
+        fetch('data/questions.json').then(r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        }),
+        fetch('data/questionnaires.json').then(r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          return r.json();
+        })
+      ]);
+      gameState.allQuestions   = (qData.itemListElement  ?? []).map(e => normalizeQuestion(e.item));
+      gameState.questionnaires = (qdData.itemListElement ?? []).map(e => normalizeQuestionnaire(e.item));
     } catch (err) {
       console.error('[joc] Error carregant preguntes:', err);
       const setup = document.getElementById('jocSetup');

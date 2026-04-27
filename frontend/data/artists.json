@@ -3,7 +3,7 @@
   "@type": "ItemList",
   "name": "Artistes de Mallorca",
   "description": "Directori d'artistes i grups musicals de l'escena mallorquina",
-  "numberOfItems": 12,
+  "numberOfItems": 46,
   "itemListElement": [
     {
       "@type": "ListItem",
@@ -226,7 +226,7 @@
             "addressRegion": "Mallorca"
           }
         },
-        "image": "assets/images/artists/mans-de-brec.jpg",
+        "image": "assets/images/artists/mans-de-bre.jpg",
         "sameAs": [
           "https://open.spotify.com/artist/example5",
           "https://www.instagram.com/mansdebrec/"
@@ -507,7 +507,7 @@
             "addressRegion": "Mallorca"
           }
         },
-        "image": "assets/images/artists/xeremiers.jpg",
+        "image": "assets/images/artists/xeremiers-de-sa-calatrava.jpg",
         "sameAs": [],
         "album": [],
         "areaServed": "Palma",
@@ -639,7 +639,957 @@
           }
         },
         "areaServed": "Palma",
-        "@id": "artist-12"
+        "@id": "artist-12",
+        "image": "assets/images/artists/cabre-loke.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-13",
+        "name": "Caspary",
+        "description": "Grup d'indie rock originari de Sa Pobla amb melodies fresques i influències post-punk.",
+        "genre": [
+          "Indie Rock",
+          "Post-Punk"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Sa Pobla",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Sa Pobla",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Caspary"
+        ],
+        "image": "assets/images/artists/caspary.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-14",
+        "name": "Caïm Riba",
+        "description": "Músic i cantautor, conegut pel seu projecte en solitari d'indie pop i com a ex-membre de Pastora.",
+        "genre": [
+          "Indie Pop",
+          "Cantautor"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Formentera",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Formentera",
+            "addressRegion": "Illes Balears"
+          }
+        },
+        "areaServed": "Illes Balears",
+        "sameAs": [
+          "https://open.spotify.com/artist/CaimRiba"
+        ],
+        "image": "assets/images/artists/ca-m-riba.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-15",
+        "name": "Cris Juanico",
+        "description": "Cantant i compositor menorquí, antic líder de la mítica banda de rock Ja T'ho Diré.",
+        "genre": [
+          "Pop Rock",
+          "Cançó d'autor"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Ciutadella",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Ciutadella",
+            "addressRegion": "Menorca"
+          }
+        },
+        "areaServed": "Menorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/CrisJuanico"
+        ],
+        "image": "assets/images/artists/cris-juanico.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-16",
+        "name": "Da Souza",
+        "description": "Banda d'indie pop i rock alternatiu formada a Mallorca, referents de l'escena musical balear.",
+        "genre": [
+          "Indie Pop",
+          "Rock Alternatiu"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Palma",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Palma",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/DaSouza"
+        ],
+        "image": "assets/images/artists/da-souza.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 17,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-17",
+        "name": "Els Amics De Les Arts",
+        "description": "Grup de pop-folk català conegut per les seves lletres costumistes i melodies enganxoses.",
+        "genre": [
+          "Pop",
+          "Folk"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Barcelona",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Barcelona",
+            "addressRegion": "Catalunya"
+          }
+        },
+        "areaServed": "Catalunya",
+        "sameAs": [
+          "https://open.spotify.com/artist/ElsAmicsDeLesArts"
+        ],
+        "image": "assets/images/artists/els-amics-de-les-arts.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 18,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-18",
+        "name": "FADES",
+        "description": "Grup musical mallorquí de pop, house i música urbana que reivindica la consciència lingüística i els drets LGTBIQ+.",
+        "genre": [
+          "Pop",
+          "Urbana",
+          "House"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Palma",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Palma",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/FADES"
+        ],
+        "image": "assets/images/artists/fades.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 19,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-19",
+        "name": "Ja T'ho Dire",
+        "description": "Una de les bandes de rock més importants i històriques de Menorca, actius principalment als anys 90.",
+        "genre": [
+          "Rock",
+          "Pop Rock"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Ciutadella",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Ciutadella",
+            "addressRegion": "Menorca"
+          }
+        },
+        "areaServed": "Menorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/JaThoDire"
+        ],
+        "image": "assets/images/artists/ja-t-ho-dire.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 20,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-20",
+        "name": "K-ZU",
+        "description": "DJ i productor català conegut per les seves remescles virals de música tradicional amb electrònica i techno.",
+        "genre": [
+          "Electrònica",
+          "Techno",
+          "Fusió"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Catalunya",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Catalunya",
+            "addressRegion": "Catalunya"
+          }
+        },
+        "areaServed": "Catalunya",
+        "sameAs": [
+          "https://open.spotify.com/artist/K-ZU"
+        ],
+        "image": "assets/images/artists/k-zu.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 21,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-21",
+        "name": "Lluís Cabot",
+        "description": "Músic i compositor mallorquí, membre de Da Souza, amb un projecte en solitari d'indie pop intimista.",
+        "genre": [
+          "Indie Pop",
+          "Cançó d'autor"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Palma",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Palma",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/LluisCabot"
+        ],
+        "image": "assets/images/artists/llu-s-cabot.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 22,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-22",
+        "name": "MARIA HEIN",
+        "description": "Jove cantautora mallorquina que barreja pop, folk i elements electrònics amb una veu delicada.",
+        "genre": [
+          "Pop",
+          "Indie Folk"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Felanitx",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Felanitx",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/MariaHein"
+        ],
+        "image": "assets/images/artists/maria-hein.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 23,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-23",
+        "name": "MDMAR",
+        "description": "Projecte de Maria del Mar Payeras, cantautora mallorquina de pop-folk d'autor amb influències elèctriques.",
+        "genre": [
+          "Pop",
+          "Folk"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Palma",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Palma",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/MDMAR"
+        ],
+        "image": "assets/images/artists/mdmar.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 24,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-24",
+        "name": "Maria Jaume",
+        "description": "Cantautora d'indie pop mallorquina amb lletres sinceres i un so pop contemporani.",
+        "genre": [
+          "Indie Pop",
+          "Cançó d'autor"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Lloret de Vistalegre",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Lloret de Vistalegre",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/MariaJaume"
+        ],
+        "image": "assets/images/artists/maria-jaume.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 25,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-25",
+        "name": "Miquel Serra",
+        "description": "Cantautor i referent del pop independent a les Illes Balears amb una discografia extensa i personal.",
+        "genre": [
+          "Indie Pop",
+          "Folk"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Eivissa",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Eivissa",
+            "addressRegion": "Illes Balears"
+          }
+        },
+        "areaServed": "Illes Balears",
+        "sameAs": [
+          "https://open.spotify.com/artist/MiquelSerra"
+        ],
+        "image": "assets/images/artists/miquel-serra.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 26,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-26",
+        "name": "Nastallat",
+        "description": "Projecte liderat per Laia Rius que fusiona la música electrònica amb la música d'arrel mallorquina i ball de bot.",
+        "genre": [
+          "Electrònica",
+          "Tradicional",
+          "Ball de bot"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Mallorca",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Mallorca",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Nastallat"
+        ],
+        "image": "assets/images/artists/nastallat.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 27,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-27",
+        "name": "Negre",
+        "description": "Banda mallorquina de synthpop amb influències americanes, guanyadors del Pop Rock de Palma el 2023.",
+        "genre": [
+          "Synthpop",
+          "Indie Pop"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Santa Maria del Camí",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Santa Maria del Camí",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Negre"
+        ],
+        "image": "assets/images/artists/negre.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 28,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-28",
+        "name": "OR (O-ERRA)",
+        "description": "Un dels grups de pop-rock en català més populars de Mallorca de l'última dècada.",
+        "genre": [
+          "Pop Rock"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Manacor",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Manacor",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/O-Erra"
+        ],
+        "image": "assets/images/artists/or-o-erra.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 29,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-29",
+        "name": "Ocults",
+        "description": "Banda clàssica de rock i ska de Mallorca, coneguda per himnes festius com 'Pa amb oli nacional'.",
+        "genre": [
+          "Rock",
+          "Ska"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Manacor",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Manacor",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Ocults"
+        ],
+        "image": "assets/images/artists/ocults.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 30,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-30",
+        "name": "Oprimits",
+        "description": "Grup històric mallorquí que combina rock, ska i reggae amb lletres compromeses i reivindicatives.",
+        "genre": [
+          "Ska",
+          "Rock",
+          "Reggae"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Mallorca",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Mallorca",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Oprimits"
+        ],
+        "image": "assets/images/artists/oprimits.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 31,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-31",
+        "name": "Ossifar",
+        "description": "Mítica banda de rock humorístic i paròdic mallorquí, autors de cançons que formen part de la cultura popular.",
+        "genre": [
+          "Rock",
+          "Humor"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Palma",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Palma",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Ossifar"
+        ],
+        "image": "assets/images/artists/ossifar.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 32,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-32",
+        "name": "Panellet",
+        "description": "Grup de 'punk dolç' (pop punk) català caracteritzat per ritmes enèrgics i lletres nostàlgiques.",
+        "genre": [
+          "Pop Punk"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Terrassa",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Terrassa",
+            "addressRegion": "Catalunya"
+          }
+        },
+        "areaServed": "Catalunya",
+        "sameAs": [
+          "https://open.spotify.com/artist/Panellet"
+        ],
+        "image": "assets/images/artists/panellet.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 33,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-33",
+        "name": "Plan-ET",
+        "description": "Projecte de Jaume Forteza, pioner de la música urbana i el rap en català a les Illes Balears.",
+        "genre": [
+          "Música Urbana",
+          "Rap",
+          "Trap"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Manacor",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Manacor",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/PlanET"
+        ],
+        "image": "assets/images/artists/plan-et.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 34,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-34",
+        "name": "Projecte Mut",
+        "description": "Grup de folk rock originari d'Eivissa, conegut per modernitzar la música tradicional de les Pitiüses.",
+        "genre": [
+          "Folk Rock"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Eivissa",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Eivissa",
+            "addressRegion": "Eivissa"
+          }
+        },
+        "areaServed": "Eivissa",
+        "sameAs": [
+          "https://open.spotify.com/artist/ProjecteMut"
+        ],
+        "image": "assets/images/artists/projecte-mut.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 35,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-35",
+        "name": "Pèl De Gall",
+        "description": "Banda de pop-rock menorquina amb lletres fresques i un potent directe.",
+        "genre": [
+          "Pop Rock"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Menorca",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Menorca",
+            "addressRegion": "Menorca"
+          }
+        },
+        "areaServed": "Menorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/PelDeGall"
+        ],
+        "image": "assets/images/artists/p-l-de-gall.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 36,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-36",
+        "name": "Reggaetonpare",
+        "description": "Grup de pop-rock festiu format al Pla de Mallorca, coneguts per les seves lletres humorístiques.",
+        "genre": [
+          "Pop Rock",
+          "Humor"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Petra / Vilafranca",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Petra / Vilafranca",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Reggaetonpare"
+        ],
+        "image": "assets/images/artists/reggaetonpare.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 37,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-37",
+        "name": "Reïna",
+        "description": "Grup mallorquí d'indie pop format a Manacor, amb un so elegant i melodies treballades.",
+        "genre": [
+          "Indie Pop"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Manacor",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Manacor",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Reina"
+        ],
+        "image": "assets/images/artists/re-na.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 38,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-38",
+        "name": "Rudymentari",
+        "description": "Projecte de reggae i dancehall d'arrel menorquina amb lletres socials i combatives.",
+        "genre": [
+          "Reggae",
+          "Dancehall"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Menorca",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Menorca",
+            "addressRegion": "Menorca"
+          }
+        },
+        "areaServed": "Menorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Rudymentari"
+        ],
+        "image": "assets/images/artists/rudymentari.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 39,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-39",
+        "name": "Salvatge Cor",
+        "description": "Banda de pop-rock independent i alternatiu de Palma, amb un discurs literari i poètic molt curat.",
+        "genre": [
+          "Indie Pop",
+          "Rock Alternatiu"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Palma",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Palma",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/SalvatgeCor"
+        ],
+        "image": "assets/images/artists/salvatge-cor.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 40,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-40",
+        "name": "Saïm",
+        "description": "Trio mallorquí d'indie rock i punk, coneguts pel seu so cru i enèrgic.",
+        "genre": [
+          "Indie Rock",
+          "Punk"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Palma",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Palma",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Saim"
+        ],
+        "image": "assets/images/artists/sa-m.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 41,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-41",
+        "name": "Ses Bubotes",
+        "description": "Banda mallorquina de música festiva i pop-rock, habituals a les revetlles i festes de l'illa.",
+        "genre": [
+          "Pop Rock Festiu"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Mallorca",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Mallorca",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/SesBubotes"
+        ],
+        "image": "assets/images/artists/ses-bubotes.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 42,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-42",
+        "name": "Ses Bísties de Mongofre",
+        "description": "Grup folk menorquí nascut el 2019 que mescla ritmes urbans, rumba catalana i temes compromesos amb l'illa.",
+        "genre": [
+          "Folk",
+          "Fusió"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Menorca",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Menorca",
+            "addressRegion": "Menorca"
+          }
+        },
+        "areaServed": "Menorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/SesBistiesDeMongofre"
+        ],
+        "image": "assets/images/artists/ses-b-sties-de-mongofre.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 43,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-43",
+        "name": "Suc I Sopes",
+        "description": "Grup de pop-rock nascut a Ciutadella, Menorca, amb un ambient fresc i juvenil.",
+        "genre": [
+          "Pop Rock"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Ciutadella",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Ciutadella",
+            "addressRegion": "Menorca"
+          }
+        },
+        "areaServed": "Menorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/SucISopes"
+        ],
+        "image": "assets/images/artists/suc-i-sopes.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 44,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-44",
+        "name": "Valtonyc",
+        "description": "Raper i productor musical mallorquí, conegut pel seu estil reivindicatiu i lletres polítiques.",
+        "genre": [
+          "Rap",
+          "Hip Hop"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Sineu",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Sineu",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Valtonyc"
+        ],
+        "image": "assets/images/artists/valtonyc.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 45,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-45",
+        "name": "Verlaat",
+        "description": "Grup menorquí d'indie pop format a Barcelona, amb cançons fresques d'ambient mediterrani.",
+        "genre": [
+          "Indie Pop"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Menorca",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Menorca",
+            "addressRegion": "Menorca"
+          }
+        },
+        "areaServed": "Menorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Verlaat"
+        ],
+        "image": "assets/images/artists/verlaat.jpg"
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 46,
+      "item": {
+        "@type": "MusicGroup",
+        "@id": "artist-46",
+        "name": "Xanguito",
+        "description": "Una de les bandes de pop-folk més exitoses i festives de Mallorca actualment.",
+        "genre": [
+          "Pop",
+          "Folk Festiu"
+        ],
+        "foundingLocation": {
+          "@type": "Place",
+          "name": "Bunyola",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bunyola",
+            "addressRegion": "Mallorca"
+          }
+        },
+        "areaServed": "Mallorca",
+        "sameAs": [
+          "https://open.spotify.com/artist/Xanguito"
+        ],
+        "image": "assets/images/artists/xanguito.jpg"
       }
     }
   ]
