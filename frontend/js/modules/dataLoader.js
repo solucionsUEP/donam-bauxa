@@ -27,7 +27,7 @@ export async function loadData(path) {
   }
 
   try {
-    const data = preload ? await preload : await fetch(path).then(r => {
+    const data = preload ? await preload : await fetch(path, { cache: 'no-cache' }).then(r => {
       if (!r.ok) throw new Error(`Failed to load ${path}: ${r.status}`);
       return r.json();
     });
