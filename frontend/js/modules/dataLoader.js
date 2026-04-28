@@ -94,3 +94,30 @@ export async function loadNews() {
   const data = await loadData('data/news.json');
   return extractItems(data);
 }
+
+/**
+ * Loads and normalizes external events from events_extern.json.
+ * Normalizes the @graph format to match internal event structure.
+ * @returns {Promise<Array<Object>>}
+ */
+export async function loadExternEvents() {
+  const data = await loadData('data/events_extern.json');
+  if (!data || !data['@graph']) return [];
+  return data['@graph'].map(event => {
+    // Normalize image: pick first ImageObject's contentUrl
+    let image = null;
+    if (Array.isArray(event.image) && event.image.length > 0) {
+      image = event.image[0].contentUrl || event.image[0].url || null;
+    } else if (typeof event.image === 'string') {
+      image = event.image;
+    }
+    return {
+      ...event,
+      image,
+      category: event.additionalType || event.category || 'festa',
+      genre: Array.isArray(event.genre) ? event.genre : [],
+      zone: event.zone || event.location?.address?.addressRegion || event.location?.address?.addressLocality || '',
+      isExtern: true,
+    };
+  });
+}

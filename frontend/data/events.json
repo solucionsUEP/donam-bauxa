@@ -620,13 +620,6 @@
         "location": {
           "@type": "Place",
           "name": "Es Baluard Museu",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Placa Porta de Santa Catalina, 10",
-            "addressLocality": "Palma",
-            "addressRegion": "Mallorca",
-            "postalCode": "07012"
-          },
           "geo": {
             "@type": "GeoCoordinates",
             "latitude": 39.5688,
@@ -641,17 +634,15 @@
         "image": "assets/images/events/electro-balear-night.jpg",
         "offers": {
           "@type": "Offer",
-          "price": "12.00",
-          "priceCurrency": "EUR",
-          "url": "#",
-          "availability": "https://schema.org/InStock"
+          "price": 12,
+          "priceCurrency": "EUR"
         },
         "genre": [
           "Electronica",
           "Synth-Pop"
         ],
         "zone": "Palma",
-        "featured": false,
+        "featured": true,
         "category": "concert"
       }
     },

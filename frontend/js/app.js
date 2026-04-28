@@ -4,7 +4,7 @@
  * Replaces the per-page entry points (main.js, artists.js, events.js, map.js).
  */
 
-import { loadArtists, loadEvents, loadNews } from './modules/dataLoader.js';
+import { loadArtists, loadEvents, loadNews, loadExternEvents } from './modules/dataLoader.js';
 import {
   renderFeaturedEvent, renderEventCard, renderNewsCard, renderArtistCard,
   renderLoading, renderEmptyState, renderArtistDetail, renderEventDetail
@@ -61,11 +61,11 @@ const initializedViews = new Set();
 async function ensureDataLoaded() {
   if (dataLoaded) return;
   try {
-    const [artists, events, news] = await Promise.all([
-      loadArtists(), loadEvents(), loadNews()
+    const [artists, events, news, externEvents] = await Promise.all([
+      loadArtists(), loadEvents(), loadNews(), loadExternEvents()
     ]);
     allArtists = artists;
-    allEvents = events;
+    allEvents = [...events, ...externEvents];
     allNews = news;
     dataLoaded = true;
 

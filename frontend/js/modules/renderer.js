@@ -204,6 +204,7 @@ export function renderEventCard(event) {
               <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
                 <div>
                   <span class="badge-category">${escapeHtml(event.category || 'concert')}</span>
+                  ${event.isExtern ? '<span class="badge-extern ms-1"><i class="bi bi-globe2"></i> Extern</span>' : ''}
                   <h3 class="card-title mt-1 mb-1">${escapeHtml(event.name)}</h3>
                 </div>
                 <div class="d-flex align-items-center gap-2">
