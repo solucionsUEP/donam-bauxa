@@ -13,6 +13,7 @@ if (!$supaUser) {
     return;
 }
 
+
 $userId = $supaUser['id'];
 $userRow = sbSelectOne('users', ['id' => 'eq.' . $userId]);
 
