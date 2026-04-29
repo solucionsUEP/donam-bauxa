@@ -5,6 +5,7 @@
 
 import { clearDataCache } from './dataLoader.js';
 import { supabase, BACKEND_URL, apiFetch } from '../config.js';
+import { initDownloadAgenda } from './downloadAgenda.js';
 
 /** @type {{ authenticated: boolean, user: Object|null, profile: Object|null }|null} */
 let authState = null;
@@ -777,6 +778,8 @@ export async function initAdmin() {
 
   if (notAuth) notAuth.style.display = 'none';
   if (content) content.style.display = 'block';
+
+  initDownloadAgenda();
 
   // Load content lists
   loadContentList('artists', 'adminArtistsList');
