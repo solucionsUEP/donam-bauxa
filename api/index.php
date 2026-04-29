@@ -4,6 +4,11 @@ require_once __DIR__ . '/helpers/supabase.php';
 require_once __DIR__ . '/helpers/auth.php';
 require_once __DIR__ . '/helpers/json.php';
 
+// Apache pot eliminar Authorization — el recuperem de l'env var que posa el .htaccess
+if (empty($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+    $_SERVER['HTTP_AUTHORIZATION'] = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+}
+
 // CORS
 $allowedOrigins = ['https://donambauxa.online', 'https://www.donambauxa.online', 'http://localhost:3000'];
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
