@@ -1,6 +1,6 @@
 <?php
 
-function supabaseRequest(string $method, string $table, array $filters = [], ?array $body = null): mixed {
+function supabaseRequest(string $method, string $table, array $filters = [], ?array $body = null) {
     $url = SUPABASE_URL . '/rest/v1/' . $table;
     if ($filters) {
         $url .= '?' . http_build_query($filters);

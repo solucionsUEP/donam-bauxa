@@ -28,7 +28,7 @@ function writeJSON(string $filePath, array $data): void {
 }
 
 // Llegeix, aplica $updateFn i escriu de forma atòmica. Retorna el que retorni $updateFn.
-function writeJSONSafe(string $filePath, callable $updateFn): mixed {
+function writeJSONSafe(string $filePath, callable $updateFn) {
     $fh = fopen($filePath, 'c+');
     if (!$fh) return null;
 
