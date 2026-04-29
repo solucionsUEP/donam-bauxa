@@ -13,6 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Genera config.php amb els secrets
+        run: |
+          printf '<?php\ndefine("SUPABASE_URL", "%s");\ndefine("SUPABASE_SERVICE_KEY", "%s");\ndefine("DATA_DIR", dirname(__DIR__) . "/data");\ndefine("FRONTEND_URL", "https://donambauxa.online");\n' \
+            '${{ secrets.SUPABASE_URL }}' \
+            '${{ secrets.SUPABASE_SERVICE_KEY }}' \
+            > api/config.php
+
       - name: Deploy API via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -23,4 +30,3 @@ jobs:
           server-dir: /api/
           exclude: |
             **/.git*
-            config.php
