@@ -26,7 +26,11 @@ function verifyJWT(string $token): ?array {
 
 function getTokenPayload(): ?array {
     $headers = getallheaders();
-    $auth = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    $auth = $headers['Authorization']
+        ?? $headers['authorization']
+        ?? $_SERVER['HTTP_AUTHORIZATION']
+        ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
+        ?? '';
     if (!str_starts_with($auth, 'Bearer ')) return null;
     return verifyJWT(substr($auth, 7));
 }
