@@ -121,13 +121,32 @@ if ($method === 'PUT' && $id && $action === 'approve') {
     }
     echo json_encode(['request' => rowToRequest($row, $STATUS)]);
 
-// GET /api/requests
-} elseif ($method === 'GET') {
-    $userRow = requireRole(['promotor', 'admin']);
-    $isAdmin = $userRow['role'] === 'admin';
+// GET /api/admin/requests (totes les solicituds, només admins)
+} elseif ($method === 'GET' && ($params['adminList'] ?? false)) {
+    $userRow = requireRole(['admin']);
 
     $filters = ['order' => 'created_at.desc'];
-    if (!$isAdmin) $filters['agent_id'] = 'eq.' . $userRow['id'];
+    $statusFilter = $_GET['status'] ?? null;
+    if ($statusFilter && isset($STATUS[$statusFilter])) $filters['status'] = 'eq.' . $statusFilter;
+
+    $rows  = sbSelect('requests', $filters);
+    $items = array_map(
+        fn($r, $i) => ['@type' => 'ListItem', 'position' => $i + 1, 'item' => rowToRequest($r, $STATUS)],
+        $rows,
+        array_keys($rows)
+    );
+    echo json_encode([
+        '@context'        => 'https://schema.org',
+        '@type'           => 'ItemList',
+        'numberOfItems'   => count($rows),
+        'itemListElement' => $items,
+    ]);
+
+// GET /api/requests (només les del usuari actual)
+} elseif ($method === 'GET') {
+    $userRow = requireRole(['promotor', 'admin']);
+
+    $filters = ['order' => 'created_at.desc', 'agent_id' => 'eq.' . $userRow['id']];
     $statusFilter = $_GET['status'] ?? null;
     if ($statusFilter && isset($STATUS[$statusFilter])) $filters['status'] = 'eq.' . $statusFilter;
 

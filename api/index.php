@@ -67,6 +67,11 @@ if ($uri === '/auth/me' && $method === 'GET') {
     ];
     require __DIR__ . '/routes/users.php';
 
+// GET /api/admin/requests  (admin: veure totes les solicituds)
+} elseif ($uri === '/api/admin/requests' && $method === 'GET') {
+    $params = ['id' => null, 'adminList' => true];
+    require __DIR__ . '/routes/requests.php';
+
 // PUT /api/admin/requests/{id}/approve|reject
 } elseif (preg_match('#^/api/admin/requests/([^/]+)/(approve|reject)$#', $uri, $m)) {
     $params = ['id' => $m[1], 'action' => $m[2]];

@@ -96,14 +96,18 @@ router.post('/', requireRole('promotor', 'admin'), async (req, res) => {
   }
 });
 
-// GET /api/requests
+// GET /api/requests (només les del usuari actual)
 router.get('/', requireRole('promotor', 'admin'), async (req, res) => {
   const { status } = req.query;
-  const isAdmin = req.userProfile.jobTitle === 'admin';
+  const isAdminList = req.baseUrl === '/api/admin/requests';
+
+  if (isAdminList && req.userProfile.jobTitle !== 'admin') {
+    return res.status(403).json({ error: 'No autoritzat' });
+  }
 
   let query = supabase.from('requests').select('*').order('created_at', { ascending: false });
 
-  if (!isAdmin) query = query.eq('agent_id', req.userProfile['@id']);
+  if (!isAdminList) query = query.eq('agent_id', req.userProfile['@id']);
   if (status && STATUS[status]) query = query.eq('status', status);
 
   const { data: rows, error } = await query;

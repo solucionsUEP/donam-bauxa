@@ -453,7 +453,7 @@ async function loadUsers() {
 async function loadAdminRequests() {
   const filter = document.getElementById('adminRequestsFilter')?.value || '';
   try {
-    const url = filter ? `/api/requests?status=${filter}` : '/api/requests';
+    const url = filter ? `/api/admin/requests?status=${filter}` : '/api/admin/requests';
     const data = await apiFetch(url);
     const container = document.getElementById('adminRequestsList');
     if (!container) return;
