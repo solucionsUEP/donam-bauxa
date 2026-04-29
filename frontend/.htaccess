@@ -4,6 +4,13 @@ RewriteEngine On
 # Passa la capçalera Authorization al PHP (Apache la elimina per defecte)
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
+# No guardar en cache les respostes de l'API
+<IfModule mod_headers.c>
+  <If "%{REQUEST_URI} =~ m#^/(api|auth)/#">
+    Header set Cache-Control "no-store, no-cache, must-revalidate"
+  </If>
+</IfModule>
+
 # Redirigeix /api/* i /auth/* al router PHP (si no és un fitxer real)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(api|auth)/ api/index.php [L,QSA]
