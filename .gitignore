@@ -4,3 +4,4 @@ TU_Delft_Report_Thesis_Template/
 node_modules/
 .env
 server-data/*.bak
+api/config.php

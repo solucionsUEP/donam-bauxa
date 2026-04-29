@@ -9,10 +9,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_pC8DdXjqtBwsCbqz8sFjww_Dh34Jb7Z';
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 console.log('[config] Supabase client creat OK');
 
-const host = window.location.hostname;
-export const BACKEND_URL = (host === 'localhost' || host === 'donam-bauxa.vercel.app')
-  ? ''
-  : 'https://donam-bauxa.vercel.app';
+export const BACKEND_URL = '';
 
 export async function apiFetch(url, options = {}) {
   const { data: { session } } = await supabase.auth.getSession();

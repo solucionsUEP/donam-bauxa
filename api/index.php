@@ -1,0 +1,73 @@
+<?php
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/helpers/supabase.php';
+require_once __DIR__ . '/helpers/auth.php';
+require_once __DIR__ . '/helpers/json.php';
+
+// CORS
+$allowedOrigins = ['https://donambauxa.online', 'https://www.donambauxa.online', 'http://localhost:3000'];
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (in_array($origin, $allowedOrigins)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization');
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
+header('Content-Type: application/json; charset=utf-8');
+
+$method = $_SERVER['REQUEST_METHOD'];
+$uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$uri    = rtrim($uri, '/');
+
+$body = [];
+if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
+    $raw  = file_get_contents('php://input');
+    $body = json_decode($raw, true) ?? [];
+}
+
+// --- Router ---
+
+// GET /auth/me
+if ($uri === '/auth/me' && $method === 'GET') {
+    require __DIR__ . '/routes/auth.php';
+
+// GET|PUT /api/profile
+} elseif ($uri === '/api/profile') {
+    require __DIR__ . '/routes/profile.php';
+
+// /api/admin/users
+} elseif (preg_match('#^/api/admin/users(/([^/]+)(/role)?)?$#', $uri, $m)) {
+    $params = [
+        'id'     => $m[2] ?? null,
+        'action' => isset($m[3]) ? 'role' : null,
+    ];
+    require __DIR__ . '/routes/users.php';
+
+// PUT /api/admin/requests/{id}/approve|reject
+} elseif (preg_match('#^/api/admin/requests/([^/]+)/(approve|reject)$#', $uri, $m)) {
+    $params = ['id' => $m[1], 'action' => $m[2]];
+    require __DIR__ . '/routes/requests.php';
+
+// GET|POST /api/requests  or  GET /api/requests/{id}
+} elseif (preg_match('#^/api/requests(/([^/]+))?$#', $uri, $m)) {
+    $params = ['id' => $m[2] ?? null];
+    require __DIR__ . '/routes/requests.php';
+
+// CRUD /api/admin/{artists|events|news|questionnaires|questions}[/{id}[/archive]]
+} elseif (preg_match('#^/api/admin/(artists|events|news|questionnaires|questions)(/([^/]+)(/archive)?)?$#', $uri, $m)) {
+    $params = [
+        'entityType' => $m[1],
+        'id'         => $m[3] ?? null,
+        'archive'    => isset($m[4]) && $m[4] === '/archive',
+    ];
+    require __DIR__ . '/routes/content.php';
+
+} else {
+    http_response_code(404);
+    echo json_encode(['error' => 'Ruta no trobada']);
+}

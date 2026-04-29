@@ -1,0 +1,26 @@
+name: Deploy Backend a DonDominio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - '!api/config.php'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy API via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./api/
+          server-dir: /api/
+          exclude: |
+            **/.git*
+            config.php

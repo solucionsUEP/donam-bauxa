@@ -12,22 +12,6 @@ import requestsRoutes from './routes/requests.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
-const isProduction = process.env.NODE_ENV === 'production';
-
-if (isProduction) app.set('trust proxy', 1);
-
-// Redirigir visites a Vercel cap al domini oficial
-if (isProduction) {
-  app.use((req, res, next) => {
-    const isVercelDomain = req.hostname === 'donam-bauxa.vercel.app';
-    const isApi = req.path.startsWith('/api') || req.path.startsWith('/auth');
-    if (isVercelDomain && !isApi) {
-      return res.redirect(301, `https://donambauxa.online${req.path}`);
-    }
-    next();
-  });
-}
-
 // CORS
 const allowedOrigins = [
   'https://donambauxa.online',
@@ -114,8 +98,6 @@ app.use('/api/admin/users', usersRoutes);
 app.use('/api/requests', requestsRoutes);
 app.use('/api/admin/requests', requestsRoutes);
 
-if (process.env.VERCEL !== '1') {
-  app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
-}
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
 
 export default app;
