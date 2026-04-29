@@ -29,6 +29,7 @@ function supabaseRequest(string $method, string $table, array $filters = [], ?ar
     $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
+    if ($response === false || $httpCode === 0) return null;
     if ($httpCode === 204) return true;
     if ($httpCode >= 400) return null;
 

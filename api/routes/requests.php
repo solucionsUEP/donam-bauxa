@@ -18,6 +18,23 @@ $CONTENT_FILES = [
 ];
 
 function rowToRequest(array $row, array $STATUS): array {
+    // current_data i proposed_data arriben com a arrays (JSONB) o strings (text)
+    $currentData  = is_string($row['current_data'])  ? json_decode($row['current_data'],  true) : ($row['current_data']  ?? null);
+    $proposedData = is_string($row['proposed_data']) ? json_decode($row['proposed_data'], true) : ($row['proposed_data'] ?? null);
+
+    $instrument = [
+        '@type'       => 'Thing',
+        'name'        => 'entityType',
+        'description' => $row['entity_type'],
+    ];
+    if (!empty($row['reviewer_notes'])) {
+        $instrument['additionalProperty'] = [[
+            '@type' => 'PropertyValue',
+            'name'  => 'reviewerNotes',
+            'value' => $row['reviewer_notes'],
+        ]];
+    }
+
     return [
         '@type'        => $row['type'],
         '@id'          => $row['id'],
@@ -28,24 +45,23 @@ function rowToRequest(array $row, array $STATUS): array {
             'email' => $row['agent_email'],
         ],
         'actionStatus' => $STATUS[$row['status']] ?? '',
-        'object'       => $row['current_data'] ? json_decode($row['current_data'], true) : ['@type' => 'Thing'],
-        'result'       => $row['proposed_data'] ? json_decode($row['proposed_data'], true) : null,
+        'object'       => $currentData ?? ['@type' => 'Thing'],
+        'result'       => $proposedData,
         'description'  => $row['description'],
         'startTime'    => $row['created_at'],
         'endTime'      => $row['resolved_at'],
-        'instrument'   => array_filter([
-            '@type'       => 'Thing',
-            'name'        => 'entityType',
-            'description' => $row['entity_type'],
-            'additionalProperty' => $row['reviewer_notes'] ? [[
-                '@type' => 'PropertyValue', 'name' => 'reviewerNotes', 'value' => $row['reviewer_notes']
-            ]] : null,
-        ]),
+        'instrument'   => $instrument,
     ];
 }
 
 $id     = $params['id'] ?? null;
 $action = $params['action'] ?? null; // 'approve' | 'reject'
+
+$ENTITY_PREFIXES = [
+    'artist' => 'artist',
+    'event'  => 'event',
+    'news'   => 'news',
+];
 
 // PUT /api/admin/requests/{id}/approve
 if ($method === 'PUT' && $id && $action === 'approve') {
@@ -53,6 +69,33 @@ if ($method === 'PUT' && $id && $action === 'approve') {
     $row = sbSelectOne('requests', ['id' => 'eq.' . $id]);
     if (!$row) { http_response_code(404); echo json_encode(['error' => 'Solicitud no trobada']); return; }
     if ($row['status'] !== 'pending') { http_response_code(400); echo json_encode(['error' => 'Aquesta solicitud ja ha estat processada']); return; }
+
+    // Aplicar els canvis al JSON
+    $entityType   = $row['entity_type'];
+    $filePath     = $CONTENT_FILES[$entityType] ?? null;
+    $proposedData = is_string($row['proposed_data']) ? json_decode($row['proposed_data'], true) : ($row['proposed_data'] ?? []);
+
+    if ($filePath && $proposedData) {
+        if ($row['type'] === 'CreateAction') {
+            $prefix = $ENTITY_PREFIXES[$entityType] ?? $entityType;
+            writeJSONSafe($filePath, function (&$data) use ($proposedData, $prefix) {
+                ['id' => $newId, 'position' => $pos] = generateId($prefix, $data['itemListElement']);
+                $proposedData['@id'] = $newId;
+                $data['itemListElement'][] = ['@type' => 'ListItem', 'position' => $pos, 'item' => $proposedData];
+                $data['numberOfItems'] = count($data['itemListElement']);
+            });
+        } elseif ($row['type'] === 'UpdateAction' && $row['entity_id']) {
+            $entityId = $row['entity_id'];
+            writeJSONSafe($filePath, function (&$data) use ($entityId, $proposedData) {
+                foreach ($data['itemListElement'] as &$el) {
+                    if (($el['item']['@id'] ?? null) === $entityId) {
+                        foreach ($proposedData as $k => $v) $el['item'][$k] = $v;
+                        break;
+                    }
+                }
+            });
+        }
+    }
 
     sbUpdate('requests', ['id' => 'eq.' . $id], ['status' => 'approved', 'resolved_at' => date('c')]);
     echo json_encode(['success' => true, 'message' => 'Solicitud aprovada']);
@@ -89,7 +132,11 @@ if ($method === 'PUT' && $id && $action === 'approve') {
     if ($statusFilter && isset($STATUS[$statusFilter])) $filters['status'] = 'eq.' . $statusFilter;
 
     $rows  = sbSelect('requests', $filters);
-    $items = array_map(fn($r, $i) => ['@type' => 'ListItem', 'position' => $i + 1, 'item' => rowToRequest($r, $STATUS)], $rows, array_keys($rows));
+    $items = array_map(
+        fn($r, $i) => ['@type' => 'ListItem', 'position' => $i + 1, 'item' => rowToRequest($r, $STATUS)],
+        $rows,
+        array_keys($rows)
+    );
     echo json_encode([
         '@context'        => 'https://schema.org',
         '@type'           => 'ItemList',
@@ -119,14 +166,13 @@ if ($method === 'PUT' && $id && $action === 'approve') {
     $currentObj = null;
     if ($action2 === 'update' && $entityId) {
         $contentData = readJSON($CONTENT_FILES[$entityType]);
-        $found = null;
         foreach ($contentData['itemListElement'] as $el) {
-            if (($el['item']['@id'] ?? null) === $entityId) { $found = $el['item']; break; }
+            if (($el['item']['@id'] ?? null) === $entityId) { $currentObj = $el['item']; break; }
         }
-        if (!$found) { http_response_code(404); echo json_encode(['error' => 'Entitat no trobada']); return; }
-        $currentObj = $found;
+        if (!$currentObj) { http_response_code(404); echo json_encode(['error' => 'Entitat no trobada']); return; }
     }
 
+    // Passar arrays directament — Supabase JSONB accepta objectes JSON nadius
     $newRow = sbInsert('requests', [
         'type'          => $action2 === 'create' ? 'CreateAction' : 'UpdateAction',
         'agent_id'      => $userRow['id'],
@@ -134,8 +180,8 @@ if ($method === 'PUT' && $id && $action === 'approve') {
         'agent_email'   => $userRow['email'],
         'entity_type'   => $entityType,
         'entity_id'     => $entityId,
-        'current_data'  => $currentObj ? json_encode($currentObj) : null,
-        'proposed_data' => json_encode($proposed),
+        'current_data'  => $currentObj,
+        'proposed_data' => $proposed,
         'description'   => $desc,
     ]);
 
