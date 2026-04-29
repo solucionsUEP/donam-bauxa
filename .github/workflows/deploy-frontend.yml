@@ -22,3 +22,6 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./frontend/
           server-dir: /
+          exclude: |
+            **/.git*
+            data/**
