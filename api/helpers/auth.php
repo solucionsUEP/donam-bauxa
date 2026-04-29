@@ -1,44 +1,38 @@
 <?php
-function base64url_decode(string $data): string {
-    $pad = strlen($data) % 4;
-    if ($pad) $data .= str_repeat('=', 4 - $pad);
-    return base64_decode(strtr($data, '-_', '+/'));
-}
 
-function base64url_encode(string $data): string {
-    return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-}
-
-function verifyJWT(string $token): ?array {
-    $parts = explode('.', $token);
-    if (count($parts) !== 3) return null;
-
-    [$header, $payload, $sig] = $parts;
-    $expected = base64url_encode(hash_hmac('sha256', "$header.$payload", SUPABASE_JWT_SECRET, true));
-    if (!hash_equals($expected, $sig)) return null;
-
-    $data = json_decode(base64url_decode($payload), true);
-    if (!$data) return null;
-    if (isset($data['exp']) && $data['exp'] < time()) return null;
-
-    return $data;
-}
-
-function getTokenPayload(): ?array {
+// Valida el token contra l'API d'Auth de Supabase i retorna el user, o null.
+function getSupabaseUser(): ?array {
     $headers = getallheaders();
     $auth = $headers['Authorization']
         ?? $headers['authorization']
         ?? $_SERVER['HTTP_AUTHORIZATION']
         ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
         ?? '';
-    if (!str_starts_with($auth, 'Bearer ')) return null;
-    return verifyJWT(substr($auth, 7));
+
+    if (strncmp($auth, 'Bearer ', 7) !== 0) return null;
+    $token = substr($auth, 7);
+
+    $ch = curl_init(SUPABASE_URL . '/auth/v1/user');
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER     => [
+            'apikey: ' . SUPABASE_SERVICE_KEY,
+            'Authorization: Bearer ' . $token,
+        ],
+    ]);
+    $response = curl_exec($ch);
+    $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode !== 200) return null;
+    $user = json_decode($response, true);
+    return (!empty($user['id'])) ? $user : null;
 }
 
 function getAuthUserRow(): ?array {
-    $payload = getTokenPayload();
-    if (!$payload || empty($payload['sub'])) return null;
-    return sbSelectOne('users', ['id' => 'eq.' . $payload['sub']]);
+    $supaUser = getSupabaseUser();
+    if (!$supaUser) return null;
+    return sbSelectOne('users', ['id' => 'eq.' . $supaUser['id']]);
 }
 
 function requireAuth(): array {

@@ -7,30 +7,24 @@ if ($method !== 'GET') {
     return;
 }
 
-$payload = getTokenPayload();
-if (!$payload) {
+$supaUser = getSupabaseUser();
+if (!$supaUser) {
     echo json_encode(['authenticated' => false]);
     return;
 }
 
-$userId = $payload['sub'] ?? null;
-if (!$userId) {
-    echo json_encode(['authenticated' => false]);
-    return;
-}
-
+$userId = $supaUser['id'];
 $userRow = sbSelectOne('users', ['id' => 'eq.' . $userId]);
 
 if (!$userRow) {
-    $meta      = $payload['user_metadata'] ?? [];
-    $fullName  = $meta['full_name'] ?? ($payload['email'] ?? '');
+    $meta      = $supaUser['user_metadata'] ?? [];
+    $fullName  = $meta['full_name'] ?? ($supaUser['email'] ?? '');
     $avatarUrl = $meta['avatar_url'] ?? '';
-    $email     = $payload['email'] ?? '';
 
     $userRow = sbInsert('users', [
         'id'           => $userId,
         'name'         => $fullName,
-        'email'        => $email,
+        'email'        => $supaUser['email'] ?? '',
         'image'        => $avatarUrl,
         'role'         => 'lector',
         'display_name' => $fullName,
@@ -47,8 +41,8 @@ echo json_encode([
     'authenticated' => true,
     'user'    => [
         'id'    => $userId,
-        'email' => $payload['email'] ?? '',
-        'name'  => $payload['user_metadata']['full_name'] ?? '',
+        'email' => $supaUser['email'] ?? '',
+        'name'  => ($supaUser['user_metadata']['full_name'] ?? ''),
     ],
     'profile' => [
         '@id'         => $userRow['id'],
