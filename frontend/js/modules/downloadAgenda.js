@@ -41,6 +41,11 @@ function setFooterVisible(visible) {
   if (footer) footer.classList.toggle('d-none', !visible);
 }
 
+function setDownloadBtnVisible(visible) {
+  const btn = document.getElementById('agendaDownloadBtn');
+  if (btn) btn.classList.toggle('d-none', !visible);
+}
+
 async function callApi(payload) {
   document.activeElement?.blur();
   const modalEl = document.getElementById('agendaModal');
@@ -60,16 +65,33 @@ async function callApi(payload) {
     throw new Error(`Error ${response.status}: ${text || response.statusText}`);
   }
 
-  const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
+  const { count, images } = await response.json();
+  const baseName = (payload._filename || 'agenda').replace(/\.png$/, '');
 
-  setModalBody(`<img src="${url}" class="img-fluid rounded" alt="Cartell de l'agenda">`);
-
-  const downloadBtn = document.getElementById('agendaDownloadBtn');
-  if (downloadBtn) {
-    downloadBtn.href = url;
-    downloadBtn.download = payload._filename;
+  if (count === 1) {
+    setModalBody(`<img src="${images[0]}" class="img-fluid rounded" alt="Cartell de l'agenda">`);
+    const downloadBtn = document.getElementById('agendaDownloadBtn');
+    if (downloadBtn) {
+      downloadBtn.href = images[0];
+      downloadBtn.download = payload._filename;
+    }
+    setDownloadBtnVisible(true);
+  } else {
+    const html = images.map((src, i) => `
+      <div class="mb-4">
+        <p class="text-muted small mb-1">Part ${i + 1} de ${count}</p>
+        <img src="${src}" class="img-fluid rounded" alt="Cartell ${i + 1} de ${count}">
+        <div class="mt-2 text-center">
+          <a href="${src}" download="${baseName}-${i + 1}.png" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-download"></i> Descarregar part ${i + 1}
+          </a>
+        </div>
+      </div>
+    `).join('');
+    setModalBody(html);
+    setDownloadBtnVisible(false);
   }
+
   setFooterVisible(true);
 }
 
