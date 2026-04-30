@@ -6,21 +6,17 @@ function toDateStr(date) {
   return date.toISOString().split('T')[0];
 }
 
-function formatDayLabel(dateStr) {
-  const [year, month, day] = dateStr.split('-').map(Number);
-  const d = new Date(year, month - 1, day);
-  return d.toLocaleDateString('ca-ES', { day: 'numeric', month: 'long' });
+function filterEventsByDate(events, dateFrom, dateTo) {
+  if (!dateTo || dateTo === dateFrom) {
+    return events.filter(e => e.startDate && e.startDate.startsWith(dateFrom));
+  }
+  return events.filter(e => e.startDate && e.startDate.slice(0, 10) >= dateFrom && e.startDate.slice(0, 10) <= dateTo);
 }
 
-function filterEventsByDate(events, dateStr) {
-  return events.filter(e => e.startDate && e.startDate.startsWith(dateStr));
-}
-
-function buildPayload(events, dayLabel) {
+function buildPayload(events) {
   return {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    'name': dayLabel,
     'itemListElement': events.map((e, i) => ({
       '@type': 'ListItem',
       'position': i + 1,
@@ -72,7 +68,7 @@ async function callApi(payload) {
   const downloadBtn = document.getElementById('agendaDownloadBtn');
   if (downloadBtn) {
     downloadBtn.href = url;
-    downloadBtn.download = `agenda-${payload.name.replace(/[^a-zA-Z0-9]/g, '_')}.png`;
+    downloadBtn.download = payload._filename;
   }
   setFooterVisible(true);
 }
@@ -89,8 +85,9 @@ export function initDownloadAgenda() {
   let lastPayload = null;
 
   async function generate() {
-    const dateInput = document.getElementById('agendaDate');
-    const dateStr = dateInput?.value || toDateStr(new Date());
+    const dateFrom = document.getElementById('agendaDateFrom')?.value || toDateStr(new Date());
+    let dateTo = document.getElementById('agendaDateTo')?.value || '';
+    if (dateTo && dateTo < dateFrom) dateTo = dateFrom;
 
     let events = [];
     try {
@@ -100,19 +97,24 @@ export function initDownloadAgenda() {
       events = [];
     }
 
-    const dayEvents = filterEventsByDate(events, dateStr);
+    const dayEvents = filterEventsByDate(events, dateFrom, dateTo);
 
     if (!dayEvents.length) {
       document.activeElement?.blur();
       const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
       modal.show();
       setFooterVisible(false);
-      setModalBody(`<div class="py-4 text-muted"><i class="bi bi-calendar-x fs-1"></i><p class="mt-3">No hi ha events per al dia <strong>${formatDayLabel(dateStr)}</strong>.</p></div>`);
+      setModalBody(`<div class="py-4 text-muted"><i class="bi bi-calendar-x fs-1"></i><p class="mt-3">No hi ha events per al rang de dates seleccionat.</p></div>`);
       return;
     }
 
-    const dayLabel = formatDayLabel(dateStr);
-    lastPayload = buildPayload(dayEvents, dayLabel);
+    const effectiveDateTo = dateTo || dateFrom;
+    const filename = effectiveDateTo === dateFrom
+      ? `agenda-${dateFrom}.png`
+      : `agenda-${dateFrom}_${effectiveDateTo}.png`;
+
+    lastPayload = buildPayload(dayEvents);
+    lastPayload._filename = filename;
 
     try {
       await callApi(lastPayload);
@@ -136,8 +138,8 @@ export function initDownloadAgenda() {
     });
   }
 
-  const dateInput = document.getElementById('agendaDate');
-  if (dateInput && !dateInput.value) {
-    dateInput.value = toDateStr(new Date());
+  const dateFromInput = document.getElementById('agendaDateFrom');
+  if (dateFromInput && !dateFromInput.value) {
+    dateFromInput.value = toDateStr(new Date());
   }
 }
