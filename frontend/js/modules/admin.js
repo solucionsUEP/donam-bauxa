@@ -1016,37 +1016,86 @@ export async function initAdmin() {
 const ANALYZE_API = 'https://post-to-json-api.vercel.app/api/analyze';
 
 function initInstagramAnalyzer() {
-  document.getElementById('btnAnalitzarPost')?.addEventListener('click', async () => {
-    const url = document.getElementById('instagramUrlInput')?.value.trim();
-    if (!url) return showAlert('Introdueix una URL d\'Instagram', 'warning');
+  let pastedImageBase64 = null;
+  let pastedImageMime = null;
 
-    const btn = document.getElementById('btnAnalitzarPost');
-    const body = document.getElementById('instagramAnalyzeBody');
+  const pasteZone   = document.getElementById('instagramPasteZone');
+  const preview     = document.getElementById('instagramPastePreview');
+  const hint        = document.getElementById('instagramPasteHint');
+  const btnAnalyze  = document.getElementById('btnAnalitzarPost');
+  const btnClear    = document.getElementById('btnClearPaste');
+
+  if (!pasteZone) return;
+
+  function setImage(file) {
+    pastedImageMime = file.type;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      pastedImageBase64 = e.target.result.split(',')[1];
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      hint.style.display = 'none';
+      btnAnalyze.disabled = false;
+      btnClear.style.display = 'inline';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Enganxar amb Ctrl+V sobre la zona o sobre el document quan el panell és visible
+  document.addEventListener('paste', (e) => {
+    const adminView = document.querySelector('[data-view="admin"]');
+    if (!adminView || adminView.style.display === 'none') return;
+    const item = [...e.clipboardData.items].find(i => i.type.startsWith('image/'));
+    if (item) setImage(item.getAsFile());
+  });
+
+  // Esborrar imatge
+  btnClear?.addEventListener('click', () => {
+    pastedImageBase64 = null;
+    pastedImageMime = null;
+    preview.src = '';
+    preview.style.display = 'none';
+    hint.style.display = '';
+    btnAnalyze.disabled = true;
+    btnClear.style.display = 'none';
+  });
+
+  // Analitzar
+  btnAnalyze?.addEventListener('click', async () => {
+    const instagramUrl = document.getElementById('instagramUrlInput')?.value.trim();
+    if (!pastedImageBase64) return showAlert('Enganxa primer una imatge', 'warning');
+    if (!instagramUrl) return showAlert('Introdueix la URL d\'Instagram per obtenir el caption', 'warning');
+
+    const modalBody = document.getElementById('instagramAnalyzeBody');
     const modal = new bootstrap.Modal(document.getElementById('instagramAnalyzeModal'));
 
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analitzant...';
-    body.innerHTML = '<div class="text-center py-4"><span class="spinner-border"></span><p class="mt-2 text-muted">Analitzant el post...</p></div>';
+    btnAnalyze.disabled = true;
+    btnAnalyze.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analitzant...';
+    modalBody.innerHTML = '<div class="text-center py-4"><span class="spinner-border"></span><p class="mt-2 text-muted">Analitzant el post...</p></div>';
     modal.show();
 
     try {
       const res = await fetch(ANALYZE_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ instagramUrl: url, provider: 'meta' }),
+        body: JSON.stringify({
+          imageBase64: pastedImageBase64,
+          imageMimeType: pastedImageMime,
+          instagramUrl,
+        }),
       });
 
       const json = await res.json();
 
       if (!res.ok) {
-        body.innerHTML = `<div class="alert alert-danger">${json.error || 'Error desconegut'}</div>`;
+        modalBody.innerHTML = `<div class="alert alert-danger">${json.error || 'Error desconegut'}</div>`;
         return;
       }
 
       const data = json.data || json;
       const events = data.subEvent || [];
 
-      body.innerHTML = `
+      modalBody.innerHTML = `
         <div class="alert alert-success mb-3">
           <strong>${data.name || 'Resultat'}</strong> — ${events.length} esdeveniment${events.length !== 1 ? 's' : ''} trobat${events.length !== 1 ? 's' : ''}
         </div>
@@ -1064,10 +1113,10 @@ function initInstagramAnalyzer() {
         ${events.length === 0 ? '<p class="text-muted">No s\'han trobat esdeveniments.</p>' : ''}
       `;
     } catch (err) {
-      body.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+      modalBody.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
     } finally {
-      btn.disabled = false;
-      btn.innerHTML = '<i class="bi bi-search"></i> Analitzar';
+      btnAnalyze.disabled = false;
+      btnAnalyze.innerHTML = '<i class="bi bi-search"></i> Analitzar';
     }
   });
 }
