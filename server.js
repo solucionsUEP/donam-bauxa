@@ -9,6 +9,7 @@ import contentRoutes from './routes/content.js';
 import usersRoutes from './routes/users.js';
 import requestsRoutes from './routes/requests.js';
 import apiKeysRoutes from './routes/apiKeys.js';
+import analyzeRoutes from './routes/analyze.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -97,6 +98,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/admin', contentRoutes);
 app.use('/api/admin/users', usersRoutes);
 app.use('/api/admin/api-keys', apiKeysRoutes);
+app.use('/api/analyze-instagram', analyzeRoutes);
 app.use('/api/requests', requestsRoutes);
 app.use('/api/admin/requests', requestsRoutes);
 

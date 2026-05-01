@@ -82,6 +82,10 @@ if ($uri === '/auth/me' && $method === 'GET') {
     $params = ['id' => $m[2] ?? null];
     require __DIR__ . '/routes/requests.php';
 
+// POST /api/analyze-instagram
+} elseif ($uri === '/api/analyze-instagram' && $method === 'POST') {
+    require __DIR__ . '/routes/analyze.php';
+
 // GET /api/admin/api-keys  |  POST /api/admin/api-keys  |  DELETE /api/admin/api-keys/{id}
 } elseif (preg_match('#^/api/admin/api-keys(/([^/]+))?$#', $uri, $m)) {
     $params = ['id' => $m[2] ?? null];

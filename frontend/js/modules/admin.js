@@ -1013,7 +1013,7 @@ export async function initAdmin() {
   document.getElementById('tab-api-keys')?.addEventListener('shown.bs.tab', loadApiKeys);
 }
 
-const ANALYZE_API = 'https://post-to-json-api.vercel.app/api/analyze';
+const ANALYZE_API = '/api/analyze-instagram';
 
 function initInstagramAnalyzer() {
   let pastedImageBase64 = null;
