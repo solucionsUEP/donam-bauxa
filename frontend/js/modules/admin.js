@@ -1093,39 +1093,12 @@ function initInstagramAnalyzer() {
     };
 
     try {
-      const res = await fetch(ANALYZE_API, {
+      await apiFetch(ANALYZE_API, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
-      const json = await res.json();
-
-      if (!res.ok) {
-        modalBody.innerHTML = `<div class="alert alert-danger">${json.error || 'Error desconegut'}</div>`;
-        return;
-      }
-
-      const data = json.data || json;
-      const events = data.subEvent || [];
-
-      modalBody.innerHTML = `
-        <div class="alert alert-success mb-3">
-          <strong>${data.name || 'Resultat'}</strong> — ${events.length} esdeveniment${events.length !== 1 ? 's' : ''} trobat${events.length !== 1 ? 's' : ''}
-        </div>
-        <ul class="list-group list-group-flush">
-          ${events.map(e => `
-            <li class="list-group-item px-0">
-              <div class="fw-semibold">${e.name || '—'}</div>
-              <div class="text-muted small">
-                ${e.startDate ? new Date(e.startDate).toLocaleString('ca') : ''}
-                ${e.location?.name ? ' · ' + e.location.name : ''}
-                ${e.location?.address?.addressLocality ? ' · ' + e.location.address.addressLocality : ''}
-              </div>
-            </li>`).join('')}
-        </ul>
-        ${events.length === 0 ? '<p class="text-muted">No s\'han trobat esdeveniments.</p>' : ''}
-      `;
+      modalBody.innerHTML = `<div class="alert alert-success mb-0"><i class="bi bi-check-circle"></i> Sol·licituds enviades correctament.</div>`;
     } catch (err) {
       modalBody.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
     } finally {
