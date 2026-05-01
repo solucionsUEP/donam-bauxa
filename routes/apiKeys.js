@@ -31,8 +31,8 @@ router.get('/', requireRole('admin'), async (req, res) => {
 // POST /api/admin/api-keys
 router.post('/', requireRole('admin'), async (req, res) => {
   const { name, agent_name, agent_email } = req.body;
-  if (!name || !agent_name || !agent_email) {
-    return res.status(400).json({ error: 'Falten camps: name, agent_name, agent_email' });
+  if (!name || !agent_name) {
+    return res.status(400).json({ error: 'Falten camps: name, agent_name' });
   }
 
   const rawKey = 'dbx_' + randomBytes(32).toString('hex');

@@ -31,9 +31,9 @@ if ($method === 'GET') {
     $agentName  = $body['agent_name'] ?? '';
     $agentEmail = $body['agent_email'] ?? '';
 
-    if (!$name || !$agentName || !$agentEmail) {
+    if (!$name || !$agentName) {
         http_response_code(400);
-        echo json_encode(['error' => 'Falten camps: name, agent_name, agent_email']);
+        echo json_encode(['error' => 'Falten camps: name, agent_name']);
         return;
     }
 
