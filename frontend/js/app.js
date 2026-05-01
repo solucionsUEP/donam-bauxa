@@ -434,23 +434,22 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
   });
 
-  // Login amb Google via Supabase
-  const loginBtn = document.getElementById('loginBtn');
-  console.log('[auth] loginBtn trobat:', !!loginBtn);
-  loginBtn?.addEventListener('click', async () => {
-    console.log('[auth] loginBtn clicat');
+  async function googleLogin() {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo: window.location.origin }
       });
-      console.log('[auth] signInWithOAuth:', data, error);
       if (error) alert('Error inici de sessió: ' + error.message);
     } catch (e) {
       console.error('[auth] Error inesperat:', e);
       alert('Error: ' + e.message);
     }
-  });
+  }
+
+  document.getElementById('loginBtn')?.addEventListener('click', googleLogin);
+  document.getElementById('profileLoginBtn')?.addEventListener('click', googleLogin);
+  document.getElementById('adminLoginBtn')?.addEventListener('click', googleLogin);
 
   // Logout
   document.getElementById('logoutBtn')?.addEventListener('click', async () => {
