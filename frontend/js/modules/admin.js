@@ -375,6 +375,50 @@ function collectNewsFormData() {
   return data;
 }
 
+// --- API Keys management ---
+
+async function loadApiKeys() {
+  const container = document.getElementById('adminApiKeysList');
+  if (!container) return;
+  try {
+    const rows = await apiFetch('/api/admin/api-keys');
+    if (!rows.length) {
+      container.innerHTML = '<p class="text-muted">Cap clau API creada.</p>';
+      return;
+    }
+    container.innerHTML = `
+      <table class="table table-bauxa table-sm">
+        <thead><tr>
+          <th>Nom</th><th>Agent</th><th>Creada</th><th>Darrer ús</th><th>Estat</th><th></th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(k => `
+            <tr>
+              <td>${k.name}</td>
+              <td>${k.agent_name}<br><small class="text-muted">${k.agent_email}</small></td>
+              <td><small>${new Date(k.created_at).toLocaleDateString('ca')}</small></td>
+              <td><small>${k.last_used_at ? new Date(k.last_used_at).toLocaleDateString('ca') : '—'}</small></td>
+              <td>${k.revoked ? '<span class="badge bg-secondary">Revocada</span>' : '<span class="badge bg-success">Activa</span>'}</td>
+              <td>${!k.revoked ? `<button class="btn btn-sm btn-danger revoke-api-key" data-id="${k.id}"><i class="bi bi-x-circle"></i> Revocar</button>` : ''}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+
+    container.querySelectorAll('.revoke-api-key').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Revocar aquesta clau? No es podrà desfer.')) return;
+        try {
+          await apiFetch(`/api/admin/api-keys/${btn.dataset.id}`, { method: 'DELETE' });
+          showAlert('Clau revocada', 'success');
+          loadApiKeys();
+        } catch (err) { showAlert(err.message, 'danger'); }
+      });
+    });
+  } catch (err) {
+    container.innerHTML = `<p class="text-danger">${err.message}</p>`;
+  }
+}
+
 // --- Users management ---
 
 async function loadUsers() {
@@ -926,11 +970,45 @@ export async function initAdmin() {
     loadAdminRequests();
   });
 
+  // --- API Keys bindings ---
+  document.getElementById('adminNewApiKey')?.addEventListener('click', () => {
+    document.getElementById('addApiKeyForm')?.reset();
+    document.getElementById('adminApiKeyForm').style.display = 'block';
+  });
+
+  document.getElementById('cancelApiKeyForm')?.addEventListener('click', () => {
+    document.getElementById('adminApiKeyForm').style.display = 'none';
+  });
+
+  document.getElementById('addApiKeyForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name        = document.getElementById('apiKeyName').value.trim();
+    const agent_name  = document.getElementById('apiKeyAgentName').value.trim();
+    const agent_email = document.getElementById('apiKeyAgentEmail').value.trim();
+    try {
+      const res = await apiFetch('/api/admin/api-keys', {
+        method: 'POST',
+        body: JSON.stringify({ name, agent_name, agent_email }),
+      });
+      document.getElementById('adminApiKeyForm').style.display = 'none';
+      document.getElementById('addApiKeyForm').reset();
+      document.getElementById('apiKeyRevealValue').value = res.key;
+      new bootstrap.Modal(document.getElementById('apiKeyRevealModal')).show();
+      loadApiKeys();
+    } catch (err) { showAlert(err.message, 'danger'); }
+  });
+
+  document.getElementById('copyApiKey')?.addEventListener('click', () => {
+    const val = document.getElementById('apiKeyRevealValue').value;
+    navigator.clipboard.writeText(val).then(() => showAlert('Clau copiada', 'success'));
+  });
+
   // --- Tab change listeners to reload data ---
   document.getElementById('tab-requests')?.addEventListener('shown.bs.tab', loadAdminRequests);
   document.getElementById('tab-users')?.addEventListener('shown.bs.tab', loadUsers);
   document.getElementById('tab-quizzes')?.addEventListener('shown.bs.tab', () => {
     loadQuestionsList().then(() => loadQuizzesList());
   });
+  document.getElementById('tab-api-keys')?.addEventListener('shown.bs.tab', loadApiKeys);
 }
 

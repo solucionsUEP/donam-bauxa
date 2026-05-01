@@ -851,6 +851,10 @@
                 <button class="nav-link" id="tab-users" data-bs-toggle="tab" data-bs-target="#panel-users"
                         type="button" role="tab"><i class="bi bi-people"></i> Usuaris</button>
               </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-api-keys" data-bs-toggle="tab" data-bs-target="#panel-api-keys"
+                        type="button" role="tab"><i class="bi bi-key"></i> Claus API</button>
+              </li>
             </ul>
 
             <!-- Tab Content -->
@@ -1270,6 +1274,71 @@
               <div class="tab-pane fade" id="panel-users" role="tabpanel">
                 <h2 class="h5 mb-3">Gestio d'Usuaris</h2>
                 <div id="adminUsersList" class="table-responsive">
+                  <!-- Dynamically loaded -->
+                </div>
+              </div>
+
+              <!-- API Keys Panel -->
+              <div class="tab-pane fade" id="panel-api-keys" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h2 class="h5 mb-0">Claus API</h2>
+                  <button class="btn btn-bauxa btn-sm" id="adminNewApiKey">
+                    <i class="bi bi-plus-lg"></i> Nova clau
+                  </button>
+                </div>
+
+                <!-- New key form -->
+                <div id="adminApiKeyForm" style="display:none;" class="card card-bauxa p-3 mb-3">
+                  <h3 class="h6 mb-3">Nova Clau API</h3>
+                  <form id="addApiKeyForm">
+                    <div class="row g-2">
+                      <div class="col-12">
+                        <label class="form-label">Nom de la clau</label>
+                        <input type="text" class="form-control form-control-bauxa" id="apiKeyName" placeholder="Ex: Bot Instagram" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label">Nom de l'agent</label>
+                        <input type="text" class="form-control form-control-bauxa" id="apiKeyAgentName" placeholder="Ex: Bot Bauxa" required>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label">Email de l'agent</label>
+                        <input type="email" class="form-control form-control-bauxa" id="apiKeyAgentEmail" placeholder="bot@example.com" required>
+                      </div>
+                      <div class="col-12 d-flex gap-2 mt-2">
+                        <button type="submit" class="btn btn-bauxa btn-sm"><i class="bi bi-check-lg"></i> Crear</button>
+                        <button type="button" class="btn btn-bauxa-outline btn-sm" id="cancelApiKeyForm">Cancel·lar</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Key reveal modal -->
+                <div class="modal fade" id="apiKeyRevealModal" tabindex="-1">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title"><i class="bi bi-key"></i> Clau creada</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="alert alert-warning mb-3">
+                          <i class="bi bi-exclamation-triangle"></i> <strong>Guarda-la ara.</strong> No es tornarà a mostrar.
+                        </div>
+                        <div class="input-group">
+                          <input type="text" class="form-control font-monospace" id="apiKeyRevealValue" readonly>
+                          <button class="btn btn-bauxa-outline" id="copyApiKey" type="button">
+                            <i class="bi bi-clipboard"></i> Copiar
+                          </button>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-bauxa" data-bs-dismiss="modal">Entès</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="adminApiKeysList" class="table-responsive">
                   <!-- Dynamically loaded -->
                 </div>
               </div>

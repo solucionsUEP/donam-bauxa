@@ -1,5 +1,24 @@
 <?php
 
+function getApiKeyRow(): ?array {
+    $headers = getallheaders();
+    $key = $headers['X-Api-Key'] ?? $headers['x-api-key'] ?? $headers['X-API-Key'] ?? null;
+    if (!$key) return null;
+
+    $hash = hash('sha256', $key);
+    $row  = sbSelectOne('api_keys', ['key_hash' => 'eq.' . $hash, 'revoked' => 'is.false']);
+    if (!$row) return null;
+
+    sbUpdate('api_keys', ['id' => 'eq.' . $row['id']], ['last_used_at' => date('c')]);
+
+    return [
+        'id'    => $row['id'],
+        'name'  => $row['agent_name'],
+        'email' => $row['agent_email'],
+        'role'  => 'promotor',
+    ];
+}
+
 // Valida el token contra l'API d'Auth de Supabase i retorna el user, o null.
 function getSupabaseUser(): ?array {
     $headers = getallheaders();
@@ -31,8 +50,8 @@ function getSupabaseUser(): ?array {
 
 function getAuthUserRow(): ?array {
     $supaUser = getSupabaseUser();
-    if (!$supaUser) return null;
-    return sbSelectOne('users', ['id' => 'eq.' . $supaUser['id']]);
+    if ($supaUser) return sbSelectOne('users', ['id' => 'eq.' . $supaUser['id']]);
+    return getApiKeyRow();
 }
 
 function requireAuth(): array {

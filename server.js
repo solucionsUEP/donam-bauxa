@@ -8,6 +8,7 @@ import profileRoutes from './routes/profile.js';
 import contentRoutes from './routes/content.js';
 import usersRoutes from './routes/users.js';
 import requestsRoutes from './routes/requests.js';
+import apiKeysRoutes from './routes/apiKeys.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -24,7 +25,7 @@ app.use((req, res, next) => {
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-API-Key');
   }
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
@@ -95,6 +96,7 @@ app.get('/auth/me', async (req, res) => {
 app.use('/api/profile', profileRoutes);
 app.use('/api/admin', contentRoutes);
 app.use('/api/admin/users', usersRoutes);
+app.use('/api/admin/api-keys', apiKeysRoutes);
 app.use('/api/requests', requestsRoutes);
 app.use('/api/admin/requests', requestsRoutes);
 

@@ -27,7 +27,7 @@ $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (in_array($origin, $allowedOrigins)) {
     header('Access-Control-Allow-Origin: ' . $origin);
     header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-API-Key');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -81,6 +81,11 @@ if ($uri === '/auth/me' && $method === 'GET') {
 } elseif (preg_match('#^/api/requests(/([^/]+))?$#', $uri, $m)) {
     $params = ['id' => $m[2] ?? null];
     require __DIR__ . '/routes/requests.php';
+
+// GET /api/admin/api-keys  |  POST /api/admin/api-keys  |  DELETE /api/admin/api-keys/{id}
+} elseif (preg_match('#^/api/admin/api-keys(/([^/]+))?$#', $uri, $m)) {
+    $params = ['id' => $m[2] ?? null];
+    require __DIR__ . '/routes/api_keys.php';
 
 // CRUD /api/admin/{artists|events|news|questionnaires|questions}[/{id}[/archive]]
 } elseif (preg_match('#^/api/admin/(artists|events|news|questionnaires|questions)(/([^/]+)(/archive)?)?$#', $uri, $m)) {
