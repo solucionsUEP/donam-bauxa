@@ -824,6 +824,7 @@ export async function initAdmin() {
   if (content) content.style.display = 'block';
 
   initDownloadAgenda();
+  initInstagramAnalyzer();
 
   // Load content lists
   loadContentList('artists', 'adminArtistsList');
@@ -1012,3 +1013,61 @@ export async function initAdmin() {
   document.getElementById('tab-api-keys')?.addEventListener('shown.bs.tab', loadApiKeys);
 }
 
+const ANALYZE_API = 'https://post-to-json-api.vercel.app/api/analyze';
+
+function initInstagramAnalyzer() {
+  document.getElementById('btnAnalitzarPost')?.addEventListener('click', async () => {
+    const url = document.getElementById('instagramUrlInput')?.value.trim();
+    if (!url) return showAlert('Introdueix una URL d\'Instagram', 'warning');
+
+    const btn = document.getElementById('btnAnalitzarPost');
+    const body = document.getElementById('instagramAnalyzeBody');
+    const modal = new bootstrap.Modal(document.getElementById('instagramAnalyzeModal'));
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analitzant...';
+    body.innerHTML = '<div class="text-center py-4"><span class="spinner-border"></span><p class="mt-2 text-muted">Analitzant el post...</p></div>';
+    modal.show();
+
+    try {
+      const res = await fetch(ANALYZE_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ instagramUrl: url, provider: 'meta' }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        body.innerHTML = `<div class="alert alert-danger">${json.error || 'Error desconegut'}</div>`;
+        return;
+      }
+
+      const data = json.data || json;
+      const events = data.subEvent || [];
+
+      body.innerHTML = `
+        <div class="alert alert-success mb-3">
+          <strong>${data.name || 'Resultat'}</strong> — ${events.length} esdeveniment${events.length !== 1 ? 's' : ''} trobat${events.length !== 1 ? 's' : ''}
+        </div>
+        <ul class="list-group list-group-flush">
+          ${events.map(e => `
+            <li class="list-group-item px-0">
+              <div class="fw-semibold">${e.name || '—'}</div>
+              <div class="text-muted small">
+                ${e.startDate ? new Date(e.startDate).toLocaleString('ca') : ''}
+                ${e.location?.name ? ' · ' + e.location.name : ''}
+                ${e.location?.address?.addressLocality ? ' · ' + e.location.address.addressLocality : ''}
+              </div>
+            </li>`).join('')}
+        </ul>
+        ${events.length === 0 ? '<p class="text-muted">No s\'han trobat esdeveniments.</p>' : ''}
+      `;
+    } catch (err) {
+      body.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-search"></i> Analitzar';
+    }
+  });
+}
