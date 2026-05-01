@@ -28,6 +28,9 @@ export async function checkAuth() {
         headers: { 'Authorization': `Bearer ${session.access_token}` }
       });
       authState = await res.json();
+      if (!authState.authenticated) {
+        await supabase.auth.signOut();
+      }
     }
   } catch {
     authState = { authenticated: false, user: null, profile: null };
