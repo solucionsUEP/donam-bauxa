@@ -942,7 +942,6 @@
                 </div>
               </div>
             </div>
-            ![1777635052925](image/index/1777635052925.png)![1777635055032](image/index/1777635055032.png)![1777635055756](image/index/1777635055756.png)![1777635062376](image/index/1777635062376.png)![1777635063093](image/index/1777635063093.png)![1777635063644](image/index/1777635063644.png)![1777635064118](image/index/1777635064118.png)![1777635064624](image/index/1777635064624.png)![1777635094293](image/index/1777635094293.png)
             <!-- Analitzar post d'Instagram -->
             <div class="card mb-4 border-0 bg-light">
               <div class="card-body">
@@ -967,8 +966,18 @@
                     </div>
                   </div>
                   <div class="col-md-8 d-flex flex-column gap-2">
-                    <input type="url" id="instagramUrlInput" class="form-control form-control-sm"
-                      placeholder="https://www.instagram.com/p/... (per al caption)">
+                    <select id="captionMode" class="form-select form-select-sm">
+                      <option value="instagram">Caption des d'Instagram</option>
+                      <option value="manual">Caption manual</option>
+                    </select>
+                    <div id="captionInstagramInput">
+                      <input type="url" id="instagramUrlInput" class="form-control form-control-sm"
+                        placeholder="https://www.instagram.com/p/...">
+                    </div>
+                    <div id="captionManualInput" style="display:none;">
+                      <textarea id="manualCaptionText" class="form-control form-control-sm" rows="4"
+                        placeholder="Enganxa aquí el text del post..."></textarea>
+                    </div>
                     <button id="btnAnalitzarPost" class="btn btn-sm btn-bauxa-outline" disabled>
                       <i class="bi bi-search"></i> Analitzar
                     </button>

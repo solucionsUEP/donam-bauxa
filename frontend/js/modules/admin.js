@@ -1027,6 +1027,13 @@ function initInstagramAnalyzer() {
 
   if (!pasteZone) return;
 
+  // Canvi de mode caption
+  document.getElementById('captionMode')?.addEventListener('change', (e) => {
+    const isManual = e.target.value === 'manual';
+    document.getElementById('captionInstagramInput').style.display = isManual ? 'none' : '';
+    document.getElementById('captionManualInput').style.display   = isManual ? '' : 'none';
+  });
+
   function setImage(file) {
     pastedImageMime = file.type;
     const reader = new FileReader();
@@ -1062,9 +1069,14 @@ function initInstagramAnalyzer() {
 
   // Analitzar
   btnAnalyze?.addEventListener('click', async () => {
-    const instagramUrl = document.getElementById('instagramUrlInput')?.value.trim();
     if (!pastedImageBase64) return showAlert('Enganxa primer una imatge', 'warning');
-    if (!instagramUrl) return showAlert('Introdueix la URL d\'Instagram per obtenir el caption', 'warning');
+
+    const mode         = document.getElementById('captionMode')?.value;
+    const instagramUrl = document.getElementById('instagramUrlInput')?.value.trim();
+    const manualCaption = document.getElementById('manualCaptionText')?.value.trim();
+
+    if (mode === 'instagram' && !instagramUrl) return showAlert('Introdueix la URL d\'Instagram per obtenir el caption', 'warning');
+    if (mode === 'manual'    && !manualCaption) return showAlert('Introdueix el caption manualment', 'warning');
 
     const modalBody = document.getElementById('instagramAnalyzeBody');
     const modal = new bootstrap.Modal(document.getElementById('instagramAnalyzeModal'));
@@ -1074,15 +1086,17 @@ function initInstagramAnalyzer() {
     modalBody.innerHTML = '<div class="text-center py-4"><span class="spinner-border"></span><p class="mt-2 text-muted">Analitzant el post...</p></div>';
     modal.show();
 
+    const payload = {
+      imageBase64:   pastedImageBase64,
+      imageMimeType: pastedImageMime,
+      ...(mode === 'instagram' ? { instagramUrl } : { caption: manualCaption }),
+    };
+
     try {
       const res = await fetch(ANALYZE_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          imageBase64: pastedImageBase64,
-          imageMimeType: pastedImageMime,
-          instagramUrl,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const json = await res.json();
