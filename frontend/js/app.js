@@ -25,7 +25,7 @@ import { supabase } from './config.js';
 import { initProfile } from './modules/profile.js';
 import { initSolicituds } from './modules/solicituds.js';
 import { initJoc } from './modules/joc.js';
-import { initChatbot } from './modules/chatbot.js';
+import { initChatbot, setDataContext as setChatbotData } from './modules/chatbot.js';
 
 /* ------------------------------------------------------------------ */
 /*  Shared state                                                       */
@@ -72,6 +72,9 @@ async function ensureDataLoaded() {
 
     // Setup global event handlers (favorites, calendar) once
     initGlobalEventHandlers(allEvents);
+
+    // Hand the catalog to the chatbot for per-message retrieval.
+    setChatbotData({ events: allEvents, artists: allArtists });
 
     // Setup modal handlers available globally
     window.showArtistDetail = (id) => {
