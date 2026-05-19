@@ -25,6 +25,7 @@ import { supabase } from './config.js';
 import { initProfile } from './modules/profile.js';
 import { initSolicituds } from './modules/solicituds.js';
 import { initJoc } from './modules/joc.js';
+import { initChatbot } from './modules/chatbot.js';
 
 /* ------------------------------------------------------------------ */
 /*  Shared state                                                       */
@@ -480,6 +481,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Register map cleanup
   registerMapCleanup(cleanupMap);
+
+  // Mount the Gemini Nano on-device assistant (available across all views).
+  initChatbot();
 
   // Start router
   initRouter();
