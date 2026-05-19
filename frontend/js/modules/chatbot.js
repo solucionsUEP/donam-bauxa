@@ -29,7 +29,9 @@ Tens tres especialitats:
    Si l'usuari nomena un artista, canco o genere, suggereix 3-5 artistes o temes similars amb una frase curta explicant la connexio (estil, escena, epoca). Si nomes diu "recomana'm musica", pregunta quin estil li agrada.
 
 3. AJUDANT GENERAL
-   Per a qualsevol altra pregunta (saludar, dubtes sobre la plataforma, preguntes curioses), respon de manera educada i concisa (1-3 frases). No inventis dades concretes sobre esdeveniments reals de la web; si l'usuari demana per esdeveniments concrets, suggereix que consulti la seccio "Esdeveniments" o el "Mapa".
+   Per a qualsevol altra pregunta (saludar, dubtes sobre la plataforma, preguntes curioses), respon de manera educada i concisa (1-3 frases).
+
+DADES DE LA PLATAFORMA: Quan rebis un bloc "CONTEXT (dades reals…)" abans del missatge de l'usuari, basa la teva resposta NOMES en aquestes dades. Cita els esdeveniments i artistes pel nom exacte i, si esmentes una data o lloc, fes-ho amb les dades del context. No inventis esdeveniments, dates ni recintes que no apareguin al context. Si el context esta buit o no inclou cap element rellevant, digues que no trobes res a l'agenda i suggereix que l'usuari ajusti la cerca.
 
 Format: usa llistes Markdown quan ajudin a la lectura. Evita disclaimers innecessaris.`;
 
@@ -51,6 +53,187 @@ let generating = false;
 
 /** @type {AbortController|null} */
 let currentAbort = null;
+
+/** @type {{events: Array<Object>, artists: Array<Object>}} */
+let dataCtx = { events: [], artists: [] };
+
+/**
+ * Lets the host SPA hand the chatbot a live view of the loaded catalog.
+ * Called from app.js once `ensureDataLoaded()` resolves.
+ * @param {{events: Array<Object>, artists: Array<Object>}} payload
+ */
+export function setDataContext({ events, artists }) {
+  dataCtx = { events: events || [], artists: artists || [] };
+  console.log(`[chatbot] data context updated: ${dataCtx.events.length} events, ${dataCtx.artists.length} artists`);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Retrieval (RAG-style filter into the system context)              */
+/* ------------------------------------------------------------------ */
+
+const DAY_NAMES = {
+  dilluns: 1, dimarts: 2, dimecres: 3, dijous: 4, divendres: 5, dissabte: 6, diumenge: 0,
+  lunes: 1, martes: 2, miercoles: 3, miércoles: 3, jueves: 4, viernes: 5, sabado: 6, sábado: 6, domingo: 0,
+  monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6, sunday: 0,
+};
+
+const KNOWN_GENRES = [
+  'pop', 'rock', 'indie', 'folk', 'jazz', 'electronic', 'electronica', 'electrònica',
+  'reggae', 'hip hop', 'rap', 'flamenc', 'flamenco', 'classica', 'clàssica', 'clasica',
+  'tradicional', 'punk', 'metal', 'blues', 'soul', 'funk',
+];
+
+const KNOWN_ZONES = [
+  'palma', 'soller', 'sóller', 'manacor', 'inca', 'llucmajor', 'alcudia', 'alcúdia',
+  'pollença', 'pollensa', 'arta', 'artà', 'tramuntana', 'pla de mallorca', 'llevant', 'migjorn',
+];
+
+function eventDate(e) {
+  const d = e?.startDate || e?.date || null;
+  return d ? new Date(d) : null;
+}
+
+function eventVenue(e) {
+  return e?.location?.name || e?.venue || '';
+}
+
+function eventGenres(e) {
+  if (Array.isArray(e?.genre)) return e.genre;
+  if (typeof e?.genre === 'string') return [e.genre];
+  return [];
+}
+
+function artistGenres(a) {
+  if (Array.isArray(a?.genre)) return a.genre;
+  if (typeof a?.genre === 'string') return [a.genre];
+  return [];
+}
+
+function artistZone(a) {
+  return a?.foundingLocation?.name || a?.foundingLocation?.address?.addressLocality || a?.zone || '';
+}
+
+/**
+ * Extracts retrieval filters from a free-text query.
+ * @param {string} query
+ */
+function extractFilters(query) {
+  const q = query.toLowerCase();
+  const filters = { day: null, genre: null, zone: null, artistMention: null };
+
+  for (const [name, idx] of Object.entries(DAY_NAMES)) {
+    if (new RegExp(`\\b${name}\\b`, 'i').test(q)) { filters.day = idx; break; }
+  }
+  filters.genre = KNOWN_GENRES.find(g => q.includes(g)) || null;
+  filters.zone = KNOWN_ZONES.find(z => q.includes(z)) || null;
+
+  // Cheap "does the message contain an artist name we know?" — exact substring match.
+  for (const a of dataCtx.artists) {
+    if (a?.name && q.includes(a.name.toLowerCase())) { filters.artistMention = a; break; }
+  }
+
+  return filters;
+}
+
+/**
+ * Selects relevant events for a query.
+ * @param {ReturnType<extractFilters>} filters
+ * @param {'weekend'|'music'|'general'} intent
+ * @returns {Array<Object>}
+ */
+function selectEvents(filters, intent) {
+  const now = Date.now();
+
+  // Score by "upcoming preferred, then closest in time". Future events get
+  // a negative bias so they rank before past events at the same distance.
+  const score = (e) => {
+    const d = eventDate(e);
+    if (!d) return Infinity;
+    const diff = d.getTime() - now;
+    return diff >= 0 ? diff : (-diff) + 365 * 86400000;
+  };
+
+  let events = dataCtx.events.filter(e => eventDate(e)).sort((a, b) => score(a) - score(b));
+
+  if (filters.day !== null) {
+    events = events.filter(e => eventDate(e).getDay() === filters.day);
+  }
+  if (filters.genre) {
+    events = events.filter(e => eventGenres(e).some(g => g.toLowerCase().includes(filters.genre)));
+  }
+  if (filters.zone) {
+    events = events.filter(e => (e.zone || '').toLowerCase().includes(filters.zone));
+  }
+  if (filters.artistMention?.name) {
+    const an = filters.artistMention.name.toLowerCase();
+    events = events.filter(e => (e?.performer?.name || '').toLowerCase().includes(an));
+  }
+
+  // Cap to keep within Gemini Nano's small context budget.
+  return events.slice(0, intent === 'weekend' ? 12 : 6);
+}
+
+/**
+ * Selects relevant artists for a query (music intent + general where useful).
+ */
+function selectArtists(filters, intent) {
+  if (intent !== 'music' && !filters.artistMention) return [];
+  let artists = dataCtx.artists.slice();
+
+  // If a known artist was named, prioritise same-genre artists.
+  if (filters.artistMention) {
+    const seedGenres = artistGenres(filters.artistMention).map(g => g.toLowerCase());
+    artists = artists.filter(a => a !== filters.artistMention && artistGenres(a).some(g => seedGenres.includes(g.toLowerCase())));
+  } else if (filters.genre) {
+    artists = artists.filter(a => artistGenres(a).some(g => g.toLowerCase().includes(filters.genre)));
+  } else {
+    artists = artists.filter(a => a.featured);
+  }
+  return artists.slice(0, 8);
+}
+
+/**
+ * Compact one-line representation of an event.
+ */
+function formatEventLine(e) {
+  const d = eventDate(e);
+  const date = d ? d.toISOString().slice(0, 10) : '';
+  const venue = eventVenue(e);
+  const zone = e.zone || '';
+  const genres = eventGenres(e).join('/');
+  const performer = e?.performer?.name || '';
+  return `- ${e.name} | ${date} | ${venue}${zone ? ' (' + zone + ')' : ''} | ${genres}${performer && performer !== e.name ? ' | ' + performer : ''}`;
+}
+
+function formatArtistLine(a) {
+  const genres = artistGenres(a).join('/');
+  const zone = artistZone(a);
+  return `- ${a.name} | ${genres}${zone ? ' | ' + zone : ''}`;
+}
+
+/**
+ * Builds the per-message retrieval context block, or '' if nothing relevant.
+ * @param {string} query
+ * @param {'weekend'|'music'|'general'} intent
+ */
+function buildRetrievalContext(query, intent) {
+  if (!dataCtx.events.length && !dataCtx.artists.length) return '';
+  const filters = extractFilters(query);
+  const events = selectEvents(filters, intent);
+  const artists = selectArtists(filters, intent);
+  if (!events.length && !artists.length) return '';
+
+  const sections = ["CONTEXT (dades reals de Dona'm Bauxa — utilitza-les en la resposta):"];
+  if (events.length) {
+    sections.push('\nEsdeveniments rellevants:');
+    sections.push(events.map(formatEventLine).join('\n'));
+  }
+  if (artists.length) {
+    sections.push('\nArtistes rellevants:');
+    sections.push(artists.map(formatArtistLine).join('\n'));
+  }
+  return sections.join('\n');
+}
 
 /* ------------------------------------------------------------------ */
 /*  Prompt API detection                                               */
@@ -427,7 +610,10 @@ export async function sendMessage(text) {
   history.push({ role: 'user', text: trimmed });
 
   const intent = classifyIntent(trimmed);
-  console.log(`[chatbot] intent=${intent} msg=${JSON.stringify(trimmed)}`);
+  const retrievalContext = buildRetrievalContext(trimmed, intent);
+  const modelInput = retrievalContext ? `${retrievalContext}\n\nUsuari: ${trimmed}` : trimmed;
+  console.log(`[chatbot] intent=${intent} retrieval=${retrievalContext ? 'yes' : 'no'} msg=${JSON.stringify(trimmed)}`);
+  if (retrievalContext) console.log('[chatbot] context:\n' + retrievalContext);
 
   const typing = appendTypingIndicator();
   generating = true;
@@ -441,7 +627,7 @@ export async function sendMessage(text) {
     let bubble = null;
 
     if (typeof s.promptStreaming === 'function') {
-      const stream = s.promptStreaming(trimmed, { signal: currentAbort.signal });
+      const stream = s.promptStreaming(modelInput, { signal: currentAbort.signal });
       typing?.remove();
       bubble = appendMessage('assistant', '');
       const bubbleBody = bubble?.querySelector?.('.chatbot-bubble') ?? null;
@@ -460,7 +646,7 @@ export async function sendMessage(text) {
         if (list) list.scrollTop = list.scrollHeight;
       }
     } else if (typeof s.prompt === 'function') {
-      finalText = await s.prompt(trimmed, { signal: currentAbort.signal });
+      finalText = await s.prompt(modelInput, { signal: currentAbort.signal });
       typing?.remove();
       appendMessage('assistant', finalText);
     } else {
