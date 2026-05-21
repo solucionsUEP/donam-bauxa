@@ -16,6 +16,14 @@ function showProfileAlert(message, type) {
   if (type === 'success') setTimeout(() => { el.style.display = 'none'; }, 5000);
 }
 
+function showPromotorAlert(message, type) {
+  const el = document.getElementById('promotorRequestAlert');
+  if (!el) return;
+  el.className = `alert alert-${type} mb-3`;
+  el.textContent = message;
+  el.style.display = 'block';
+}
+
 export async function initProfile() {
   const auth = getAuthState();
   const notAuth = document.getElementById('profileNotAuth');
@@ -52,9 +60,53 @@ export async function initProfile() {
       else if (profile.jobTitle === 'promotor') roleBadge.classList.add('bg-primary');
       else roleBadge.classList.add('bg-secondary');
     }
+
+    // Show promotor request card only for lectors
+    const promotorCard = document.getElementById('promotorRequestCard');
+    if (promotorCard) {
+      const role = profile.jobTitle || 'lector';
+      if (role === 'lector') {
+        promotorCard.style.display = 'block';
+        // Check for existing role request via normal list endpoint
+        try {
+          const reqData = await apiFetch('/api/requests');
+          const requests = (reqData?.itemListElement || []).map(el => el.item);
+          const roleReq = requests.find(r => r.instrument?.description === 'role');
+          if (roleReq?.actionStatus === 'https://schema.org/PotentialActionStatus') {
+            document.getElementById('promotorRequestForm').style.display = 'none';
+            showPromotorAlert(t('profile.requestPromotorPending'), 'info');
+          }
+        } catch { /* silent — show form by default */ }
+      }
+    }
   } catch {
     showProfileAlert(t('profile.loadError'), 'danger');
   }
+
+  // Promotor request form submit
+  document.getElementById('promotorRequestForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const motivation = document.getElementById('promotorMotivation').value.trim();
+    if (!motivation) {
+      showPromotorAlert(t('profile.requestPromotorErrorMotiv'), 'danger');
+      return;
+    }
+    try {
+      await apiFetch('/api/requests', {
+        method: 'POST',
+        body: JSON.stringify({
+          entityType: 'role',
+          action: 'create',
+          proposedData: { role: 'promotor' },
+          description: motivation
+        })
+      });
+      document.getElementById('promotorRequestForm').style.display = 'none';
+      showPromotorAlert(t('profile.requestPromotorSent'), 'success');
+    } catch (err) {
+      showPromotorAlert(err.message, 'danger');
+    }
+  });
 
   // Form submit
   document.getElementById('profileForm')?.addEventListener('submit', async (e) => {

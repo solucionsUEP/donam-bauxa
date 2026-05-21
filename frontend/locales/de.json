@@ -14,6 +14,7 @@
     "profile": "Mein Profil",
     "requests": "Anfragen",
     "admin": "Verwaltung",
+    "language": "Sprache",
     "openMenu": "Navigationsmenü öffnen",
     "mainNav": "Hauptnavigation",
     "skipToContent": "Zum Hauptinhalt springen"
@@ -121,7 +122,16 @@
     "instagramLabel": "Instagram URL",
     "saveChanges": "Änderungen speichern",
     "savedOk": "Profil erfolgreich aktualisiert",
-    "loadError": "Fehler beim Laden des Profils"
+    "loadError": "Fehler beim Laden des Profils",
+    "requestPromotorTitle": "Promotor-Rolle beantragen",
+    "requestPromotorDesc": "Promotoren können Änderungen an Künstlern, Veranstaltungen und Nachrichten vorschlagen, die der Administrator prüft.",
+    "requestPromotorMotivLabel": "Warum möchten Sie Promotor werden?",
+    "requestPromotorMotivPlaceholder": "Erklären Sie kurz Ihre Motivation...",
+    "requestPromotorBtn": "Anfrage senden",
+    "requestPromotorSent": "Anfrage erfolgreich gesendet. Der Administrator wird sie bald prüfen.",
+    "requestPromotorPending": "Sie haben eine ausstehende Promotor-Anfrage.",
+    "requestPromotorAlready": "Sie sind bereits Promotor oder Administrator.",
+    "requestPromotorErrorMotiv": "Bitte schreiben Sie den Grund Ihrer Anfrage."
   },
   "solicituds": {
     "title": "Bearbeitungsanfragen",
@@ -211,6 +221,8 @@
     "keyCopiedOk": "Schlüssel kopiert",
     "roleSavedOk": "Rolle erfolgreich aktualisiert",
     "approvedOk": "Anfrage genehmigt und Änderungen angewandt",
+    "approveRoleOk": "Benutzer zum Promotor befördert",
+    "typeRoleRequest": "Promotor-Anfrage",
     "rejectedOk": "Anfrage abgelehnt",
     "loadError": "Fehler beim Laden von {{type}}: {{error}}",
     "saveError": "Fehler beim Speichern: {{error}}",

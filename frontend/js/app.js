@@ -458,6 +458,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     btn.addEventListener('click', () => setLang(btn.dataset.lang));
   });
 
+  // Language submenu accordion toggle
+  document.querySelectorAll('.lang-submenu-toggle').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const submenu = btn.nextElementSibling;
+      const chevron = btn.querySelector('.lang-submenu-chevron');
+      const open = submenu.style.display !== 'none';
+      submenu.style.display = open ? 'none' : 'block';
+      if (chevron) chevron.style.transform = open ? '' : 'rotate(180deg)';
+    });
+  });
+
   // Re-render dynamic content when language changes
   document.addEventListener('langChanged', () => {
     applyTranslations();

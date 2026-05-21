@@ -26,11 +26,13 @@ export function initScrollToTop() {
  * Updates the favorites badge count in the navbar.
  */
 export function updateFavoriteBadge() {
-  const badge = document.getElementById('favBadge');
-  if (!badge) return;
   const count = getTotalFavoriteCount();
-  badge.textContent = count;
-  badge.style.display = count > 0 ? 'inline-block' : 'none';
+  for (const id of ['favBadge', 'favBadgeUser']) {
+    const badge = document.getElementById(id);
+    if (!badge) continue;
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'inline-block' : 'none';
+  }
 }
 
 /**

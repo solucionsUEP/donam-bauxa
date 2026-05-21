@@ -14,6 +14,7 @@
     "profile": "El meu Perfil",
     "requests": "Solicituds",
     "admin": "Administració",
+    "language": "Idioma",
     "openMenu": "Obrir menú de navegació",
     "mainNav": "Navegació principal",
     "skipToContent": "Anar al contingut principal"
@@ -121,7 +122,16 @@
     "instagramLabel": "Instagram URL",
     "saveChanges": "Guardar canvis",
     "savedOk": "Perfil actualitzat correctament",
-    "loadError": "Error carregant el perfil"
+    "loadError": "Error carregant el perfil",
+    "requestPromotorTitle": "Sol·licitar rol de Promotor",
+    "requestPromotorDesc": "Els promotors poden proposar canvis d'artistes, events i notícies que l'administrador revisa.",
+    "requestPromotorMotivLabel": "Per què vols ser promotor?",
+    "requestPromotorMotivPlaceholder": "Explica breument la teva motivació...",
+    "requestPromotorBtn": "Enviar sol·licitud",
+    "requestPromotorSent": "Sol·licitud enviada correctament. L'administrador la revisarà aviat.",
+    "requestPromotorPending": "Tens una sol·licitud de promotor pendent de revisió.",
+    "requestPromotorAlready": "Ja ets promotor o administrador.",
+    "requestPromotorErrorMotiv": "Escriu el motiu de la sol·licitud."
   },
   "solicituds": {
     "title": "Solicituds d'Edició",
@@ -211,6 +221,8 @@
     "keyCopiedOk": "Clau copiada",
     "roleSavedOk": "Rol actualitzat correctament",
     "approvedOk": "Solicitud aprovada i canvis aplicats",
+    "approveRoleOk": "Usuari promocionat a Promotor",
+    "typeRoleRequest": "Sol·licitud de Promotor",
     "rejectedOk": "Solicitud rebutjada",
     "loadError": "Error carregant {{type}}: {{error}}",
     "saveError": "Error desant: {{error}}",

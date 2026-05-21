@@ -14,6 +14,7 @@
     "profile": "My Profile",
     "requests": "Requests",
     "admin": "Administration",
+    "language": "Language",
     "openMenu": "Open navigation menu",
     "mainNav": "Main navigation",
     "skipToContent": "Skip to main content"
@@ -121,7 +122,16 @@
     "instagramLabel": "Instagram URL",
     "saveChanges": "Save changes",
     "savedOk": "Profile updated successfully",
-    "loadError": "Error loading profile"
+    "loadError": "Error loading profile",
+    "requestPromotorTitle": "Request Promotor Role",
+    "requestPromotorDesc": "Promotors can propose changes to artists, events and news that the administrator reviews.",
+    "requestPromotorMotivLabel": "Why do you want to be a promotor?",
+    "requestPromotorMotivPlaceholder": "Briefly explain your motivation...",
+    "requestPromotorBtn": "Send request",
+    "requestPromotorSent": "Request sent successfully. The administrator will review it soon.",
+    "requestPromotorPending": "You have a promotor request pending review.",
+    "requestPromotorAlready": "You are already a promotor or administrator.",
+    "requestPromotorErrorMotiv": "Please write the reason for your request."
   },
   "solicituds": {
     "title": "Edit Requests",
@@ -211,6 +221,8 @@
     "keyCopiedOk": "Key copied",
     "roleSavedOk": "Role updated successfully",
     "approvedOk": "Request approved and changes applied",
+    "approveRoleOk": "User promoted to Promotor",
+    "typeRoleRequest": "Promotor Request",
     "rejectedOk": "Request rejected",
     "loadError": "Error loading {{type}}: {{error}}",
     "saveError": "Error saving: {{error}}",

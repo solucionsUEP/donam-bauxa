@@ -1468,7 +1468,7 @@ img {
 .chatbot-launcher {
   position: fixed;
   bottom: 2rem;
-  right: 5rem;
+  left: 2rem;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -1499,7 +1499,7 @@ img {
 .chatbot-window {
   position: fixed;
   bottom: 2rem;
-  right: 2rem;
+  left: 2rem;
   width: min(380px, calc(100vw - 2rem));
   height: min(560px, calc(100vh - 4rem));
   background: var(--color-surface);

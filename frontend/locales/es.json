@@ -14,6 +14,7 @@
     "profile": "Mi Perfil",
     "requests": "Solicitudes",
     "admin": "Administración",
+    "language": "Idioma",
     "openMenu": "Abrir menú de navegación",
     "mainNav": "Navegación principal",
     "skipToContent": "Ir al contenido principal"
@@ -121,7 +122,16 @@
     "instagramLabel": "URL de Instagram",
     "saveChanges": "Guardar cambios",
     "savedOk": "Perfil actualizado correctamente",
-    "loadError": "Error cargando el perfil"
+    "loadError": "Error cargando el perfil",
+    "requestPromotorTitle": "Solicitar rol de Promotor",
+    "requestPromotorDesc": "Los promotores pueden proponer cambios de artistas, eventos y noticias que el administrador revisa.",
+    "requestPromotorMotivLabel": "¿Por qué quieres ser promotor?",
+    "requestPromotorMotivPlaceholder": "Explica brevemente tu motivación...",
+    "requestPromotorBtn": "Enviar solicitud",
+    "requestPromotorSent": "Solicitud enviada correctamente. El administrador la revisará pronto.",
+    "requestPromotorPending": "Tienes una solicitud de promotor pendiente de revisión.",
+    "requestPromotorAlready": "Ya eres promotor o administrador.",
+    "requestPromotorErrorMotiv": "Escribe el motivo de la solicitud."
   },
   "solicituds": {
     "title": "Solicitudes de Edición",
@@ -211,6 +221,8 @@
     "keyCopiedOk": "Clave copiada",
     "roleSavedOk": "Rol actualizado correctamente",
     "approvedOk": "Solicitud aprobada y cambios aplicados",
+    "approveRoleOk": "Usuario promocionado a Promotor",
+    "typeRoleRequest": "Solicitud de Promotor",
     "rejectedOk": "Solicitud rechazada",
     "loadError": "Error cargando {{type}}: {{error}}",
     "saveError": "Error guardando: {{error}}",

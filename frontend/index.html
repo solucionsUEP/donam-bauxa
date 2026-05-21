@@ -112,50 +112,76 @@
             <a class="nav-link" href="#map"><i class="bi bi-map" aria-hidden="true"></i> <span data-i18n="nav.map">Mapa</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#favorits" data-i18n-aria="nav.favorites" aria-label="Favorits">
-              <i class="bi bi-heart" aria-hidden="true"></i> <span data-i18n="nav.favorites">Favorits</span>
-              <span id="favBadge" class="badge rounded-pill bg-danger ms-1" style="display:none;">0</span>
-            </a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="#joc"><i class="bi bi-controller" aria-hidden="true"></i> <span data-i18n="nav.game">Joc</span></a>
           </li>
-          <!-- Language switcher -->
+          <!-- Menú general: idioma + favorits + login -->
           <li class="nav-item dropdown" id="navLangSwitcher">
             <button class="nav-link btn btn-sm dropdown-toggle d-flex align-items-center gap-1 ms-lg-1"
-                    data-bs-toggle="dropdown" aria-expanded="false" aria-label="Seleccionar idioma">
-              <i class="bi bi-translate" aria-hidden="true"></i>
-              <span id="currentLangLabel">CA</span>
+                    data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Menú">
+              <i class="bi bi-person-circle fs-5" aria-hidden="true"></i>
+              <span id="currentLangLabel" class="d-none"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><button class="dropdown-item lang-btn" data-lang="ca"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt="CA"> Català</button></li>
-              <li><button class="dropdown-item lang-btn" data-lang="en"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt="EN"> English</button></li>
-              <li><button class="dropdown-item lang-btn" data-lang="de"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt="DE"> Deutsch</button></li>
-              <li><button class="dropdown-item lang-btn" data-lang="es"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt="ES"> Castellano</button></li>
+              <li>
+                <a class="dropdown-item" href="#favorits">
+                  <i class="bi bi-heart" aria-hidden="true"></i> <span data-i18n="nav.favorites">Favorits</span>
+                  <span id="favBadge" class="badge rounded-pill bg-danger ms-1" style="display:none;">0</span>
+                </a>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <button class="dropdown-item d-flex justify-content-between align-items-center lang-submenu-toggle">
+                  <span><i class="bi bi-translate" aria-hidden="true"></i> <span data-i18n="nav.language">Idioma</span></span>
+                  <i class="bi bi-chevron-down small lang-submenu-chevron"></i>
+                </button>
+                <ul class="lang-submenu list-unstyled ps-3 mb-0" style="display:none;">
+                  <li><button class="dropdown-item lang-btn" data-lang="ca"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt="CA"> Català</button></li>
+                  <li><button class="dropdown-item lang-btn" data-lang="en"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt="EN"> English</button></li>
+                  <li><button class="dropdown-item lang-btn" data-lang="de"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt="DE"> Deutsch</button></li>
+                  <li><button class="dropdown-item lang-btn" data-lang="es"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt="ES"> Castellano</button></li>
+                </ul>
+              </li>
+              <li id="navLogin">
+                <hr class="dropdown-divider">
+                <button class="dropdown-item" id="loginBtn">
+                  <i class="bi bi-google" aria-hidden="true"></i> <span data-i18n="nav.login">Iniciar Sessió</span>
+                </button>
+              </li>
             </ul>
-          </li>
-          <!-- Login button (visible when not authenticated) -->
-          <li class="nav-item" id="navLogin">
-            <button class="nav-link btn btn-bauxa-outline btn-sm ms-lg-2" id="loginBtn">
-              <i class="bi bi-google" aria-hidden="true"></i> <span data-i18n="nav.login">Iniciar Sessió</span>
-            </button>
           </li>
           <!-- User dropdown (visible when authenticated) -->
           <li class="nav-item dropdown d-none" id="navUser">
             <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button"
-              data-bs-toggle="dropdown" aria-expanded="false">
+              data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
               <img id="userAvatar" class="rounded-circle" width="28" height="28" alt="Avatar" src="">
               <span id="userName"></span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" href="#profile"><i class="bi bi-person" aria-hidden="true"></i> <span data-i18n="nav.profile">El meu Perfil</span></a></li>
-              <li id="navSolicituds" class="d-none"><a class="dropdown-item" href="#solicituds"><i
-                    class="bi bi-pencil-square" aria-hidden="true"></i> <span data-i18n="nav.requests">Solicituds</span></a></li>
-              <li id="navAdmin" class="d-none"><a class="dropdown-item" href="#admin"><i class="bi bi-gear" aria-hidden="true"></i>
-                  <span data-i18n="nav.admin">Administració</span></a></li>
+              <li id="navSolicituds" class="d-none"><a class="dropdown-item" href="#solicituds"><i class="bi bi-pencil-square" aria-hidden="true"></i> <span data-i18n="nav.requests">Solicituds</span></a></li>
+              <li id="navAdmin" class="d-none"><a class="dropdown-item" href="#admin"><i class="bi bi-gear" aria-hidden="true"></i> <span data-i18n="nav.admin">Administració</span></a></li>
+              <li><hr class="dropdown-divider"></li>
               <li>
-                <hr class="dropdown-divider">
+                <a class="dropdown-item" href="#favorits">
+                  <i class="bi bi-heart" aria-hidden="true"></i> <span data-i18n="nav.favorites">Favorits</span>
+                  <span id="favBadgeUser" class="badge rounded-pill bg-danger ms-1" style="display:none;">0</span>
+                </a>
               </li>
+              <li><hr class="dropdown-divider"></li>
+              <!-- Subdesplegable d'idiomes (toggle manual) -->
+              <li>
+                <button class="dropdown-item d-flex justify-content-between align-items-center lang-submenu-toggle">
+                  <span><i class="bi bi-translate" aria-hidden="true"></i> <span data-i18n="nav.language">Idioma</span></span>
+                  <i class="bi bi-chevron-down small lang-submenu-chevron"></i>
+                </button>
+                <ul class="lang-submenu list-unstyled ps-3 mb-0" style="display:none;">
+                  <li><button class="dropdown-item lang-btn" data-lang="ca"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt="CA"> Català</button></li>
+                  <li><button class="dropdown-item lang-btn" data-lang="en"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt="EN"> English</button></li>
+                  <li><button class="dropdown-item lang-btn" data-lang="de"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt="DE"> Deutsch</button></li>
+                  <li><button class="dropdown-item lang-btn" data-lang="es"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt="ES"> Castellano</button></li>
+                </ul>
+              </li>
+              <li><hr class="dropdown-divider"></li>
               <li><button class="dropdown-item text-danger" id="logoutBtn"><i class="bi bi-box-arrow-right" aria-hidden="true"></i> <span data-i18n="nav.logout">Tancar Sessió</span></button></li>
             </ul>
           </li>
@@ -601,35 +627,60 @@
           <div id="profileContent" style="display:none;">
             <div id="profileAlert" style="display:none;" class="mb-4"></div>
 
-            <div class="card-bauxa" style="padding:2rem;max-width:600px;">
-              <div class="d-flex align-items-center gap-3 mb-4">
-                <img id="profileAvatar" class="rounded-circle" width="64" height="64" alt="Avatar" src="">
-                <div>
-                  <h2 class="h5 mb-0" id="profileName"></h2>
-                  <span class="badge bg-secondary" id="profileRole"></span>
+            <div class="row g-4 align-items-start">
+              <div class="col-12 col-lg-6">
+                <div class="card-bauxa h-100" style="padding:2rem;">
+                  <div class="d-flex align-items-center gap-3 mb-4">
+                    <img id="profileAvatar" class="rounded-circle" width="64" height="64" alt="Avatar" src="">
+                    <div>
+                      <h2 class="h5 mb-0" id="profileName"></h2>
+                      <span class="badge bg-secondary" id="profileRole"></span>
+                    </div>
+                  </div>
+
+                  <form id="profileForm">
+                    <div class="mb-3">
+                      <label for="profileEmail" class="form-label small fw-semibold" data-i18n="profile.emailLabel">Email</label>
+                      <input type="email" class="form-control form-control-bauxa" id="profileEmail" disabled>
+                    </div>
+                    <div class="mb-3">
+                      <label for="profileDisplayName" class="form-label small fw-semibold" data-i18n="profile.displayNameLabel">Nom visible</label>
+                      <input type="text" class="form-control form-control-bauxa" id="profileDisplayName"
+                        data-i18n-placeholder="profile.displayNameLabel" placeholder="El teu nom visible">
+                    </div>
+                    <div class="mb-3">
+                      <label for="profileBio" class="form-label small fw-semibold" data-i18n="profile.bioLabel">Bio</label>
+                      <textarea class="form-control form-control-bauxa" id="profileBio" rows="3"
+                        placeholder="..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-bauxa">
+                      <i class="bi bi-check-lg" aria-hidden="true"></i> <span data-i18n="profile.saveChanges">Guardar Canvis</span>
+                    </button>
+                  </form>
                 </div>
               </div>
 
-              <form id="profileForm">
-                <div class="mb-3">
-                  <label for="profileEmail" class="form-label small fw-semibold" data-i18n="profile.emailLabel">Email</label>
-                  <input type="email" class="form-control form-control-bauxa" id="profileEmail" disabled>
+              <!-- Promotor request card — only shown to lectors -->
+              <div class="col-12 col-lg-6" id="promotorRequestCard" style="display:none;">
+                <div class="card-bauxa h-100" style="padding:2rem;">
+                  <h3 class="h6 mb-2 fw-semibold"><i class="bi bi-person-badge" aria-hidden="true"></i> <span data-i18n="profile.requestPromotorTitle">Sol·licitar rol de Promotor</span></h3>
+                  <p class="text-muted small mb-3" data-i18n="profile.requestPromotorDesc">Els promotors poden proposar canvis d'artistes, events i notícies.</p>
+                  <div id="promotorRequestAlert" style="display:none;" class="mb-3"></div>
+                  <form id="promotorRequestForm">
+                    <div class="mb-3">
+                      <label for="promotorMotivation" class="form-label small fw-semibold" data-i18n="profile.requestPromotorMotivLabel">Per què vols ser promotor?</label>
+                      <textarea class="form-control form-control-bauxa" id="promotorMotivation" rows="3"
+                        data-i18n-placeholder="profile.requestPromotorMotivPlaceholder"
+                        placeholder="Explica breument la teva motivació..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-bauxa">
+                      <i class="bi bi-send" aria-hidden="true"></i> <span data-i18n="profile.requestPromotorBtn">Enviar sol·licitud</span>
+                    </button>
+                  </form>
                 </div>
-                <div class="mb-3">
-                  <label for="profileDisplayName" class="form-label small fw-semibold" data-i18n="profile.displayNameLabel">Nom visible</label>
-                  <input type="text" class="form-control form-control-bauxa" id="profileDisplayName"
-                    data-i18n-placeholder="profile.displayNameLabel" placeholder="El teu nom visible">
-                </div>
-                <div class="mb-3">
-                  <label for="profileBio" class="form-label small fw-semibold" data-i18n="profile.bioLabel">Bio</label>
-                  <textarea class="form-control form-control-bauxa" id="profileBio" rows="3"
-                    placeholder="..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-bauxa">
-                  <i class="bi bi-check-lg" aria-hidden="true"></i> <span data-i18n="profile.saveChanges">Guardar Canvis</span>
-                </button>
-              </form>
+              </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -1053,40 +1104,51 @@
             <!-- Admin Tabs -->
             <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
               <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="tab-artists" data-bs-toggle="tab" data-bs-target="#panel-artists"
-                  type="button" role="tab"><i class="bi bi-music-note-list"></i> Artistes</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-events" data-bs-toggle="tab" data-bs-target="#panel-events"
-                  type="button" role="tab"><i class="bi bi-calendar-event"></i> Events</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-news" data-bs-toggle="tab" data-bs-target="#panel-news" type="button"
-                  role="tab"><i class="bi bi-newspaper"></i> Noticies</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-quizzes" data-bs-toggle="tab" data-bs-target="#panel-quizzes"
-                  type="button" role="tab"><i class="bi bi-controller"></i> Qüestionaris</button>
+                <button class="nav-link active" id="tab-content" data-bs-toggle="tab" data-bs-target="#panel-content"
+                  type="button" role="tab"><i class="bi bi-collection"></i> <span data-i18n="admin.tabContent">Continguts</span></button>
               </li>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-requests" data-bs-toggle="tab" data-bs-target="#panel-requests"
                   type="button" role="tab">
-                  <i class="bi bi-pencil-square"></i> Solicituds
+                  <i class="bi bi-pencil-square"></i> <span data-i18n="admin.tabRequests">Solicituds</span>
                   <span id="pendingRequestsBadge" class="badge bg-danger ms-1" style="display:none;">0</span>
                 </button>
               </li>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-users" data-bs-toggle="tab" data-bs-target="#panel-users" type="button"
-                  role="tab"><i class="bi bi-people"></i> Usuaris</button>
+                  role="tab"><i class="bi bi-people"></i> <span data-i18n="admin.tabUsers">Usuaris</span></button>
               </li>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-api-keys" data-bs-toggle="tab" data-bs-target="#panel-api-keys"
-                  type="button" role="tab"><i class="bi bi-key"></i> Claus API</button>
+                  type="button" role="tab"><i class="bi bi-key"></i> <span data-i18n="admin.tabApiKeys">Claus API</span></button>
               </li>
             </ul>
 
             <!-- Tab Content -->
             <div class="tab-content" id="adminTabContent">
+
+              <!-- Content Panel (outer) -->
+              <div class="tab-pane fade show active" id="panel-content" role="tabpanel">
+                <!-- Content Sub-tabs -->
+                <ul class="nav nav-tabs nav-tabs-sm mb-3" id="contentSubTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="subtab-artists" data-bs-toggle="tab" data-bs-target="#panel-artists"
+                      type="button" role="tab"><i class="bi bi-music-note-list"></i> <span data-i18n="admin.tabArtists">Artistes</span></button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="subtab-events" data-bs-toggle="tab" data-bs-target="#panel-events"
+                      type="button" role="tab"><i class="bi bi-calendar-event"></i> <span data-i18n="admin.tabEvents">Events</span></button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="subtab-news" data-bs-toggle="tab" data-bs-target="#panel-news"
+                      type="button" role="tab"><i class="bi bi-newspaper"></i> <span data-i18n="admin.tabNews">Notícies</span></button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="subtab-quizzes" data-bs-toggle="tab" data-bs-target="#panel-quizzes"
+                      type="button" role="tab"><i class="bi bi-controller"></i> <span data-i18n="admin.tabQuizzes">Qüestionaris</span></button>
+                  </li>
+                </ul>
+                <div class="tab-content" id="contentSubTabContent">
 
               <!-- Artists Panel -->
               <div class="tab-pane fade show active" id="panel-artists" role="tabpanel">
@@ -1387,43 +1449,7 @@
                 </div>
               </div>
 
-              <!-- Requests Panel -->
-              <div class="tab-pane fade" id="panel-requests" role="tabpanel">
-                <h2 class="h5 mb-3">Solicituds d'Edicio</h2>
-                <div class="mb-3">
-                  <select class="form-select form-select-bauxa" style="max-width:200px;display:inline-block;"
-                    id="adminRequestsFilter">
-                    <option value="pending">Pendents</option>
-                    <option value="">Totes</option>
-                    <option value="approved">Aprovades</option>
-                    <option value="rejected">Rebutjades</option>
-                  </select>
-                </div>
-                <div id="adminRequestsList">
-                  <!-- Dynamically loaded -->
-                </div>
-                <!-- Request detail modal area -->
-                <div id="adminRequestDetail" style="display:none;" class="card-bauxa mt-3 p-3">
-                  <h3 class="h6 mb-3">Detall de la Solicitud</h3>
-                  <div id="requestDetailContent">
-                    <!-- Dynamically loaded -->
-                  </div>
-                  <div class="mt-3" id="requestActions" style="display:none;">
-                    <div class="mb-2">
-                      <label for="adminReviewerNotes" class="form-label small fw-semibold">Notes (opcional)</label>
-                      <textarea class="form-control form-control-bauxa" id="adminReviewerNotes" rows="2"
-                        placeholder="Notes per al promotor..."></textarea>
-                    </div>
-                    <button class="btn btn-success btn-sm me-2" id="approveRequestBtn"><i class="bi bi-check-lg"></i>
-                      Aprovar</button>
-                    <button class="btn btn-danger btn-sm me-2" id="rejectRequestBtn"><i class="bi bi-x-lg"></i>
-                      Rebutjar</button>
-                    <button class="btn btn-bauxa-outline btn-sm" id="closeRequestDetail">Tancar</button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Quizzes Panel -->
+              <!-- Quizzes Panel (inside content sub-tabs) -->
               <div class="tab-pane fade" id="panel-quizzes" role="tabpanel">
 
                 <!-- Questionnaires Sub-Section -->
@@ -1577,6 +1603,63 @@
                       </div>
                     </div>
                   </form>
+                </div>
+              </div>
+
+                </div><!-- end contentSubTabContent -->
+              </div><!-- end panel-content -->
+
+              <!-- Requests Panel -->
+              <div class="tab-pane fade" id="panel-requests" role="tabpanel">
+                <!-- Entity type filter + status filter -->
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                  <ul class="nav nav-pills mb-0" id="requestsEntityFilter">
+                    <li class="nav-item">
+                      <button class="nav-link active py-1 px-2 small" data-entity=""><span data-i18n="filter.all">Totes</span></button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link py-1 px-2 small" data-entity="artist"><i class="bi bi-music-note-list"></i> <span data-i18n="admin.tabArtists">Artistes</span></button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link py-1 px-2 small" data-entity="event"><i class="bi bi-calendar-event"></i> <span data-i18n="nav.events">Esdeveniments</span></button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link py-1 px-2 small" data-entity="news"><i class="bi bi-newspaper"></i> <span data-i18n="admin.tabNews">Notícies</span></button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link py-1 px-2 small" data-entity="role"><i class="bi bi-person-badge"></i> <span data-i18n="admin.typeRoleRequest">Promotors</span></button>
+                    </li>
+                  </ul>
+                  <select class="form-select form-select-bauxa form-select-sm ms-auto" style="max-width:140px;"
+                    id="adminRequestsFilter">
+                    <option value="pending" data-i18n="solicituds.statusPending">Pendents</option>
+                    <option value="">Totes</option>
+                    <option value="approved" data-i18n="solicituds.statusApproved">Aprovades</option>
+                    <option value="rejected" data-i18n="solicituds.statusRejected">Rebutjades</option>
+                  </select>
+                </div>
+                <div id="adminRequestsList">
+                  <!-- Dynamically loaded -->
+                </div>
+                <!-- Request detail area -->
+                <div id="adminRequestDetail" style="display:none;" class="card-bauxa mt-3 p-3">
+                  <h3 class="h6 mb-3">Detall de la Solicitud</h3>
+                  <div id="requestDetailContent">
+                    <!-- Dynamically loaded -->
+                  </div>
+                  <div class="mt-3" id="requestActions" style="display:none;">
+                    <div class="mb-2">
+                      <label for="adminReviewerNotes" class="form-label small fw-semibold">Notes (opcional)</label>
+                      <textarea class="form-control form-control-bauxa" id="adminReviewerNotes" rows="2"
+                        placeholder="Notes per al promotor..."></textarea>
+                    </div>
+                    <button class="btn btn-success btn-sm me-2" id="approveRequestBtn"><i class="bi bi-check-lg"></i>
+                      <span data-i18n="admin.approve">Aprovar</span></button>
+                    <button class="btn btn-danger btn-sm me-2" id="rejectRequestBtn"><i class="bi bi-x-lg"></i>
+                      <span data-i18n="admin.reject">Rebutjar</span></button>
+                    <button class="btn btn-bauxa-outline btn-sm" id="closeRequestDetail">
+                      <span data-i18n="common.close">Tancar</span></button>
+                  </div>
                 </div>
               </div>
 

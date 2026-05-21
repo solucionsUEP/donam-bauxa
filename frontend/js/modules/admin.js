@@ -39,6 +39,7 @@ export async function checkAuth() {
 
   const navLogin = document.getElementById('navLogin');
   const navUser = document.getElementById('navUser');
+  const navLangSwitcher = document.getElementById('navLangSwitcher');
   const navSolicituds = document.getElementById('navSolicituds');
   const navAdmin = document.getElementById('navAdmin');
   const userAvatar = document.getElementById('userAvatar');
@@ -48,6 +49,7 @@ export async function checkAuth() {
     const role = authState.profile.role;
 
     if (navLogin) navLogin.classList.add('d-none');
+    if (navLangSwitcher) navLangSwitcher.classList.add('d-none');
     if (navUser) navUser.classList.remove('d-none');
     if (userAvatar) userAvatar.src = authState.profile.image || '';
     if (userName) userName.textContent = authState.profile.displayName || authState.user?.name || '';
@@ -62,6 +64,7 @@ export async function checkAuth() {
     }
   } else {
     if (navLogin) navLogin.classList.remove('d-none');
+    if (navLangSwitcher) navLangSwitcher.classList.remove('d-none');
     if (navUser) navUser.classList.add('d-none');
     if (navSolicituds) navSolicituds?.classList.add('d-none');
     if (navAdmin) navAdmin?.classList.add('d-none');
@@ -544,7 +547,10 @@ async function loadAdminRequests() {
     for (const el of items) {
       const req = el.item;
       const entityType = req.instrument?.description || '-';
-      const actionLabel = req['@type'] === 'CreateAction' ? t('solicituds.actionCreate') : t('solicituds.actionEdit');
+      const isRoleReq = entityType === 'role';
+      const actionLabel = isRoleReq
+        ? `<span class="badge bg-warning text-dark">${t('admin.typeRoleRequest')}</span>`
+        : req['@type'] === 'CreateAction' ? t('solicituds.actionCreate') : t('solicituds.actionEdit');
       const date = req.startTime ? new Date(req.startTime).toLocaleDateString(getIntlLocale()) : '-';
       const statusBadge = req.actionStatus === 'https://schema.org/PotentialActionStatus'
         ? `<span class="badge bg-warning">${t('solicituds.statusPending')}</span>`
@@ -557,7 +563,7 @@ async function loadAdminRequests() {
       html += `<tr>
         <td><small>${req['@id']}</small></td>
         <td>${req.agent?.name || '-'}</td>
-        <td>${entityType}</td>
+        <td>${isRoleReq ? '<i class="bi bi-person-badge"></i>' : entityType}</td>
         <td>${actionLabel}</td>
         <td>${statusBadge}</td>
         <td><small>${date}</small></td>
@@ -587,20 +593,31 @@ async function viewRequestDetail(requestId) {
     if (!detail || !content) return;
 
     const isPending = req.actionStatus === 'https://schema.org/PotentialActionStatus';
+    const isRoleReq = req.instrument?.description === 'role';
 
-    content.innerHTML = `
-      <div class="row">
-        <div class="col-md-6">
-          <h6>${t('admin.currentData')}</h6>
-          <pre class="p-2" style="background:var(--color-bg-alt);border-radius:8px;font-size:0.75rem;max-height:300px;overflow:auto;">${JSON.stringify(req.object, null, 2)}</pre>
+    if (isRoleReq) {
+      content.innerHTML = `
+        <div class="mb-3">
+          <span class="badge bg-warning text-dark fs-6 mb-2"><i class="bi bi-person-badge me-1"></i>${t('admin.typeRoleRequest')}</span>
+          <p class="mb-1"><strong>${t('admin.colRequestedBy')}:</strong> ${req.agent?.name || '-'} <span class="text-muted small">&lt;${req.agent?.email || ''}&gt;</span></p>
         </div>
-        <div class="col-md-6">
-          <h6>${t('admin.proposedData')}</h6>
-          <pre class="p-2" style="background:var(--color-bg-alt);border-radius:8px;font-size:0.75rem;max-height:300px;overflow:auto;">${JSON.stringify(req.result, null, 2)}</pre>
+        <p><strong>${t('admin.motive')}:</strong> ${req.description || '-'}</p>
+      `;
+    } else {
+      content.innerHTML = `
+        <div class="row">
+          <div class="col-md-6">
+            <h6>${t('admin.currentData')}</h6>
+            <pre class="p-2" style="background:var(--color-bg-alt);border-radius:8px;font-size:0.75rem;max-height:300px;overflow:auto;">${JSON.stringify(req.object, null, 2)}</pre>
+          </div>
+          <div class="col-md-6">
+            <h6>${t('admin.proposedData')}</h6>
+            <pre class="p-2" style="background:var(--color-bg-alt);border-radius:8px;font-size:0.75rem;max-height:300px;overflow:auto;">${JSON.stringify(req.result, null, 2)}</pre>
+          </div>
         </div>
-      </div>
-      <p class="mt-2"><strong>${t('admin.motive')}:</strong> ${req.description || '-'}</p>
-    `;
+        <p class="mt-2"><strong>${t('admin.motive')}:</strong> ${req.description || '-'}</p>
+      `;
+    }
 
     detail.style.display = 'block';
     if (actions) actions.style.display = isPending ? 'block' : 'none';
@@ -622,7 +639,7 @@ async function viewRequestDetail(requestId) {
       approveBtn?.addEventListener('click', async () => {
         try {
           await apiFetch(`/api/admin/requests/${requestId}/approve`, { method: 'PUT' });
-          showAlert(t('admin.approvedOk'), 'success');
+          showAlert(isRoleReq ? t('admin.approveRoleOk') : t('admin.approvedOk'), 'success');
           cleanup();
           loadAdminRequests();
         } catch (err) {
