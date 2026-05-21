@@ -366,7 +366,8 @@
     "zones": "Zones de Mallorca",
     "contact": "Contacte",
     "copyright": "2026 Dona'm Bauxa. Projecte acadèmic UIB - Tecnologia Multimèdia.",
-    "madeWith": "Fet amb"
+    "madeWith": "Fet amb",
+    "developersTitle": "Creat per:"
   },
   "common": {
     "loading": "Carregant...",

@@ -2054,6 +2054,55 @@ img { max-width: 100%; }
 #scrollTopBtn.visible, .scroll-top-btn.visible { display: flex; }
 
 /* --------------------------------------------------------------------------
+   Mobile multi-action FAB (hidden on desktop)
+   -------------------------------------------------------------------------- */
+.mobile-fab { display: none; }
+.mobile-fab__toggle {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-fg);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  transition: transform 220ms cubic-bezier(.34,1.56,.64,1);
+}
+.mobile-fab__toggle:hover { transform: scale(1.06); }
+.mobile-fab.open .mobile-fab__toggle { transform: rotate(45deg); }
+.mobile-fab__actions {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  right: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.6rem;
+  pointer-events: none;
+}
+.mobile-fab__action {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  opacity: 0;
+  transform: translateY(12px) scale(0.6);
+  transition: opacity 180ms ease, transform 220ms cubic-bezier(.34,1.56,.64,1);
+}
+.mobile-fab.open .mobile-fab__action {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.mobile-fab.open .mobile-fab__actions { pointer-events: auto; }
+.mobile-fab.open .mobile-fab__action:nth-child(1) { transition-delay: 60ms; }
+.mobile-fab.open .mobile-fab__action:nth-child(2) { transition-delay: 40ms; }
+.mobile-fab.open .mobile-fab__action:nth-child(3) { transition-delay: 20ms; }
+.mobile-fab.open .mobile-fab__action:nth-child(4) { transition-delay: 0ms; }
+.mobile-fab__action:active { transform: scale(0.92); }
+
+/* --------------------------------------------------------------------------
    Mobile — sidebar becomes bottom tab bar
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
@@ -2074,13 +2123,15 @@ img { max-width: 100%; }
   .fav-badge { position: absolute; top: 2px; right: 2px; font-size: 0.55rem; padding: 0.05em 0.35em; }
   .sidebar-link { position: relative; }
   #navSolicituds, #navAdmin { display: none !important; }
-  .main-content { padding-bottom: 58px; min-height: calc(100vh - 58px); }
+  .main-content { min-height: calc(100vh - 58px); }
+  .footer-bauxa { padding-bottom: calc(1.5rem + 58px); }
   .section-padding { padding: 1.5rem 1rem; }
   .hero .container { padding: 2rem 1rem; }
   .hero h1 { font-size: clamp(2rem, 10vw, 3.5rem); }
-  .chatbot-launcher { bottom: 4.5rem; right: 1rem; width: 44px; height: 44px; font-size: 1.1rem; }
+  .chatbot-launcher { display: none !important; }
   .chatbot-window { bottom: 4.5rem; right: 0.5rem; left: 0.5rem; width: auto; }
-  #scrollTopBtn, .scroll-top-btn { bottom: 8rem; right: 1rem; }
+  #scrollTopBtn, .scroll-top-btn { display: none !important; }
+  .mobile-fab { display: block; position: fixed; bottom: 4.5rem; right: 1rem; z-index: 1100; }
 }
 
 @media (max-width: 480px) {

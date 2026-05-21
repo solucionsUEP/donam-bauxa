@@ -15,7 +15,7 @@ import {
   getUniqueGenres, getUniqueZones, getUniqueCategories
 } from './modules/filters.js';
 import {
-  initScrollToTop, updateFavoriteBadge, initGlobalEventHandlers,
+  initScrollToTop, initMobileFab, updateFavoriteBadge, initGlobalEventHandlers,
   setActiveNavLink, populateSelect
 } from './modules/ui.js';
 import { initMap, addEventMarkers, fitToMarkers } from './modules/mapModule.js';
@@ -61,8 +61,11 @@ const initializedViews = new Set();
 /**
  * Loads all JSON data once and caches it.
  */
+let dataLoadingPromise = null;
 async function ensureDataLoaded() {
   if (dataLoaded) return;
+  if (dataLoadingPromise) return dataLoadingPromise;
+  dataLoadingPromise = (async () => {
   try {
     const [artists, events, news, externEvents] = await Promise.all([
       loadArtists(), loadEvents(), loadNews(), loadExternEvents()
@@ -100,6 +103,8 @@ async function ensureDataLoaded() {
   } catch (error) {
     console.error('[app] Error loading data:', error);
   }
+  })();
+  return dataLoadingPromise;
 }
 
 /**
@@ -463,6 +468,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Initialize shared UI
   initScrollToTop();
+  initMobileFab();
   updateFavoriteBadge();
 
   // Check auth state for admin nav

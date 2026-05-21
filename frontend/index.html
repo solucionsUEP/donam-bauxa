@@ -1887,6 +1887,27 @@
     <i class="bi bi-chevron-up"></i>
   </button>
 
+  <!-- Mobile multi-action FAB (favorites, profile, top, chat) -->
+  <div class="mobile-fab" id="mobileFab">
+    <div class="mobile-fab__actions">
+      <a href="#favorits" class="mobile-fab__action" data-i18n-aria="nav.favorites" aria-label="Favorits">
+        <i class="bi bi-heart-fill" aria-hidden="true"></i>
+      </a>
+      <a href="#profile" class="mobile-fab__action" data-i18n-aria="nav.profile" aria-label="El meu Perfil">
+        <i class="bi bi-person-fill" aria-hidden="true"></i>
+      </a>
+      <button type="button" class="mobile-fab__action" id="mobileFabTop" aria-label="Tornar a dalt">
+        <i class="bi bi-arrow-up" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="mobile-fab__action" id="mobileFabChat" aria-label="Xat">
+        <i class="bi bi-chat-dots-fill" aria-hidden="true"></i>
+      </button>
+    </div>
+    <button type="button" class="mobile-fab__toggle" id="mobileFabToggle" aria-expanded="false" aria-label="Accions">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+    </button>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
 
