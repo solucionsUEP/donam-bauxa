@@ -385,6 +385,9 @@ function collectNewsFormData() {
   const image = document.getElementById('newsImage').value.trim();
   if (image) data.image = image;
 
+  const newsLang = document.getElementById('newsLang').value;
+  if (newsLang) data.lang = newsLang;
+
   return data;
 }
 

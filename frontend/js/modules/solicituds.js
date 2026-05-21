@@ -103,6 +103,7 @@ function fillFormFromEntity(entityType, item) {
     document.getElementById('req_artistSpotify').value = sameAs.find(u => u.includes('spotify')) || '';
     document.getElementById('req_artistInstagram').value = sameAs.find(u => u.includes('instagram')) || '';
     document.getElementById('req_artistWikipedia').value = sameAs.find(u => u.includes('wikipedia')) || '';
+    document.getElementById('req_artistLang').value = item.lang || '';
 
   } else if (entityType === 'event') {
     document.getElementById('req_eventName').value = item.name || '';
@@ -117,6 +118,7 @@ function fillFormFromEntity(entityType, item) {
     if (item.startDate) document.getElementById('req_eventStartDate').value = item.startDate.slice(0, 16);
     if (item.endDate) document.getElementById('req_eventEndDate').value = item.endDate.slice(0, 16);
     if (item.offers?.price) document.getElementById('req_eventPrice').value = item.offers.price;
+    document.getElementById('req_eventLang').value = item.lang || '';
 
   } else if (entityType === 'news') {
     document.getElementById('req_newsHeadline').value = item.headline || item.name || '';
@@ -125,6 +127,7 @@ function fillFormFromEntity(entityType, item) {
     document.getElementById('req_newsImage').value = item.image || '';
     document.getElementById('req_newsAuthor').value = item.author?.name || '';
     if (item.datePublished) document.getElementById('req_newsDate').value = item.datePublished.slice(0, 10);
+    document.getElementById('req_newsLang').value = item.lang || '';
   }
 }
 
@@ -179,6 +182,9 @@ function collectProposedData(entityType) {
 
     if (members.length) data.member = members.map(name => ({ '@type': 'Person', name }));
 
+    const artistLang = document.getElementById('req_artistLang').value;
+    if (artistLang) data.lang = artistLang;
+
     return data;
 
   } else if (entityType === 'event') {
@@ -216,6 +222,9 @@ function collectProposedData(entityType) {
     const image = document.getElementById('req_eventImage').value.trim();
     if (image) data.image = image;
 
+    const eventLang = document.getElementById('req_eventLang').value;
+    if (eventLang) data.lang = eventLang;
+
     return data;
 
   } else if (entityType === 'news') {
@@ -239,6 +248,9 @@ function collectProposedData(entityType) {
     const image = document.getElementById('req_newsImage').value.trim();
     if (image) data.image = image;
 
+    const newsLang = document.getElementById('req_newsLang').value;
+    if (newsLang) data.lang = newsLang;
+
     return data;
   }
   return null;
@@ -253,6 +265,7 @@ function resetDynamicFields() {
     if (el) el.value = '';
   });
   document.getElementById('req_artistZone').value = '';
+  document.getElementById('req_artistLang').value = '';
 
   ['req_eventName','req_eventDescription','req_eventStartDate','req_eventEndDate',
    'req_eventPrice','req_eventLocationName','req_eventLat','req_eventLng',
@@ -262,12 +275,14 @@ function resetDynamicFields() {
   });
   document.getElementById('req_eventCategory').value = 'concert';
   document.getElementById('req_eventZone').value = '';
+  document.getElementById('req_eventLang').value = '';
 
   ['req_newsHeadline','req_newsDescription','req_newsCategory','req_newsDate',
    'req_newsAuthor','req_newsImage'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+  document.getElementById('req_newsLang').value = '';
 }
 
 // --- Init ---

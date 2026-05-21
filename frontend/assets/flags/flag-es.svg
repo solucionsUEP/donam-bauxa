@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" width="650" height="500">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0" viewBox="0 0 650 500">
+<defs><clipPath id="r"><rect width="650" height="500" rx="72"/></clipPath></defs>
+<g clip-path="url(#r)">
 <rect width="650" height="500" fill="#da121a"/>
 <rect width="325" height="250" y="250" fill="#ffffff"/>
 <rect width="325" height="250" x="325" fill="#ffffff"/>
@@ -461,5 +463,6 @@
 	</g>
 	<use xlink:href="#lion" transform="translate(325,-250)"/>
 	<use xlink:href="#castle" transform="translate(325,250)"/>
+</g>
 </g>
 </svg>

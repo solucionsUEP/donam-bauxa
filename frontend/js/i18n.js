@@ -6,7 +6,12 @@
  */
 
 const SUPPORTED_LANGS = ['ca', 'es', 'en', 'de'];
-const LANG_FLAGS = { ca: '🇪🇸', en: '🇬🇧', de: '🇩🇪', es: '🇪🇸' };
+const LANG_FLAGS = {
+  ca: '<img src="/assets/flags/flag-ca.svg" class="flag-icon" alt="CA">',
+  en: '<img src="/assets/flags/flag-en.svg" class="flag-icon" alt="EN">',
+  de: '<img src="/assets/flags/flag-de.svg" class="flag-icon" alt="DE">',
+  es: '<img src="/assets/flags/flag-es.svg" class="flag-icon" alt="ES">',
+};
 const STORAGE_KEY = 'bauxa_lang';
 
 /** @type {Map<string, Object>} Loaded locale data keyed by lang code */
@@ -147,7 +152,7 @@ export async function setLang(lang) {
   document.documentElement.setAttribute('dir', 'ltr'); // extend here for RTL langs
 
   const label = document.getElementById('currentLangLabel');
-  if (label) label.textContent = LANG_FLAGS[lang] ?? lang.toUpperCase();
+  if (label) label.innerHTML = LANG_FLAGS[lang] ?? lang.toUpperCase();
 
   document.dispatchEvent(new CustomEvent('langChanged', { detail: { lang } }));
 }
@@ -170,5 +175,5 @@ export async function initI18n() {
   document.documentElement.setAttribute('dir', 'ltr');
 
   const label = document.getElementById('currentLangLabel');
-  if (label) label.textContent = LANG_FLAGS[lang] ?? lang.toUpperCase();
+  if (label) label.innerHTML = LANG_FLAGS[lang] ?? lang.toUpperCase();
 }

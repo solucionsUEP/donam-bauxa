@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="810" height="540">
-<rect width="810" height="540" fill="#FCDD09"/>
-<path stroke="#DA121A" stroke-width="60" d="M0,90H810m0,120H0m0,120H810m0,120H0"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+  <defs><clipPath id="r"><rect x="0" y="5" width="36" height="26" rx="4"/></clipPath></defs>
+  <g clip-path="url(#r)">
+    <rect y="5" width="36" height="26" fill="#FCDD09"/>
+    <rect y="7.889" width="36" height="2.889" fill="#DA121A"/>
+    <rect y="13.667" width="36" height="2.889" fill="#DA121A"/>
+    <rect y="19.444" width="36" height="2.889" fill="#DA121A"/>
+    <rect y="25.222" width="36" height="2.889" fill="#DA121A"/>
+  </g>
 </svg>
