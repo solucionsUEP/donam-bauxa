@@ -2273,6 +2273,43 @@ img { max-width: 100%; }
   align-items: center;
 }
 
+/* Generic view header — replaces hero--inner for inner pages */
+.view-header {
+  padding: 2.25rem 0 2rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+  background: var(--surface);
+}
+.view-header__inner {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+.view-header__icon {
+  width: 52px; height: 52px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+.view-header__title {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0 0 0.25rem;
+  color: var(--text);
+}
+.view-header__title span { color: var(--accent-text); }
+.view-header__subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
 /* Scroll-to-top button */
 #scrollTopBtn, .scroll-top-btn {
   position: fixed;
