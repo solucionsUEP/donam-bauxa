@@ -10,20 +10,24 @@ import usersRoutes from './routes/users.js';
 import requestsRoutes from './routes/requests.js';
 import apiKeysRoutes from './routes/apiKeys.js';
 import analyzeRoutes from './routes/analyze.js';
+import chatRoutes from './routes/chat.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 // CORS
 const allowedOrigins = [
   'https://donambauxa.online',
   'https://www.donambauxa.online',
   `http://localhost:${PORT}`
 ];
+// Tailnet origins: allow any http://100.x.x.x:PORT and any *.ts.net:PORT host.
+const tailnetOriginRe = new RegExp(`^http://(100\\.\\d+\\.\\d+\\.\\d+|[^/]+\\.ts\\.net):${PORT}$`);
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
+  if (origin && (allowedOrigins.includes(origin) || tailnetOriginRe.test(origin))) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-API-Key');
@@ -32,7 +36,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 app.use(express.static(join(__dirname, 'frontend')));
 
 // Auth: retorna el perfil de l'usuari autenticat via Supabase JWT
@@ -99,9 +103,10 @@ app.use('/api/admin', contentRoutes);
 app.use('/api/admin/users', usersRoutes);
 app.use('/api/admin/api-keys', apiKeysRoutes);
 app.use('/api/analyze-instagram', analyzeRoutes);
+app.use('/api/chat', chatRoutes);
 app.use('/api/requests', requestsRoutes);
 app.use('/api/admin/requests', requestsRoutes);
 
-app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+app.listen(PORT, HOST, () => console.log(`Server running at http://${HOST}:${PORT}`));
 
 export default app;
