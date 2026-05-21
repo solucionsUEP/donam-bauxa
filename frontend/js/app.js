@@ -515,6 +515,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Register map cleanup
   registerMapCleanup(cleanupMap);
 
+  // Prefetch catalog data immediately so the chatbot has it ready on first send,
+  // regardless of which route the user lands on.
+  ensureDataLoaded();
+
   // Mount the Gemini Nano on-device assistant (available across all views).
   initChatbot();
 

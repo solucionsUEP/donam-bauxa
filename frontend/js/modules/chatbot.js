@@ -25,15 +25,15 @@ const SYSTEM_INSTRUCTION = `Ets l'assistent virtual de Dona'm Bauxa, una platafo
 Tens tres especialitats:
 
 1. PLANIFICADOR DE CAP DE SETMANA
-   Si l'usuari demana un pla i menciona un dia concret (dissabte / diumenge / divendres vespre), respon amb un itinerari estructurat en franges horaries (mati, migdia, tarda, vespre, nit). Cada franja: 1 activitat + 1 frase de context. Si menciona Mallorca, dona suggeriments locals plausibles (cala, mercat, ruta, concert). Si no especifica dia, demana-li quin dia vol planificar.
+   Si l'usuari demana un pla o menciona un dia (dissabte / diumenge / divendres), respon amb un itinerari estructurat en franges horaries (mati, migdia, tarda, vespre, nit). Cada franja: 1 activitat + 1 frase de context. Inclou SEMPRE els concerts i esdeveniments del CONTEXT si n'hi ha. Si no especifica dia, demana-li quin dia vol planificar.
 
 2. RECOMANADOR MUSICAL
-   Si l'usuari nomena un artista, canco o genere, suggereix 3-5 artistes o temes similars amb una frase curta explicant la connexio (estil, escena, epoca). Si nomes diu "recomana'm musica", pregunta quin estil li agrada.
+   Si l'usuari nomena un artista, canco o genere, suggereix 3-5 artistes o temes similars amb una frase curta explicant la connexio (estil, escena, epoca). Inclou els artistes del CONTEXT si n'hi ha.
 
 3. AJUDANT GENERAL
-   Per a qualsevol altra pregunta (saludar, dubtes sobre la plataforma, preguntes curioses), respon de manera educada i concisa (1-3 frases).
+   Per a qualsevol altra pregunta (saludar, dubtes sobre la plataforma, preguntes curioses), respon de manera educada i concisa (1-3 frases). Si el CONTEXT te esdeveniments, menciona'ls breument.
 
-DADES DE LA PLATAFORMA: Quan rebis un bloc "CONTEXT (dades reals…)" abans del missatge de l'usuari, basa la teva resposta NOMES en aquestes dades. Cita els esdeveniments i artistes pel nom exacte i, si esmentes una data o lloc, fes-ho amb les dades del context. No inventis esdeveniments, dates ni recintes que no apareguin al context. Si el context esta buit o no inclou cap element rellevant, digues que no trobes res a l'agenda i suggereix que l'usuari ajusti la cerca.
+DADES DE LA PLATAFORMA: Quan rebis un bloc "CONTEXT (dades reals…)" UTILITZA SEMPRE totes les dades d'aquell bloc. Cita els esdeveniments i artistes pel nom exacte. No inventis esdeveniments ni artistes que no apareguin al context. Si el bloc CONTEXT esta completament buit (no te cap linia despres del titol), digues que no trobes res a l'agenda.
 
 Format: usa llistes Markdown quan ajudin a la lectura. Evita disclaimers innecessaris.`;
 
@@ -59,14 +59,88 @@ let currentAbort = null;
 /** @type {{events: Array<Object>, artists: Array<Object>}} */
 let dataCtx = { events: [], artists: [] };
 
+/** @type {boolean|null} null=not checked, true=running, false=unreachable */
+let ollamaAvailable = null;
+
+/** Message history for the Ollama backend — starts with the system prompt. */
+const ollamaMessages = [{ role: 'system', content: SYSTEM_INSTRUCTION }];
+
 /**
  * Lets the host SPA hand the chatbot a live view of the loaded catalog.
  * Called from app.js once `ensureDataLoaded()` resolves.
  * @param {{events: Array<Object>, artists: Array<Object>}} payload
  */
 export function setDataContext({ events, artists }) {
+  const wasEmpty = !dataCtx.events.length && !dataCtx.artists.length;
   dataCtx = { events: events || [], artists: artists || [] };
   console.log(`[chatbot] data context updated: ${dataCtx.events.length} events, ${dataCtx.artists.length} artists`);
+  // Session was created before data was available — destroy it so the next
+  // message gets a fresh session that sees the full RAG context.
+  if (wasEmpty && session) {
+    session.destroy?.();
+    session = null;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Ollama backend (localhost:11434)                                  */
+/* ------------------------------------------------------------------ */
+
+const OLLAMA_URL = 'http://localhost:11434';
+const OLLAMA_MODEL = 'gemma3n:e2b';
+
+/** Returns true if Ollama is reachable. Caches result after first probe. */
+async function probeOllama() {
+  if (ollamaAvailable !== null) return ollamaAvailable;
+  try {
+    const r = await fetch(`${OLLAMA_URL}/api/tags`, { signal: AbortSignal.timeout(500) });
+    ollamaAvailable = r.ok;
+  } catch {
+    ollamaAvailable = false;
+  }
+  console.log('[chatbot] ollama available:', ollamaAvailable);
+  return ollamaAvailable;
+}
+
+/**
+ * Streams a response from Ollama. Each chunk call receives the cumulative text.
+ * Stores clean turns (without RAG block) in ollamaMessages for context continuity.
+ */
+async function ollamaGenerate(cleanUserText, ragEnrichedContent, onChunk, abortSignal) {
+  const requestMessages = [
+    ...ollamaMessages,
+    { role: 'user', content: ragEnrichedContent },
+  ];
+  const response = await fetch(`${OLLAMA_URL}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: OLLAMA_MODEL, messages: requestMessages, stream: true }),
+    signal: abortSignal,
+  });
+  if (!response.ok) throw new Error(`Ollama HTTP ${response.status}`);
+
+  const reader = response.body.getReader();
+  const dec = new TextDecoder();
+  let full = '';
+  let buf = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop() ?? '';
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      try {
+        const delta = JSON.parse(line)?.message?.content ?? '';
+        if (delta) { full += delta; onChunk(full); }
+      } catch { /* skip malformed */ }
+    }
+  }
+  // Store clean turn in history so follow-up messages have context.
+  ollamaMessages.push({ role: 'user', content: cleanUserText });
+  ollamaMessages.push({ role: 'assistant', content: full });
+  return full;
 }
 
 /* ------------------------------------------------------------------ */
@@ -321,7 +395,9 @@ async function checkAvailability() {
   try {
     let raw;
     if (typeof api.availability === 'function') {
-      raw = await api.availability();
+      // Try the smaller 2b model first; fall back to default if it rejects the param.
+      try { raw = await api.availability({ model: 'gemini-nano-2b' }); } catch { /* fall through */ }
+      if (!raw) raw = await api.availability();
     } else if (typeof api.capabilities === 'function') {
       const caps = await api.capabilities();
       raw = caps?.available;
@@ -365,25 +441,28 @@ async function ensureSession() {
   // Use Spanish (linguistically closest to Catalan) for both attestation
   // sides. The system prompt still steers the model to reply in Catalan;
   // safety filtering will run against Spanish toxic-word lists.
-  const createOptions = {
+  const monitor = (m) => {
+    m.addEventListener('downloadprogress', (e) => {
+      const pct = Math.round((e.loaded ?? 0) * 100);
+      modelStatus = 'downloading';
+      renderStatus(`${t('chatbot.downloadingModel')} ${pct}%`);
+    });
+  };
+  const baseOpts = {
     initialPrompts: [{ role: 'system', content: SYSTEM_INSTRUCTION }],
     expectedInputs: [{ type: 'text', languages: ['es', 'en'] }],
     expectedOutputs: [{ type: 'text', languages: ['es'] }],
-    monitor(m) {
-      m.addEventListener('downloadprogress', (e) => {
-        const pct = Math.round((e.loaded ?? 0) * 100);
-        modelStatus = 'downloading';
-        renderStatus(`${t('chatbot.downloadingModel')} ${pct}%`);
-      });
-    },
+    monitor,
   };
 
-  // Try each option shape that Chrome has historically accepted. Newer
-  // builds reject unknown keys, so we strip and retry on failure.
+  // Try each option shape that Chrome has historically accepted.
+  // First attempt uses the smaller 2B variant; subsequent attempts fall back
+  // to default model, then to no language hints, then to legacy systemPrompt.
   const attempts = [
-    createOptions,
-    { ...createOptions, expectedInputs: undefined, expectedOutputs: undefined },
-    { systemPrompt: SYSTEM_INSTRUCTION, monitor: createOptions.monitor },
+    { ...baseOpts, model: 'gemini-nano-2b' },
+    baseOpts,
+    { ...baseOpts, expectedInputs: undefined, expectedOutputs: undefined },
+    { systemPrompt: SYSTEM_INSTRUCTION, monitor },
   ];
 
   let lastErr = null;
@@ -421,7 +500,8 @@ export function classifyIntent(text) {
   const lc = text.toLowerCase();
   const dayHit = /\b(dissabte|diumenge|divendres|saturday|sunday|friday|sabado|domingo|viernes)\b/.test(lc);
   const planHit = /\b(pla|plan|itinerari|itinerario|cap de setmana|weekend|fin de semana)\b/.test(lc);
-  if (dayHit && (planHit || /\b(fer|hacer|do|que faig|que hago)\b/.test(lc))) return 'weekend';
+  // Any mention of a specific day → weekend planner context (covers follow-up replies like "Dissabte")
+  if (dayHit) return 'weekend';
   if (planHit) return 'weekend';
 
   // Stem-friendly match: `artist`, `artista`, `artistes`, `recomana`, `recomanacio`, etc.
@@ -622,37 +702,56 @@ export async function sendMessage(text) {
   setSendingState(true);
 
   try {
-    const s = await ensureSession();
     currentAbort = new AbortController();
-
     let finalText = '';
-    let bubble = null;
 
-    if (typeof s.promptStreaming === 'function') {
-      const stream = s.promptStreaming(modelInput, { signal: currentAbort.signal });
+    // Probe Ollama on first send if primeModel hasn't run yet.
+    if (ollamaAvailable === null) await probeOllama();
+
+    if (ollamaAvailable) {
+      // ── Ollama path ──────────────────────────────────────────────────
       typing?.remove();
-      bubble = appendMessage('assistant', '');
+      const bubble = appendMessage('assistant', '');
       const bubbleBody = bubble?.querySelector?.('.chatbot-bubble') ?? null;
-
-      let lastChunk = '';
-      for await (const chunk of stream) {
-        // Some implementations emit cumulative text; others emit deltas.
-        if (chunk.startsWith(lastChunk) && chunk.length > lastChunk.length) {
-          finalText = chunk;
-        } else {
-          finalText += chunk;
-        }
-        lastChunk = chunk;
-        if (bubbleBody) bubbleBody.innerHTML = formatMessage(finalText);
-        const list = document.getElementById(MESSAGES_ID);
-        if (list) list.scrollTop = list.scrollHeight;
-      }
-    } else if (typeof s.prompt === 'function') {
-      finalText = await s.prompt(modelInput, { signal: currentAbort.signal });
-      typing?.remove();
-      appendMessage('assistant', finalText);
+      finalText = await ollamaGenerate(
+        trimmed,
+        modelInput,
+        (cum) => {
+          if (bubbleBody) bubbleBody.innerHTML = formatMessage(cum);
+          const list = document.getElementById(MESSAGES_ID);
+          if (list) list.scrollTop = list.scrollHeight;
+        },
+        currentAbort.signal,
+      );
     } else {
-      throw new Error('Session has no prompt() method');
+      // ── Chrome Prompt API path ────────────────────────────────────────
+      const s = await ensureSession();
+      let bubble = null;
+
+      if (typeof s.promptStreaming === 'function') {
+        const stream = s.promptStreaming(modelInput, { signal: currentAbort.signal });
+        typing?.remove();
+        bubble = appendMessage('assistant', '');
+        const bubbleBody = bubble?.querySelector?.('.chatbot-bubble') ?? null;
+        let lastChunk = '';
+        for await (const chunk of stream) {
+          if (chunk.startsWith(lastChunk) && chunk.length > lastChunk.length) {
+            finalText = chunk;
+          } else {
+            finalText += chunk;
+          }
+          lastChunk = chunk;
+          if (bubbleBody) bubbleBody.innerHTML = formatMessage(finalText);
+          const list = document.getElementById(MESSAGES_ID);
+          if (list) list.scrollTop = list.scrollHeight;
+        }
+      } else if (typeof s.prompt === 'function') {
+        finalText = await s.prompt(modelInput, { signal: currentAbort.signal });
+        typing?.remove();
+        appendMessage('assistant', finalText);
+      } else {
+        throw new Error('Session has no prompt() method');
+      }
     }
 
     history.push({ role: 'assistant', text: finalText });
@@ -663,14 +762,19 @@ export async function sendMessage(text) {
     let msg;
     if (err?.name === 'AbortError') {
       msg = t('chatbot.cancelledMsg');
+    } else if (err?.message?.startsWith('Ollama HTTP')) {
+      msg = `Error Ollama (${err.message}). Comprova que el model \`${OLLAMA_MODEL}\` esta descarregat: \`ollama pull ${OLLAMA_MODEL}\`.`;
+    } else if (err?.name === 'TypeError' && /fetch|network/i.test(String(err?.message))) {
+      ollamaAvailable = false;
+      msg = "No s'ha pogut connectar amb Ollama. Comprova que esta actiu (`ollama serve`) i torna a provar.";
     } else if (err?.name === 'InvalidStateError') {
-      msg = "El model encara no esta llest al dispositiu. Comprova a `chrome://components` que **Optimization Guide On Device Model** te una versio diferent de `0.0.0.0` i que el flag `optimization-guide-on-device-model` esta en **Enabled BypassPerfRequirement**.";
+      msg = "El model encara no esta llest al dispositiu. Comprova a `chrome://components` que **Optimization Guide On Device Model** te una versio diferent de `0.0.0.0`.";
     } else if (err?.name === 'QuotaExceededError') {
       msg = 'El missatge es massa llarg per al model. Resumeix-lo i torna a provar.';
     } else if (err?.name === 'NotSupportedError' && /space|disk/i.test(String(err?.message))) {
-      msg = "**No hi ha prou espai al disc** per descarregar Gemini Nano. Chrome requereix ~22 GB lliures. Allibera espai i torna-ho a intentar.";
+      msg = "**No hi ha prou espai al disc** per descarregar Gemini Nano. Chrome requereix ~22 GB lliures.";
     } else if (err?.name === 'NotSupportedError' && /service is not running/i.test(String(err?.message))) {
-      msg = "**El servei d'IA al dispositiu no esta actiu.** Obre `chrome://components`, busca **Optimization Guide On Device Model** i prem _Check for update_. Si la versio segueix sent `0.0.0.0` despres de descarregar, comprova que tens almenys 22 GB lliures al disc i reinicia Chrome.";
+      msg = "**El servei d'IA al dispositiu no esta actiu.** Obre `chrome://components` i prem _Check for update_ a **Optimization Guide On Device Model**.";
     } else if (err?.name === 'NotSupportedError') {
       msg = `Opcions no suportades: ${err.message}`;
     } else {
@@ -723,10 +827,16 @@ function closeWindow() {
 }
 
 async function primeModel() {
-  // Always log a diagnostic on first model probe so the developer console
-  // tells us exactly which API surface (if any) Chrome is exposing.
   diagnose();
 
+  // Prefer Ollama if it's running locally — no download required.
+  if (await probeOllama()) {
+    modelStatus = 'ready';
+    renderStatus(`IA local · ${OLLAMA_MODEL}`);
+    return;
+  }
+
+  // Fall back to Chrome Built-In AI.
   const status = await checkAvailability();
   modelStatus = status === 'available' ? 'ready' : status;
   console.log('[chatbot] availability:', status);
@@ -742,9 +852,6 @@ async function primeModel() {
     return;
   }
   if (status === 'downloadable') {
-    // Don't trigger the download here — `create()` needs a user gesture and
-    // the gesture from "open the chat window" may have lapsed across awaits.
-    // We let the next message kick it off.
     renderStatus(t('chatbot.statusDownloadable'));
     return;
   }
@@ -752,7 +859,6 @@ async function primeModel() {
     renderStatus(t('chatbot.statusDownloading'));
     return;
   }
-  // 'available' — defer session creation until first send to save memory.
   renderStatus(t('chatbot.readyStatus'));
 }
 
