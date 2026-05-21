@@ -20,7 +20,7 @@
   <link rel="dns-prefetch" href="https://unpkg.com">
 
   <!-- Bootstrap CSS: synchronous local copy (layout-critical, async causes CLS) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" data-bootstrap-dir="ltr">
 
   <!-- Bootstrap Icons: async (non-layout-critical) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
@@ -42,6 +42,7 @@
   <link rel="stylesheet" href="css/main.css">
 
   <!-- Modulepreload: start downloading JS modules early -->
+  <link rel="modulepreload" href="js/i18n.js">
   <link rel="modulepreload" href="js/app.js">
   <link rel="modulepreload" href="js/modules/dataLoader.js">
   <link rel="modulepreload" href="js/modules/renderer.js">
@@ -84,45 +85,59 @@
 
 <body>
   <!-- Skip to Content -->
-  <a href="#main-content" class="skip-link">Anar al contingut principal</a>
+  <a href="#main-content" class="skip-link" data-i18n="nav.skipToContent">Anar al contingut principal</a>
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-bauxa sticky-top" aria-label="Navegacio principal">
+  <nav class="navbar navbar-expand-lg navbar-bauxa sticky-top" data-i18n-aria="nav.mainNav" aria-label="Navegació principal">
     <div class="container">
       <a class="navbar-brand" href="#home">
         Dona'm <span>Bauxa</span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-        aria-controls="mainNav" aria-expanded="false" aria-label="Obrir menu de navegacio">
+        aria-controls="mainNav" aria-expanded="false" data-i18n-aria="nav.openMenu" aria-label="Obrir menú de navegació">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav ms-auto align-items-lg-center">
           <li class="nav-item">
-            <a class="nav-link active" href="#home"><i class="bi bi-house-door"></i> Inici</a>
+            <a class="nav-link active" href="#home"><i class="bi bi-house-door" aria-hidden="true"></i> <span data-i18n="nav.home">Inici</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#artists"><i class="bi bi-music-note-list"></i> Artistes</a>
+            <a class="nav-link" href="#artists"><i class="bi bi-music-note-list" aria-hidden="true"></i> <span data-i18n="nav.artists">Artistes</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#events"><i class="bi bi-calendar-event"></i> Agenda</a>
+            <a class="nav-link" href="#events"><i class="bi bi-calendar-event" aria-hidden="true"></i> <span data-i18n="nav.events">Agenda</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#map"><i class="bi bi-map"></i> Mapa</a>
+            <a class="nav-link" href="#map"><i class="bi bi-map" aria-hidden="true"></i> <span data-i18n="nav.map">Mapa</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#favorits" aria-label="Favorits">
-              <i class="bi bi-heart"></i> Favorits
+            <a class="nav-link" href="#favorits" data-i18n-aria="nav.favorites" aria-label="Favorits">
+              <i class="bi bi-heart" aria-hidden="true"></i> <span data-i18n="nav.favorites">Favorits</span>
               <span id="favBadge" class="badge rounded-pill bg-danger ms-1" style="display:none;">0</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#joc"><i class="bi bi-controller"></i> Joc</a>
+            <a class="nav-link" href="#joc"><i class="bi bi-controller" aria-hidden="true"></i> <span data-i18n="nav.game">Joc</span></a>
+          </li>
+          <!-- Language switcher -->
+          <li class="nav-item dropdown" id="navLangSwitcher">
+            <button class="nav-link btn btn-sm dropdown-toggle d-flex align-items-center gap-1 ms-lg-1"
+                    data-bs-toggle="dropdown" aria-expanded="false" aria-label="Seleccionar idioma">
+              <i class="bi bi-translate" aria-hidden="true"></i>
+              <span id="currentLangLabel">CA</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><button class="dropdown-item lang-btn" data-lang="ca"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt="CA"> Català</button></li>
+              <li><button class="dropdown-item lang-btn" data-lang="en"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt="EN"> English</button></li>
+              <li><button class="dropdown-item lang-btn" data-lang="de"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt="DE"> Deutsch</button></li>
+              <li><button class="dropdown-item lang-btn" data-lang="es"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt="ES"> Castellano</button></li>
+            </ul>
           </li>
           <!-- Login button (visible when not authenticated) -->
           <li class="nav-item" id="navLogin">
             <button class="nav-link btn btn-bauxa-outline btn-sm ms-lg-2" id="loginBtn">
-              <i class="bi bi-google"></i> Iniciar Sessio
+              <i class="bi bi-google" aria-hidden="true"></i> <span data-i18n="nav.login">Iniciar Sessió</span>
             </button>
           </li>
           <!-- User dropdown (visible when authenticated) -->
@@ -133,16 +148,15 @@
               <span id="userName"></span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#profile"><i class="bi bi-person"></i> El meu Perfil</a></li>
+              <li><a class="dropdown-item" href="#profile"><i class="bi bi-person" aria-hidden="true"></i> <span data-i18n="nav.profile">El meu Perfil</span></a></li>
               <li id="navSolicituds" class="d-none"><a class="dropdown-item" href="#solicituds"><i
-                    class="bi bi-pencil-square"></i> Solicituds</a></li>
-              <li id="navAdmin" class="d-none"><a class="dropdown-item" href="#admin"><i class="bi bi-gear"></i>
-                  Administracio</a></li>
+                    class="bi bi-pencil-square" aria-hidden="true"></i> <span data-i18n="nav.requests">Solicituds</span></a></li>
+              <li id="navAdmin" class="d-none"><a class="dropdown-item" href="#admin"><i class="bi bi-gear" aria-hidden="true"></i>
+                  <span data-i18n="nav.admin">Administració</span></a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><button class="dropdown-item text-danger" id="logoutBtn"><i class="bi bi-box-arrow-right"></i> Tancar
-                  Sessio</button></li>
+              <li><button class="dropdown-item text-danger" id="logoutBtn"><i class="bi bi-box-arrow-right" aria-hidden="true"></i> <span data-i18n="nav.logout">Tancar Sessió</span></button></li>
             </ul>
           </li>
         </ul>
@@ -160,16 +174,15 @@
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-7">
-              <h1>Descobreix la <span>Bauxa</span> de Mallorca</h1>
-              <p class="mb-4">La teva guia per trobar concerts, festivals i festes populars a l'illa. Explora l'escena
-                musical mallorquina i no et perdis cap nit de bauxa.</p>
+              <h1 data-i18n="hero.title">Descobreix la <span>Bauxa</span> de Mallorca</h1>
+              <p class="mb-4" data-i18n="hero.subtitle">La teva guia per trobar concerts, festivals i festes populars a l'illa.</p>
               <div class="d-flex flex-wrap gap-3">
                 <a href="#events" class="btn btn-bauxa btn-lg">
-                  <i class="bi bi-calendar-event"></i> Veure Agenda
+                  <i class="bi bi-calendar-event" aria-hidden="true"></i> <span data-i18n="hero.viewCalendar">Veure Agenda</span>
                 </a>
                 <a href="#artists" class="btn btn-bauxa-outline btn-lg"
                   style="border-color:rgba(255,255,255,0.5);color:#fff;">
-                  <i class="bi bi-music-note-list"></i> Explorar Artistes
+                  <i class="bi bi-music-note-list" aria-hidden="true"></i> <span data-i18n="hero.exploreArtists">Explorar Artistes</span>
                 </a>
               </div>
             </div>
@@ -193,8 +206,8 @@
       <!-- Featured Events Section -->
       <section class="section-padding" aria-label="Esdeveniments destacats">
         <div class="container">
-          <h2 class="section-title">Esdeveniments Destacats</h2>
-          <p class="section-subtitle">Els concerts i festivals que no et pots perdre</p>
+          <h2 class="section-title" data-i18n="section.featuredEvents">Esdeveniments Destacats</h2>
+          <p class="section-subtitle" data-i18n="section.featuredEventsSubtitle">Els concerts i festivals que no et pots perdre</p>
           <div class="row" id="featuredEvents">
             <div class="col-md-6 mb-4" aria-hidden="true">
               <div class="skeleton-block"
@@ -221,11 +234,11 @@
         <div class="container">
           <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
             <div>
-              <h2 class="section-title">Propers Esdeveniments</h2>
-              <p class="section-subtitle mb-0">Agenda actualitzada de concerts i festes</p>
+              <h2 class="section-title" data-i18n="section.upcomingEvents">Propers Esdeveniments</h2>
+              <p class="section-subtitle mb-0" data-i18n="section.upcomingEventsSubtitle">Agenda actualitzada de concerts i festes</p>
             </div>
             <a href="#events" class="btn btn-bauxa-outline">
-              Veure tots <i class="bi bi-arrow-right"></i>
+              <span data-i18n="common.viewAll">Veure tots</span> <i class="bi bi-arrow-right" aria-hidden="true"></i>
             </a>
           </div>
           <div class="row" id="upcomingEvents">
@@ -263,11 +276,11 @@
         <div class="container">
           <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
             <div>
-              <h2 class="section-title">Artistes Destacats</h2>
-              <p class="section-subtitle mb-0">El talent musical de l'illa</p>
+              <h2 class="section-title" data-i18n="section.featuredArtists">Artistes Destacats</h2>
+              <p class="section-subtitle mb-0" data-i18n="section.featuredArtistsSubtitle">El talent musical de l'illa</p>
             </div>
             <a href="#artists" class="btn btn-bauxa-outline">
-              Tots els artistes <i class="bi bi-arrow-right"></i>
+              <span data-i18n="common.viewAll">Tots els artistes</span> <i class="bi bi-arrow-right" aria-hidden="true"></i>
             </a>
           </div>
           <div class="row" id="featuredArtists">
@@ -296,10 +309,10 @@
       </section>
 
       <!-- News Section -->
-      <section class="section-padding bg-alt" aria-label="Noticies">
+      <section class="section-padding bg-alt" aria-label="Notícies">
         <div class="container">
-          <h2 class="section-title">Noticies de l'Escena</h2>
-          <p class="section-subtitle">Actualitat musical de les Illes Balears</p>
+          <h2 class="section-title" data-i18n="section.news">Notícies de l'Escena</h2>
+          <p class="section-subtitle" data-i18n="section.newsSubtitle">Actualitat musical de les Illes Balears</p>
           <div class="row" id="newsGrid">
             <div class="col-md-6 col-lg-4 mb-4" aria-hidden="true">
               <div class="skeleton-block"
@@ -324,11 +337,10 @@
       <section class="section-padding text-center"
         style="background:linear-gradient(135deg, var(--color-secondary-dark), var(--color-primary-dark)); color:#fff;">
         <div class="container">
-          <h2 style="color:#fff;" class="mb-3">No et perdis cap bauxa!</h2>
-          <p class="mb-4" style="opacity:0.9;max-width:500px;margin:0 auto;">Explora el mapa de Mallorca per trobar els
-            concerts mes propers a tu.</p>
+          <h2 style="color:#fff;" class="mb-3" data-i18n="section.cta">No et perdis cap bauxa!</h2>
+          <p class="mb-4" style="opacity:0.9;max-width:500px;margin:0 auto;" data-i18n="section.ctaDesc">Explora el mapa de Mallorca per trobar els concerts més propers a tu.</p>
           <a href="#map" class="btn btn-bauxa btn-lg">
-            <i class="bi bi-map"></i> Obrir Mapa
+            <i class="bi bi-map" aria-hidden="true"></i> <span data-i18n="hero.openMap">Obrir Mapa</span>
           </a>
         </div>
       </section>
@@ -350,28 +362,28 @@
         <div class="container">
 
           <!-- Filter Bar -->
-          <div class="filter-bar" role="search" aria-label="Filtres d'artistes">
+          <div class="filter-bar" role="search" data-i18n-aria="filter.artistsFilters" aria-label="Filtres d'artistes">
             <div class="row g-3 align-items-end">
               <div class="col-md-4">
-                <label for="searchArtists" class="form-label small fw-semibold">Cerca</label>
+                <label for="searchArtists" class="form-label small fw-semibold" data-i18n="filter.search">Cerca</label>
                 <input type="search" class="form-control form-control-bauxa" id="searchArtists"
-                  placeholder="Nom d'artista, genere..." aria-label="Cercar artistes">
+                  data-i18n-placeholder="filter.artistsPlaceholder" placeholder="Nom d'artista, gènere..." aria-label="Cercar artistes">
               </div>
               <div class="col-md-3">
-                <label for="artistsFilterGenre" class="form-label small fw-semibold">Genere</label>
-                <select class="form-select form-select-bauxa" id="artistsFilterGenre" aria-label="Filtrar per genere">
-                  <option value="">Tots els generes</option>
+                <label for="artistsFilterGenre" class="form-label small fw-semibold" data-i18n="filter.genre">Gènere</label>
+                <select class="form-select form-select-bauxa" id="artistsFilterGenre" aria-label="Filtrar per gènere">
+                  <option value=""></option>
                 </select>
               </div>
               <div class="col-md-3">
-                <label for="artistsFilterZone" class="form-label small fw-semibold">Zona</label>
+                <label for="artistsFilterZone" class="form-label small fw-semibold" data-i18n="filter.zone">Zona</label>
                 <select class="form-select form-select-bauxa" id="artistsFilterZone" aria-label="Filtrar per zona">
-                  <option value="">Totes les zones</option>
+                  <option value=""></option>
                 </select>
               </div>
               <div class="col-md-2">
-                <button class="btn btn-bauxa-outline w-100" id="artistsClearFilters" aria-label="Netejar filtres">
-                  <i class="bi bi-x-circle"></i> Netejar
+                <button class="btn btn-bauxa-outline w-100" id="artistsClearFilters" data-i18n-aria="filter.clear" aria-label="Netejar filtres">
+                  <i class="bi bi-x-circle" aria-hidden="true"></i> <span data-i18n="filter.clear">Netejar</span>
                 </button>
               </div>
             </div>
@@ -405,47 +417,47 @@
         <div class="container">
 
           <!-- Filter Bar -->
-          <div class="filter-bar" role="search" aria-label="Filtres d'esdeveniments">
+          <div class="filter-bar" role="search" data-i18n-aria="filter.eventsFilters" aria-label="Filtres d'esdeveniments">
             <div class="row g-3 align-items-end">
               <div class="col-md-3">
-                <label for="searchEvents" class="form-label small fw-semibold">Cerca</label>
+                <label for="searchEvents" class="form-label small fw-semibold" data-i18n="filter.search">Cerca</label>
                 <input type="search" class="form-control form-control-bauxa" id="searchEvents"
-                  placeholder="Nom, artista, lloc..." aria-label="Cercar esdeveniments">
+                  data-i18n-placeholder="filter.eventsPlaceholder" placeholder="Nom, artista, lloc..." aria-label="Cercar esdeveniments">
               </div>
               <div class="col-md-2">
-                <label for="eventsFilterGenre" class="form-label small fw-semibold">Genere</label>
-                <select class="form-select form-select-bauxa" id="eventsFilterGenre" aria-label="Filtrar per genere">
-                  <option value="">Tots</option>
+                <label for="eventsFilterGenre" class="form-label small fw-semibold" data-i18n="filter.genre">Gènere</label>
+                <select class="form-select form-select-bauxa" id="eventsFilterGenre" aria-label="Filtrar per gènere">
+                  <option value=""></option>
                 </select>
               </div>
               <div class="col-md-2">
-                <label for="eventsFilterZone" class="form-label small fw-semibold">Zona</label>
+                <label for="eventsFilterZone" class="form-label small fw-semibold" data-i18n="filter.zone">Zona</label>
                 <select class="form-select form-select-bauxa" id="eventsFilterZone" aria-label="Filtrar per zona">
-                  <option value="">Totes</option>
+                  <option value=""></option>
                 </select>
               </div>
               <div class="col-md-2">
-                <label for="eventsFilterCategory" class="form-label small fw-semibold">Categoria</label>
+                <label for="eventsFilterCategory" class="form-label small fw-semibold" data-i18n="filter.category">Categoria</label>
                 <select class="form-select form-select-bauxa" id="eventsFilterCategory"
                   aria-label="Filtrar per categoria">
-                  <option value="">Totes</option>
+                  <option value=""></option>
                 </select>
               </div>
               <div class="col-md-3">
-                <label for="eventsFilterDateFrom" class="form-label small fw-semibold">Des de</label>
+                <label for="eventsFilterDateFrom" class="form-label small fw-semibold" data-i18n="filter.dateFrom">Des de</label>
                 <input type="date" class="form-control form-control-bauxa" id="eventsFilterDateFrom"
                   aria-label="Data des de">
               </div>
             </div>
             <div class="row g-3 mt-1 align-items-end">
               <div class="col-md-3">
-                <label for="eventsFilterDateTo" class="form-label small fw-semibold">Fins a</label>
+                <label for="eventsFilterDateTo" class="form-label small fw-semibold" data-i18n="filter.dateTo">Fins a</label>
                 <input type="date" class="form-control form-control-bauxa" id="eventsFilterDateTo"
                   aria-label="Data fins a">
               </div>
               <div class="col-md-2">
-                <button class="btn btn-bauxa-outline w-100" id="eventsClearFilters" aria-label="Netejar filtres">
-                  <i class="bi bi-x-circle"></i> Netejar
+                <button class="btn btn-bauxa-outline w-100" id="eventsClearFilters" data-i18n-aria="filter.clear" aria-label="Netejar filtres">
+                  <i class="bi bi-x-circle" aria-hidden="true"></i> <span data-i18n="filter.clear">Netejar</span>
                 </button>
               </div>
             </div>
@@ -510,19 +522,19 @@
 
               <!-- Legend -->
               <div class="map-legend mt-3">
-                <strong class="small">Llegenda:</strong>
+                <strong class="small" data-i18n="map.legend.title">Llegenda:</strong>
                 <div class="d-flex flex-wrap gap-3 mt-2">
                   <div class="map-legend__item">
                     <span class="map-legend__dot" style="background:#C45A3C;"></span>
-                    Concert
+                    <span data-i18n="map.legend.concert">Concert</span>
                   </div>
                   <div class="map-legend__item">
                     <span class="map-legend__dot" style="background:#D4A843;"></span>
-                    Festival
+                    <span data-i18n="map.legend.festival">Festival</span>
                   </div>
                   <div class="map-legend__item">
                     <span class="map-legend__dot" style="background:#6B8E4E;"></span>
-                    Festa Popular
+                    <span data-i18n="map.legend.popularFestival">Festa Popular</span>
                   </div>
                 </div>
               </div>
@@ -581,8 +593,8 @@
           <div id="profileNotAuth" style="display:none;">
             <div class="empty-state">
               <i class="bi bi-shield-lock"></i>
-              <p>Has d'iniciar sessio per veure el teu perfil.</p>
-              <button id="profileLoginBtn" class="btn btn-bauxa"><i class="bi bi-google"></i> Iniciar Sessio amb Google</button>
+              <p data-i18n="profile.notAuth">Has d'iniciar sessió per veure el teu perfil.</p>
+              <button id="profileLoginBtn" class="btn btn-bauxa"><i class="bi bi-google" aria-hidden="true"></i> <span data-i18n="profile.loginBtn">Iniciar Sessió amb Google</span></button>
             </div>
           </div>
 
@@ -600,21 +612,21 @@
 
               <form id="profileForm">
                 <div class="mb-3">
-                  <label for="profileEmail" class="form-label small fw-semibold">Email</label>
+                  <label for="profileEmail" class="form-label small fw-semibold" data-i18n="profile.emailLabel">Email</label>
                   <input type="email" class="form-control form-control-bauxa" id="profileEmail" disabled>
                 </div>
                 <div class="mb-3">
-                  <label for="profileDisplayName" class="form-label small fw-semibold">Nom visible</label>
+                  <label for="profileDisplayName" class="form-label small fw-semibold" data-i18n="profile.displayNameLabel">Nom visible</label>
                   <input type="text" class="form-control form-control-bauxa" id="profileDisplayName"
-                    placeholder="El teu nom visible">
+                    data-i18n-placeholder="profile.displayNameLabel" placeholder="El teu nom visible">
                 </div>
                 <div class="mb-3">
-                  <label for="profileBio" class="form-label small fw-semibold">Bio</label>
+                  <label for="profileBio" class="form-label small fw-semibold" data-i18n="profile.bioLabel">Bio</label>
                   <textarea class="form-control form-control-bauxa" id="profileBio" rows="3"
-                    placeholder="Conta'ns una mica sobre tu..."></textarea>
+                    placeholder="..."></textarea>
                 </div>
                 <button type="submit" class="btn btn-bauxa">
-                  <i class="bi bi-check-lg"></i> Guardar Canvis
+                  <i class="bi bi-check-lg" aria-hidden="true"></i> <span data-i18n="profile.saveChanges">Guardar Canvis</span>
                 </button>
               </form>
             </div>
@@ -765,6 +777,16 @@
                         <input type="text" class="form-control form-control-bauxa" id="req_artistImage"
                           placeholder="assets/images/artists/nom.jpg">
                       </div>
+                      <div class="col-md-6">
+                        <label class="form-label small fw-semibold" data-i18n="common.contentLang">Idioma del contingut</label>
+                        <select class="form-select form-select-bauxa" id="req_artistLang">
+                          <option value="" data-i18n="common.langAll">Tots (sense etiqueta)</option>
+                          <option value="ca" data-i18n="common.langCa">Català</option>
+                          <option value="en" data-i18n="common.langEn">Anglès</option>
+                          <option value="de" data-i18n="common.langDe">Alemany</option>
+                          <option value="es" data-i18n="common.langEs">Castellà</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
 
@@ -842,6 +864,16 @@
                         <input type="text" class="form-control form-control-bauxa" id="req_eventImage"
                           placeholder="assets/images/events/nom.jpg">
                       </div>
+                      <div class="col-md-6">
+                        <label class="form-label small fw-semibold" data-i18n="common.contentLang">Idioma del contingut</label>
+                        <select class="form-select form-select-bauxa" id="req_eventLang">
+                          <option value="" data-i18n="common.langAll">Tots (sense etiqueta)</option>
+                          <option value="ca" data-i18n="common.langCa">Català</option>
+                          <option value="en" data-i18n="common.langEn">Anglès</option>
+                          <option value="de" data-i18n="common.langDe">Alemany</option>
+                          <option value="es" data-i18n="common.langEs">Castellà</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
 
@@ -878,6 +910,16 @@
                         <label class="form-label small fw-semibold">Ruta imatge</label>
                         <input type="text" class="form-control form-control-bauxa" id="req_newsImage"
                           placeholder="assets/images/news/nom.jpg">
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label small fw-semibold" data-i18n="common.contentLang">Idioma del contingut</label>
+                        <select class="form-select form-select-bauxa" id="req_newsLang">
+                          <option value="" data-i18n="common.langAll">Tots (sense etiqueta)</option>
+                          <option value="ca" data-i18n="common.langCa">Català</option>
+                          <option value="en" data-i18n="common.langEn">Anglès</option>
+                          <option value="de" data-i18n="common.langDe">Alemany</option>
+                          <option value="es" data-i18n="common.langEs">Castellà</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -917,8 +959,8 @@
           <div id="adminNotAuth" style="display:none;">
             <div class="empty-state">
               <i class="bi bi-shield-lock"></i>
-              <p>Has d'iniciar sessio amb un compte d'administrador.</p>
-              <button id="adminLoginBtn" class="btn btn-bauxa"><i class="bi bi-google"></i> Iniciar Sessio amb Google</button>
+              <p data-i18n="admin.notAuth">Has d'iniciar sessió amb un compte d'administrador.</p>
+              <button id="adminLoginBtn" class="btn btn-bauxa"><i class="bi bi-google" aria-hidden="true"></i> <span data-i18n="admin.loginBtn">Iniciar Sessió amb Google</span></button>
             </div>
           </div>
 
@@ -1148,6 +1190,16 @@
                         <button type="button" class="btn btn-sm btn-bauxa-outline mt-1" id="addAlbumRow"><i
                             class="bi bi-plus-circle"></i> Afegir album</button>
                       </div>
+                      <div class="col-md-4">
+                        <label for="artistLang" class="form-label small fw-semibold">Idioma del contingut</label>
+                        <select class="form-select form-select-bauxa" id="artistLang">
+                          <option value="">Tots (sense etiqueta)</option>
+                          <option value="ca">Català</option>
+                          <option value="es">Castellà</option>
+                          <option value="en">Anglès</option>
+                          <option value="de">Alemany</option>
+                        </select>
+                      </div>
                       <div class="col-12 mt-3">
                         <button type="submit" class="btn btn-bauxa me-2" id="submitArtist"><i
                             class="bi bi-check-lg"></i> Guardar</button>
@@ -1250,6 +1302,16 @@
                           <label class="form-check-label small" for="eventFeatured">Esdeveniment destacat</label>
                         </div>
                       </div>
+                      <div class="col-md-4">
+                        <label for="eventLang" class="form-label small fw-semibold">Idioma del contingut</label>
+                        <select class="form-select form-select-bauxa" id="eventLang">
+                          <option value="">Tots (sense etiqueta)</option>
+                          <option value="ca">Català</option>
+                          <option value="es">Castellà</option>
+                          <option value="en">Anglès</option>
+                          <option value="de">Alemany</option>
+                        </select>
+                      </div>
                       <div class="col-12 mt-3">
                         <button type="submit" class="btn btn-bauxa me-2" id="submitEvent"><i class="bi bi-check-lg"></i>
                           Guardar</button>
@@ -1304,6 +1366,16 @@
                         <label for="newsImage" class="form-label small fw-semibold">Ruta imatge</label>
                         <input type="text" class="form-control form-control-bauxa" id="newsImage"
                           placeholder="assets/images/news/nom.jpg">
+                      </div>
+                      <div class="col-md-4">
+                        <label for="newsLang" class="form-label small fw-semibold">Idioma del contingut</label>
+                        <select class="form-select form-select-bauxa" id="newsLang">
+                          <option value="">Tots (sense etiqueta)</option>
+                          <option value="ca">Català</option>
+                          <option value="es">Castellà</option>
+                          <option value="en">Anglès</option>
+                          <option value="de">Alemany</option>
+                        </select>
                       </div>
                       <div class="col-12 mt-3">
                         <button type="submit" class="btn btn-bauxa me-2" id="submitNews"><i class="bi bi-check-lg"></i>

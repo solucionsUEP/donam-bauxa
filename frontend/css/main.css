@@ -446,6 +446,13 @@ img {
   margin-right: 0.3rem;
 }
 
+.flag-icon {
+  width: 20px;
+  height: auto;
+  vertical-align: middle;
+  border-radius: 2px;
+}
+
 .navbar-bauxa .navbar-nav {
   gap: 0.25rem;
 }
