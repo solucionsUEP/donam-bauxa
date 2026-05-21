@@ -14,6 +14,8 @@
  *   - __mockTest()         Console-driven mock test entry point.
  */
 
+import { t } from '../i18n.js';
+
 /* ------------------------------------------------------------------ */
 /*  System instruction                                                 */
 /* ------------------------------------------------------------------ */
@@ -371,7 +373,7 @@ async function ensureSession() {
       m.addEventListener('downloadprogress', (e) => {
         const pct = Math.round((e.loaded ?? 0) * 100);
         modelStatus = 'downloading';
-        renderStatus(`Descarregant el model… ${pct}%`);
+        renderStatus(`${t('chatbot.downloadingModel')} ${pct}%`);
       });
     },
   };
@@ -416,14 +418,14 @@ async function ensureSession() {
  * @returns {'weekend'|'music'|'general'}
  */
 export function classifyIntent(text) {
-  const t = text.toLowerCase();
-  const dayHit = /\b(dissabte|diumenge|divendres|saturday|sunday|friday|sabado|domingo|viernes)\b/.test(t);
-  const planHit = /\b(pla|plan|itinerari|itinerario|cap de setmana|weekend|fin de semana)\b/.test(t);
-  if (dayHit && (planHit || /\b(fer|hacer|do|que faig|que hago)\b/.test(t))) return 'weekend';
+  const lc = text.toLowerCase();
+  const dayHit = /\b(dissabte|diumenge|divendres|saturday|sunday|friday|sabado|domingo|viernes)\b/.test(lc);
+  const planHit = /\b(pla|plan|itinerari|itinerario|cap de setmana|weekend|fin de semana)\b/.test(lc);
+  if (dayHit && (planHit || /\b(fer|hacer|do|que faig|que hago)\b/.test(lc))) return 'weekend';
   if (planHit) return 'weekend';
 
   // Stem-friendly match: `artist`, `artista`, `artistes`, `recomana`, `recomanacio`, etc.
-  const musicHit = /\b(m[uú]sic\w*|can[çc]\w*|song\w*|artist\w*|band\w*|grup\w*|group\w*|g[èeé]ner\w*|genre\w*|recoman\w*|recomien\w*|recommend\w*|playlist)\b/.test(t);
+  const musicHit = /\b(m[uú]sic\w*|can[çc]\w*|song\w*|artist\w*|band\w*|grup\w*|group\w*|g[èeé]ner\w*|genre\w*|recoman\w*|recomien\w*|recommend\w*|playlist)\b/.test(lc);
   if (musicHit) return 'music';
 
   return 'general';
@@ -447,25 +449,25 @@ function mountUI() {
   launcher.id = LAUNCHER_ID;
   launcher.className = 'chatbot-launcher';
   launcher.type = 'button';
-  launcher.setAttribute('aria-label', 'Obrir assistent');
+  launcher.setAttribute('aria-label', t('chatbot.openAssistant'));
   launcher.innerHTML = '<i class="bi bi-chat-dots-fill" aria-hidden="true"></i>';
 
   const win = document.createElement('section');
   win.id = WINDOW_ID;
   win.className = 'chatbot-window';
   win.setAttribute('role', 'dialog');
-  win.setAttribute('aria-label', "Assistent Dona'm Bauxa");
+  win.setAttribute('aria-label', t('chatbot.title'));
   win.setAttribute('aria-hidden', 'true');
   win.innerHTML = `
     <header class="chatbot-header">
       <div class="chatbot-header-title">
         <span class="chatbot-avatar" aria-hidden="true"><i class="bi bi-stars"></i></span>
         <div>
-          <div class="chatbot-title">Assistent Bauxa</div>
-          <div class="chatbot-subtitle" id="${STATUS_ID}">IA al dispositiu</div>
+          <div class="chatbot-title">${t('chatbot.title')}</div>
+          <div class="chatbot-subtitle" id="${STATUS_ID}">${t('chatbot.deviceStatus')}</div>
         </div>
       </div>
-      <button type="button" class="chatbot-close" aria-label="Tancar assistent">
+      <button type="button" class="chatbot-close" aria-label="${t('chatbot.closeAssistant')}">
         <i class="bi bi-x-lg" aria-hidden="true"></i>
       </button>
     </header>
@@ -475,12 +477,12 @@ function mountUI() {
         id="${INPUT_ID}"
         type="text"
         class="chatbot-input"
-        placeholder="Demana'm un pla, musica…"
-        aria-label="Escriu un missatge"
+        placeholder="${t('chatbot.placeholder')}"
+        aria-label="${t('chatbot.inputLabel')}"
         maxlength="500"
         required
       />
-      <button type="submit" class="chatbot-send" aria-label="Enviar">
+      <button type="submit" class="chatbot-send" aria-label="${t('chatbot.send')}">
         <i class="bi bi-send-fill" aria-hidden="true"></i>
       </button>
     </form>
@@ -560,7 +562,7 @@ function appendTypingIndicator() {
 
 function renderStatus(text) {
   const el = document.getElementById(STATUS_ID);
-  if (el) el.textContent = text || (modelStatus === 'ready' ? 'IA al dispositiu · llest' : 'IA al dispositiu');
+  if (el) el.textContent = text || (modelStatus === 'ready' ? t('chatbot.readyStatus') : t('chatbot.deviceStatus'));
 }
 
 function renderUnsupportedNotice(detail) {
@@ -660,7 +662,7 @@ export async function sendMessage(text) {
     console.error('[chatbot] generation failed:', err);
     let msg;
     if (err?.name === 'AbortError') {
-      msg = 'Resposta cancel·lada.';
+      msg = t('chatbot.cancelledMsg');
     } else if (err?.name === 'InvalidStateError') {
       msg = "El model encara no esta llest al dispositiu. Comprova a `chrome://components` que **Optimization Guide On Device Model** te una versio diferent de `0.0.0.0` i que el flag `optimization-guide-on-device-model` esta en **Enabled BypassPerfRequirement**.";
     } else if (err?.name === 'QuotaExceededError') {
@@ -672,7 +674,7 @@ export async function sendMessage(text) {
     } else if (err?.name === 'NotSupportedError') {
       msg = `Opcions no suportades: ${err.message}`;
     } else {
-      msg = `L'assistent no ha pogut respondre (${err?.name || 'error'}). Mira la consola per detalls.`;
+      msg = t('chatbot.errorGeneric');
     }
     appendMessage('assistant', msg);
     return '';
@@ -705,10 +707,7 @@ function openWindow() {
 
   // First open: seed greeting + verify model.
   if (!history.length) {
-    appendMessage(
-      'assistant',
-      "Hola! Soc l'assistent de Dona'm Bauxa. Et puc ajudar a **planificar un cap de setmana**, **recomanar-te musica** o respondre dubtes. Que et ve de gust?"
-    );
+    appendMessage('assistant', t('chatbot.greeting'));
     primeModel();
   }
 }
@@ -733,12 +732,12 @@ async function primeModel() {
   console.log('[chatbot] availability:', status);
 
   if (status === 'unsupported') {
-    renderStatus('No disponible en aquest navegador');
+    renderStatus(t('chatbot.statusUnsupported'));
     renderUnsupportedNotice('unsupported');
     return;
   }
   if (status === 'unavailable') {
-    renderStatus('Model no disponible al dispositiu');
+    renderStatus(t('chatbot.statusUnavailable'));
     renderUnsupportedNotice('unavailable');
     return;
   }
@@ -746,15 +745,15 @@ async function primeModel() {
     // Don't trigger the download here — `create()` needs a user gesture and
     // the gesture from "open the chat window" may have lapsed across awaits.
     // We let the next message kick it off.
-    renderStatus("Model llest per descarregar (s'iniciara amb el primer missatge)");
+    renderStatus(t('chatbot.statusDownloadable'));
     return;
   }
   if (status === 'downloading') {
-    renderStatus("El model s'esta descarregant en segon pla…");
+    renderStatus(t('chatbot.statusDownloading'));
     return;
   }
   // 'available' — defer session creation until first send to save memory.
-  renderStatus('IA al dispositiu · llest');
+  renderStatus(t('chatbot.readyStatus'));
 }
 
 function bindEvents() {

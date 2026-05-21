@@ -5,9 +5,7 @@
 
 import { isFavorite, toggleFavorite } from './favorites.js';
 import { downloadICS } from './calendar.js';
-
-/** Month abbreviations in Catalan */
-const MONTHS_CA = ['Gen', 'Feb', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Des'];
+import { t, getIntlLocale } from '../i18n.js';
 
 /**
  * Generates an inline SVG placeholder for items without images.
@@ -87,11 +85,12 @@ function escapeHtml(text) {
  */
 function formatDate(dateStr) {
   const d = new Date(dateStr);
+  const locale = getIntlLocale();
   return {
     day: d.getDate().toString(),
-    month: MONTHS_CA[d.getMonth()],
-    time: d.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' }),
-    full: d.toLocaleDateString('ca-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    month: new Intl.DateTimeFormat(locale, { month: 'short' }).format(d),
+    time: d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }),
+    full: d.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   };
 }
 
@@ -133,8 +132,8 @@ export function renderArtistCard(artist) {
             <button class="btn-favorite ${favClass}"
                     data-fav-type="artist"
                     data-fav-id="${artist['@id']}"
-                    aria-label="Afegir ${escapeHtml(artist.name)} a favorits"
-                    title="Afegir a favorits">
+                    aria-label="${t('artist.addToFavorites', { name: escapeHtml(artist.name) })}"
+                    title="${t('artist.addToFavoritesShort')}">
               <i class="bi ${favIcon}"></i>
             </button>
           </div>
@@ -156,14 +155,14 @@ export function renderArtistCard(artist) {
                     data-bs-target="#artistModal"
                     data-artist-id="${artist['@id']}"
                     onclick="window.showArtistDetail && window.showArtistDetail('${artist['@id']}')">
-              <i class="bi bi-info-circle"></i> Veure mes
+              <i class="bi bi-info-circle"></i> ${t('artist.viewMore')}
             </button>
             ${artist.spotifyId ? `
               <a href="https://open.spotify.com/artist/${artist.spotifyId}"
                  class="btn btn-sm btn-bauxa-secondary"
                  target="_blank"
                  rel="noopener noreferrer"
-                 aria-label="Escoltar ${escapeHtml(artist.name)} a Spotify">
+                 aria-label="${t('artist.listenOnSpotify', { name: escapeHtml(artist.name) })}">
                 <i class="bi bi-spotify"></i>
               </a>` : ''}
           </div>
@@ -181,7 +180,7 @@ export function renderEventCard(event) {
   const date = formatDate(event.startDate);
   const performers = getPerformerNames(event);
   const price = parseFloat(event.offers?.price || 0);
-  const priceLabel = price === 0 ? 'Gratuit' : `${price.toFixed(0)} EUR`;
+  const priceLabel = price === 0 ? t('event.free') : `${price.toFixed(0)} EUR`;
   const priceClass = price === 0 ? 'badge-price--free' : '';
 
   const favClass = isFavorite('event', event['@id']) ? 'active' : '';
@@ -212,7 +211,7 @@ export function renderEventCard(event) {
                   <button class="btn-favorite ${favClass}"
                           data-fav-type="event"
                           data-fav-id="${event['@id']}"
-                          aria-label="Afegir ${escapeHtml(event.name)} a favorits">
+                          aria-label="${t('event.addToFavorites', { name: escapeHtml(event.name) })}">
                     <i class="bi ${favIcon}"></i>
                   </button>
                 </div>
@@ -233,13 +232,13 @@ export function renderEventCard(event) {
                         data-bs-toggle="modal"
                         data-bs-target="#eventModal"
                         onclick="window.showEventDetail && window.showEventDetail('${event['@id']}')">
-                  <i class="bi bi-info-circle"></i> Detalls
+                  <i class="bi bi-info-circle"></i> ${t('event.details')}
                 </button>
                 ${event.offers?.url && event.offers.url !== '#' ? `
                   <a href="${event.offers.url}" class="btn btn-sm btn-bauxa-outline" target="_blank" rel="noopener noreferrer">
-                    <i class="bi bi-ticket-perforated"></i> Entrades
+                    <i class="bi bi-ticket-perforated"></i> ${t('event.tickets')}
                   </a>` : ''}
-                <button class="btn btn-sm btn-bauxa-secondary btn-calendar" data-event-id="${event['@id']}" aria-label="Afegir al calendari">
+                <button class="btn btn-sm btn-bauxa-secondary btn-calendar" data-event-id="${event['@id']}" aria-label="${t('event.addToCalendar')}">
                   <i class="bi bi-calendar-plus"></i>
                 </button>
               </div>
@@ -259,7 +258,7 @@ export function renderFeaturedEvent(event) {
   const date = formatDate(event.startDate);
   const performers = getPerformerNames(event);
   const price = parseFloat(event.offers?.price || 0);
-  const priceLabel = price === 0 ? 'Gratuit' : `${price.toFixed(0)} EUR`;
+  const priceLabel = price === 0 ? t('event.free') : `${price.toFixed(0)} EUR`;
 
   return `
     <div class="col-md-6 mb-4 animate-fade-in-up">
@@ -276,10 +275,10 @@ export function renderFeaturedEvent(event) {
             <span class="badge-price ${price === 0 ? 'badge-price--free' : ''}">${priceLabel}</span>
             ${event.offers?.url && event.offers.url !== '#' ? `
               <a href="${event.offers.url}" class="btn btn-sm btn-bauxa" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-ticket-perforated"></i> Entrades
+                <i class="bi bi-ticket-perforated"></i> ${t('event.tickets')}
               </a>` : ''}
             <button class="btn btn-sm btn-bauxa-secondary btn-calendar" data-event-id="${event['@id']}">
-              <i class="bi bi-calendar-plus"></i> Calendari
+              <i class="bi bi-calendar-plus"></i> ${t('event.addToCalendarShort')}
             </button>
           </div>
         </div>
@@ -294,7 +293,7 @@ export function renderFeaturedEvent(event) {
  */
 export function renderNewsCard(article) {
   const date = new Date(article.datePublished);
-  const dateStr = date.toLocaleDateString('ca-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+  const dateStr = date.toLocaleDateString(getIntlLocale(), { day: 'numeric', month: 'long', year: 'numeric' });
 
   return `
     <div class="col-md-6 col-lg-4 mb-4 animate-fade-in-up">
@@ -355,10 +354,10 @@ export function renderArtistDetail(artist) {
       <div class="col-12">
         <p class="mb-3">${escapeHtml(artist.description || '')}</p>
         <div class="mb-3">${genres} <span class="badge-zone ms-2">${escapeHtml(artist.zone || '')}</span></div>
-        ${artist.foundingDate ? `<p class="small text-muted"><i class="bi bi-calendar3"></i> Des de ${artist.foundingDate} &mdash; ${escapeHtml(artist.foundingLocation?.name || '')}</p>` : ''}
-        ${members ? `<div class="mb-3"><strong class="small">Membres:</strong><br>${members}</div>` : ''}
-        ${albums ? `<div class="mb-3"><strong class="small">Discografia:</strong><ul class="list-group list-group-flush mt-1">${albums}</ul></div>` : ''}
-        ${links ? `<div class="mb-3"><strong class="small d-block mb-2">Enllacos:</strong>${links}</div>` : ''}
+        ${artist.foundingDate ? `<p class="small text-muted"><i class="bi bi-calendar3"></i> ${t('artist.since')} ${artist.foundingDate} &mdash; ${escapeHtml(artist.foundingLocation?.name || '')}</p>` : ''}
+        ${members ? `<div class="mb-3"><strong class="small">${t('artist.members')}</strong><br>${members}</div>` : ''}
+        ${albums ? `<div class="mb-3"><strong class="small">${t('artist.discography')}</strong><ul class="list-group list-group-flush mt-1">${albums}</ul></div>` : ''}
+        ${links ? `<div class="mb-3"><strong class="small d-block mb-2">${t('artist.links')}</strong>${links}</div>` : ''}
         ${spotifyEmbed}
       </div>
     </div>`;
@@ -374,7 +373,7 @@ export function renderEventDetail(event) {
   const endDate = formatDate(event.endDate);
   const performers = getPerformerNames(event);
   const price = parseFloat(event.offers?.price || 0);
-  const priceLabel = price === 0 ? 'Gratuit' : `${price.toFixed(2)} EUR`;
+  const priceLabel = price === 0 ? t('event.free') : `${price.toFixed(2)} EUR`;
   const genres = (event.genre || []).map(g => `<span class="badge-genre">${escapeHtml(g)}</span>`).join(' ');
 
   return `
@@ -392,14 +391,14 @@ export function renderEventDetail(event) {
         <div class="d-flex flex-wrap gap-2 mt-3">
           ${event.offers?.url && event.offers.url !== '#' ? `
             <a href="${event.offers.url}" class="btn btn-bauxa" target="_blank" rel="noopener noreferrer">
-              <i class="bi bi-ticket-perforated"></i> Comprar Entrades
+              <i class="bi bi-ticket-perforated"></i> ${t('event.buyTickets')}
             </a>` : ''}
           <button class="btn btn-bauxa-secondary btn-calendar" data-event-id="${event['@id']}">
-            <i class="bi bi-calendar-plus"></i> Afegir al Calendari
+            <i class="bi bi-calendar-plus"></i> ${t('event.addToCalendar')}
           </button>
           <button class="btn btn-bauxa-outline btn-favorite-modal ${isFavorite('event', event['@id']) ? 'active' : ''}"
                   data-fav-type="event" data-fav-id="${event['@id']}">
-            <i class="bi ${isFavorite('event', event['@id']) ? 'bi-heart-fill' : 'bi-heart'}"></i> Favorit
+            <i class="bi ${isFavorite('event', event['@id']) ? 'bi-heart-fill' : 'bi-heart'}"></i> ${t('event.favorite')}
           </button>
         </div>
       </div>
@@ -411,7 +410,8 @@ export function renderEventDetail(event) {
  * @param {string} [message='Carregant...']
  * @returns {string}
  */
-export function renderLoading(message = 'Carregant...') {
+export function renderLoading(message) {
+  message = message ?? t('common.loading');
   return `
     <div class="loading-spinner">
       <div class="spinner-border" role="status">
@@ -427,7 +427,8 @@ export function renderLoading(message = 'Carregant...') {
  * @param {string} [icon='bi-search']
  * @returns {string}
  */
-export function renderEmptyState(message = "No s'han trobat resultats", icon = 'bi-search') {
+export function renderEmptyState(message, icon = 'bi-search') {
+  message = message ?? t('common.noResults');
   return `
     <div class="col-12">
       <div class="empty-state">

@@ -6,24 +6,27 @@
 
 import { getAuthState } from './admin.js';
 import { apiFetch } from '../config.js';
+import { t, getIntlLocale } from '../i18n.js';
 
 function showAlert(message, type) {
   const el = document.getElementById('solicitudsAlert');
   if (!el) return;
   el.className = `alert alert-${type} alert-dismissible mb-4`;
   el.innerHTML = `${message}
-    <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'" aria-label="Tancar"></button>`;
+    <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'" aria-label="${t('solicituds.closeAlert')}"></button>`;
   el.style.display = 'block';
-  // Never auto-dismiss — user closes manually
   el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// --- Status labels ---
-const STATUS_LABELS = {
-  'https://schema.org/PotentialActionStatus': '<span class="badge bg-warning text-dark">Pendent</span>',
-  'https://schema.org/CompletedActionStatus': '<span class="badge bg-success">Aprovada</span>',
-  'https://schema.org/FailedActionStatus': '<span class="badge bg-danger">Rebutjada</span>'
-};
+function getStatusLabel(status) {
+  if (status === 'https://schema.org/PotentialActionStatus')
+    return `<span class="badge bg-warning text-dark">${t('solicituds.statusPending')}</span>`;
+  if (status === 'https://schema.org/CompletedActionStatus')
+    return `<span class="badge bg-success">${t('solicituds.statusApproved')}</span>`;
+  if (status === 'https://schema.org/FailedActionStatus')
+    return `<span class="badge bg-danger">${t('solicituds.statusRejected')}</span>`;
+  return '-';
+}
 
 // --- Load my requests list ---
 async function loadMyRequests() {
@@ -35,7 +38,7 @@ async function loadMyRequests() {
     const items = data.itemListElement || [];
 
     if (!items.length) {
-      container.innerHTML = '<p class="text-muted">No tens solicituds enviades. Crea\'n una amb el boto de dalt.</p>';
+      container.innerHTML = `<p class="text-muted">${t('solicituds.emptyList')}</p>`;
       return;
     }
 
@@ -43,17 +46,17 @@ async function loadMyRequests() {
     for (const el of items) {
       const req = el.item;
       const entityType = req.instrument?.description || '-';
-      const actionLabel = req['@type'] === 'CreateAction' ? 'Crear' : 'Editar';
+      const actionLabel = req['@type'] === 'CreateAction' ? t('solicituds.actionCreate') : t('solicituds.actionEdit');
       const entityName = req.object?.name || req.object?.headline || req.object?.['@id'] || '-';
-      const date = req.startTime ? new Date(req.startTime).toLocaleDateString('ca') : '-';
-      const statusHtml = STATUS_LABELS[req.actionStatus] || '-';
+      const date = req.startTime ? new Date(req.startTime).toLocaleDateString(getIntlLocale()) : '-';
+      const statusHtml = getStatusLabel(req.actionStatus);
 
       html += `
         <div class="card-bauxa mb-3 p-3">
           <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
             <div>
               <strong>${actionLabel} ${entityType}</strong>
-              ${actionLabel === 'Editar' ? `<span class="text-muted small"> — ${entityName}</span>` : ''}
+              ${req['@type'] !== 'CreateAction' ? `<span class="text-muted small"> — ${entityName}</span>` : ''}
               <p class="small text-muted mb-1 mt-1">${req.description || ''}</p>
               <small class="text-muted">${date}</small>
             </div>
@@ -63,7 +66,7 @@ async function loadMyRequests() {
     }
     container.innerHTML = html;
   } catch (err) {
-    showAlert(`Error carregant solicituds: ${err.message}`, 'danger');
+    showAlert(t('solicituds.loadError', { error: err.message }), 'danger');
   }
 }
 
@@ -71,7 +74,7 @@ async function loadMyRequests() {
 async function loadEntityOptions(entityType) {
   const select = document.getElementById('requestEntitySelect');
   if (!select) return;
-  select.innerHTML = '<option value="">Selecciona...</option>';
+  select.innerHTML = `<option value="">${t('solicituds.selectPlaceholder')}</option>`;
 
   const fileMap = { artist: 'artists', event: 'events', news: 'news' };
   try {
@@ -320,7 +323,7 @@ export async function initSolicituds() {
     const type = entityTypeSelect.value;
     resetDynamicFields();
     showFields(type);
-    entitySelect.innerHTML = '<option value="">Selecciona...</option>';
+    entitySelect.innerHTML = `<option value="">${t('solicituds.selectPlaceholder')}</option>`;
     if (actionSelect.value === 'update' && type) {
       loadEntityOptions(type);
     }
@@ -365,38 +368,38 @@ export async function initSolicituds() {
     const description = document.getElementById('requestDescription')?.value?.trim();
 
     if (!entityType || !action) {
-      showAlert('Selecciona el tipus d\'entitat i l\'accio', 'danger');
+      showAlert(t('solicituds.errorSelectType'), 'danger');
       return;
     }
     if (action === 'update' && !entityId) {
-      showAlert('Selecciona l\'entitat que vols editar', 'danger');
+      showAlert(t('solicituds.errorSelectEntity'), 'danger');
       return;
     }
     if (!description) {
-      showAlert('Escriu el motiu de la solicitud', 'danger');
+      showAlert(t('solicituds.errorMotive'), 'danger');
       document.getElementById('requestDescription')?.focus();
       return;
     }
 
     const proposedData = collectProposedData(entityType);
     if (!proposedData) {
-      showAlert('Error recollint les dades del formulari', 'danger');
+      showAlert(t('solicituds.errorLoadData'), 'danger');
       return;
     }
 
     // Validate minimum fields depending on entity type
     if (entityType === 'artist' && !document.getElementById('req_artistName')?.value.trim()) {
-      showAlert('El nom de l\'artista es obligatori', 'danger');
+      showAlert(t('solicituds.errorArtistName'), 'danger');
       document.getElementById('req_artistName')?.focus();
       return;
     }
     if (entityType === 'event' && !document.getElementById('req_eventName')?.value.trim()) {
-      showAlert('El nom de l\'esdeveniment es obligatori', 'danger');
+      showAlert(t('solicituds.errorEventName'), 'danger');
       document.getElementById('req_eventName')?.focus();
       return;
     }
     if (entityType === 'news' && !document.getElementById('req_newsHeadline')?.value.trim()) {
-      showAlert('El titular de la noticia es obligatori', 'danger');
+      showAlert(t('solicituds.errorNewsTitle'), 'danger');
       document.getElementById('req_newsHeadline')?.focus();
       return;
     }
@@ -406,7 +409,7 @@ export async function initSolicituds() {
         method: 'POST',
         body: JSON.stringify({ entityType, entityId, action, proposedData, description })
       });
-      showAlert('<strong>Solicitud enviada correctament!</strong> Apareix a la llista a sota amb l\'estat "Pendent". L\'administrador la revisara aviat.', 'success');
+      showAlert(t('solicituds.sentOk'), 'success');
       document.getElementById('requestForm')?.reset();
       resetDynamicFields();
       showFields('');

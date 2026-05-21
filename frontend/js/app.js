@@ -18,7 +18,8 @@ import {
   setActiveNavLink, populateSelect
 } from './modules/ui.js';
 import { initMap, addEventMarkers, fitToMarkers } from './modules/mapModule.js';
-import { initRouter, registerRoutes, registerMapCleanup } from './router.js';
+import { initRouter, registerRoutes, registerMapCleanup, refreshView } from './router.js';
+import { initI18n, setLang, t, applyTranslations } from './i18n.js';
 import { getFavorites as getFavoritesForType } from './modules/favorites.js';
 import { initAdmin, checkAuth } from './modules/admin.js';
 import { supabase } from './config.js';
@@ -123,14 +124,14 @@ async function initHome() {
     const featured = sortEventsByDate(allEvents.filter(e => e.featured));
     featuredContainer.innerHTML = featured.length > 0
       ? featured.slice(0, 4).map(renderFeaturedEvent).join('')
-      : renderEmptyState('No hi ha esdeveniments destacats', 'bi-calendar-x');
+      : renderEmptyState(t('section.noFeaturedEvents'), 'bi-calendar-x');
   }
 
   if (upcomingContainer) {
     const upcoming = sortEventsByDate(getUpcomingEvents(allEvents));
     upcomingContainer.innerHTML = upcoming.length > 0
       ? upcoming.slice(0, 5).map(renderEventCard).join('')
-      : renderEmptyState('No hi ha propers esdeveniments', 'bi-calendar-x');
+      : renderEmptyState(t('section.noUpcomingEvents'), 'bi-calendar-x');
   }
 
   if (newsContainer && allNews.length > 0) {
@@ -163,21 +164,16 @@ function renderArtistsGrid() {
   const filtered = filterArtists(allArtists, { search, genre, zone });
 
   if (filtered.length === 0) {
-    container.innerHTML = renderEmptyState(
-      "No s'han trobat artistes amb aquests filtres.",
-      'bi-music-note-list'
-    );
+    container.innerHTML = renderEmptyState(t('artist.notFound'), 'bi-music-note-list');
     const countEl = document.getElementById('artistsResultsCount');
-    if (countEl) countEl.textContent = '0 artistes';
+    if (countEl) countEl.textContent = t('artist.count', { n: 0 }, 0);
     return;
   }
 
   container.innerHTML = filtered.map(renderArtistCard).join('');
 
   const countEl = document.getElementById('artistsResultsCount');
-  if (countEl) {
-    countEl.textContent = `${filtered.length} artiste${filtered.length !== 1 ? 's' : ''}`;
-  }
+  if (countEl) countEl.textContent = t('artist.count', { n: filtered.length }, filtered.length);
 }
 
 /**
@@ -194,8 +190,8 @@ async function initArtists() {
   initializedViews.add('artists');
 
   // Populate filter selects
-  populateSelect('artistsFilterGenre', getUniqueGenres(allArtists), 'Tots els generes');
-  populateSelect('artistsFilterZone', getUniqueZones(allArtists), 'Totes les zones');
+  populateSelect('artistsFilterGenre', getUniqueGenres(allArtists), t('filter.allGenres'));
+  populateSelect('artistsFilterZone', getUniqueZones(allArtists), t('filter.allZones'));
 
   // Render initial grid
   renderArtistsGrid();
@@ -239,18 +235,13 @@ function renderEventsList() {
   const countEl = document.getElementById('eventsResultsCount');
 
   if (filtered.length === 0) {
-    container.innerHTML = renderEmptyState(
-      "No s'han trobat esdeveniments amb aquests filtres.",
-      'bi-calendar-x'
-    );
-    if (countEl) countEl.textContent = '0 esdeveniments';
+    container.innerHTML = renderEmptyState(t('event.notFound'), 'bi-calendar-x');
+    if (countEl) countEl.textContent = t('event.count', { n: 0 }, 0);
     return;
   }
 
   container.innerHTML = filtered.map(renderEventCard).join('');
-  if (countEl) {
-    countEl.textContent = `${filtered.length} esdeveniment${filtered.length !== 1 ? 's' : ''}`;
-  }
+  if (countEl) countEl.textContent = t('event.count', { n: filtered.length }, filtered.length);
 }
 
 /**
@@ -266,9 +257,9 @@ async function initEvents() {
   initializedViews.add('events');
 
   // Populate filters
-  populateSelect('eventsFilterGenre', getUniqueGenres(allEvents), 'Tots els generes');
-  populateSelect('eventsFilterZone', getUniqueZones(allEvents), 'Totes les zones');
-  populateSelect('eventsFilterCategory', getUniqueCategories(allEvents), 'Totes les categories');
+  populateSelect('eventsFilterGenre', getUniqueGenres(allEvents), t('filter.allGenres'));
+  populateSelect('eventsFilterZone', getUniqueZones(allEvents), t('filter.allZones'));
+  populateSelect('eventsFilterCategory', getUniqueCategories(allEvents), t('filter.allCategories'));
 
   // Render initial list
   renderEventsList();
@@ -319,12 +310,12 @@ function updateMapView() {
   if (sidebar) {
     sidebar.innerHTML = filtered.length > 0
       ? filtered.map(renderEventCard).join('')
-      : renderEmptyState("No hi ha esdeveniments en aquesta zona.", 'bi-geo-alt');
+      : renderEmptyState(t('event.notFoundZone'), 'bi-geo-alt');
   }
 
   // Update count
   const countEl = document.getElementById('mapEventsCount');
-  if (countEl) countEl.textContent = `${filtered.length} esdeveniment${filtered.length !== 1 ? 's' : ''}`;
+  if (countEl) countEl.textContent = t('event.count', { n: filtered.length }, filtered.length);
 }
 
 /**
@@ -349,8 +340,8 @@ async function initMapView() {
   if (!initializedViews.has('map')) {
     initializedViews.add('map');
 
-    populateSelect('mapFilterZone', getUniqueZones(allEvents), 'Totes les zones');
-    populateSelect('mapFilterCategory', getUniqueCategories(allEvents), 'Totes les categories');
+    populateSelect('mapFilterZone', getUniqueZones(allEvents), t('filter.allZones'));
+    populateSelect('mapFilterCategory', getUniqueCategories(allEvents), t('filter.allCategories'));
 
     // Filter listeners
     document.getElementById('mapFilterZone')?.addEventListener('change', updateMapView);
@@ -401,20 +392,17 @@ async function initFavorits() {
   let html = '';
 
   if (favArtists.length > 0) {
-    html += `<h2 class="section-title mb-3">Artistes Favorits</h2>`;
+    html += `<h2 class="section-title mb-3">${t('favorites.artistsSection')}</h2>`;
     html += `<div class="row">${favArtists.map(renderArtistCard).join('')}</div>`;
   }
 
   if (favEvents.length > 0) {
-    html += `<h2 class="section-title mb-3 mt-4">Esdeveniments Favorits</h2>`;
+    html += `<h2 class="section-title mb-3 mt-4">${t('favorites.eventsSection')}</h2>`;
     html += `<div class="row">${favEvents.map(renderEventCard).join('')}</div>`;
   }
 
   if (favArtists.length === 0 && favEvents.length === 0) {
-    html = renderEmptyState(
-      "No tens cap favorit guardat. Explora artistes i esdeveniments per afegir-ne!",
-      'bi-heart'
-    );
+    html = renderEmptyState(t('favorites.empty'), 'bi-heart');
   }
 
   container.innerHTML = html;
@@ -424,7 +412,11 @@ async function initFavorits() {
 /*  App initialization                                                 */
 /* ------------------------------------------------------------------ */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load translations before rendering anything
+  await initI18n();
+  applyTranslations();
+
   // Initialize shared UI
   initScrollToTop();
   updateFavoriteBadge();
@@ -444,10 +436,10 @@ document.addEventListener('DOMContentLoaded', () => {
         provider: 'google',
         options: { redirectTo: window.location.origin }
       });
-      if (error) alert('Error inici de sessió: ' + error.message);
+      if (error) alert(t('auth.loginError', { message: error.message }));
     } catch (e) {
       console.error('[auth] Error inesperat:', e);
-      alert('Error: ' + e.message);
+      alert(t('auth.genericError', { message: e.message }));
     }
   }
 
@@ -459,6 +451,32 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     await supabase.auth.signOut();
     checkAuth();
+  });
+
+  // Language switcher
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+  });
+
+  // Re-render dynamic content when language changes
+  document.addEventListener('langChanged', () => {
+    applyTranslations();
+    // Update filter select default options (first option, no listener re-binding)
+    const selectDefaults = [
+      ['artistsFilterGenre', 'filter.allGenres'],
+      ['artistsFilterZone', 'filter.allZones'],
+      ['eventsFilterGenre', 'filter.allGenres'],
+      ['eventsFilterZone', 'filter.allZones'],
+      ['eventsFilterCategory', 'filter.allCategories'],
+      ['mapFilterZone', 'filter.allZones'],
+      ['mapFilterCategory', 'filter.allCategories'],
+    ];
+    selectDefaults.forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      if (el?.options[0]) el.options[0].text = t(key);
+    });
+    // Re-render the active view's dynamic content
+    refreshView();
   });
 
   document.addEventListener('admin:contentChanged', () => {

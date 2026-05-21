@@ -92,6 +92,16 @@ function switchView(view) {
 }
 
 /**
+ * Re-calls the current view's route handler without navigating.
+ * Used by i18n to refresh dynamic content after a language change.
+ */
+export function refreshView() {
+  if (currentView && routeHandlers[currentView]) {
+    routeHandlers[currentView]();
+  }
+}
+
+/**
  * Initializes the router: listens to hashchange and triggers initial route.
  */
 export function initRouter() {

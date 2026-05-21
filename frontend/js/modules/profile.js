@@ -5,6 +5,7 @@
 
 import { getAuthState } from './admin.js';
 import { apiFetch } from '../config.js';
+import { t } from '../i18n.js';
 
 function showProfileAlert(message, type) {
   const el = document.getElementById('profileAlert');
@@ -52,7 +53,7 @@ export async function initProfile() {
       else roleBadge.classList.add('bg-secondary');
     }
   } catch {
-    showProfileAlert('Error carregant el perfil', 'danger');
+    showProfileAlert(t('profile.loadError'), 'danger');
   }
 
   // Form submit
@@ -66,7 +67,7 @@ export async function initProfile() {
         method: 'PUT',
         body: JSON.stringify({ displayName, description })
       });
-      showProfileAlert('Perfil actualitzat correctament', 'success');
+      showProfileAlert(t('profile.savedOk'), 'success');
     } catch (err) {
       showProfileAlert(err.message, 'danger');
     }

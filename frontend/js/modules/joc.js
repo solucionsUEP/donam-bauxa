@@ -4,6 +4,8 @@
  * Supports named questionnaires (filtered by questionnaire ID) and a Random mix mode.
  */
 
+import { t } from '../i18n.js';
+
 /* ------------------------------------------------------------------ */
 /*  Centralized game state                                             */
 /* ------------------------------------------------------------------ */
@@ -132,7 +134,7 @@ function renderMedia(question) {
     return `
       <div class="joc-media-wrapper joc-media-wrapper--audio">
         <div class="joc-audio-icon" aria-hidden="true"><i class="bi bi-music-note-beamed"></i></div>
-        <audio class="joc-audio" controls autoplay aria-label="Fragment de música per endevinar">
+        <audio class="joc-audio" controls autoplay aria-label="${t('joc.musicFragment')}">
           <source src="${escapeHtml(src.url)}" type="${escapeHtml(src.format)}">
         </audio>
       </div>`;
@@ -143,7 +145,7 @@ function renderMedia(question) {
       <div class="joc-media-wrapper">
         <picture>
           ${src.webp ? `<source srcset="${escapeHtml(src.webp)}" type="image/webp">` : ''}
-          <img src="${escapeHtml(src.jpg || src.png || '')}" alt="Imatge per endevinar l'artista" class="joc-media-img" loading="eager">
+          <img src="${escapeHtml(src.jpg || src.png || '')}" alt="${t('joc.imageFragment')}" class="joc-media-img" loading="eager">
         </picture>
       </div>`;
   }
@@ -151,7 +153,7 @@ function renderMedia(question) {
   if (type === 'video') {
     return `
       <div class="joc-media-wrapper">
-        <video class="joc-media-video" controls autoplay playsinline muted aria-label="Clip de vídeo per endevinar">
+        <video class="joc-media-video" controls autoplay playsinline muted aria-label="${t('joc.videoFragment')}">
           ${src.webm ? `<source src="${escapeHtml(src.webm)}" type="video/webm">` : ''}
           ${src.mp4  ? `<source src="${escapeHtml(src.mp4)}"  type="video/mp4">` : ''}
         </video>
@@ -175,7 +177,7 @@ function presetBtn({ mode = null, questionnaireId = null, length, label, ariaLab
     : gameState.allQuestions.length;
   const isDisabled = count < length;
   const disabledAttrs = isDisabled
-    ? `disabled aria-disabled="true" title="Només hi ha ${count} preguntes disponibles"`
+    ? `disabled aria-disabled="true" title="${t('joc.notEnoughTitle', { count })}"`
     : '';
   const dataAttrs = questionnaireId
     ? `data-questionnaire="${questionnaireId}" data-length="${length}"`
@@ -209,26 +211,26 @@ function renderBannerCard(q) {
           <h3 id="jocBanner-${q.id}" class="joc-banner-card__title">${escapeHtml(q.name)}</h3>
           <p class="joc-banner-card__meta">
             <i class="bi bi-collection" aria-hidden="true"></i>
-            <span aria-label="${count} preguntes disponibles">${count} preguntes</span>
+            <span aria-label="${t('joc.questionsAvailable', { count }, count)}">${t('joc.questionCount', { count })}</span>
           </p>
           <div class="joc-banner-card__actions" role="group" aria-label="Longitud de ${escapeHtml(q.name)}">
-            ${presetBtn({ questionnaireId: q.id, length: 5,  label: 'Quick 5',  ariaLabel: `${q.name} · 5 preguntes` })}
-            ${presetBtn({ questionnaireId: q.id, length: 20, label: 'Full 20', ariaLabel: `${q.name} · 20 preguntes` })}
+            ${presetBtn({ questionnaireId: q.id, length: 5,  label: 'Quick 5',  ariaLabel: `${q.name} · ${t('joc.questionCount', { count: 5 })}` })}
+            ${presetBtn({ questionnaireId: q.id, length: 20, label: 'Full 20', ariaLabel: `${q.name} · ${t('joc.questionCount', { count: 20 })}` })}
           </div>
         </div>
       </div>
     </article>`;
 }
 
-const SECTIONS = [
-  { id: 'music',   label: 'Música',  icon: 'bi-music-note-beamed' },
-  { id: 'picture', label: 'Imatge',  icon: 'bi-image' },
-  { id: 'video',   label: 'Vídeo',   icon: 'bi-play-circle-fill' }
-];
-
 function renderSetup() {
   const setup = document.getElementById('jocSetup');
   if (!setup) return;
+
+  const SECTIONS = [
+    { id: 'music',   label: t('joc.sectionMusic'),  icon: 'bi-music-note-beamed' },
+    { id: 'picture', label: t('joc.sectionImage'),  icon: 'bi-image' },
+    { id: 'video',   label: t('joc.sectionVideo'),  icon: 'bi-play-circle-fill' }
+  ];
 
   const totalCount = gameState.allQuestions.length;
 
@@ -243,7 +245,7 @@ function renderSetup() {
           </span>
           <h3 id="jocSec-${sec.id}" class="joc-section__title">${sec.label}</h3>
         </div>
-        <div class="joc-scroll-row" role="list" aria-label="Qüestionaris de ${sec.label}">
+        <div class="joc-scroll-row" role="list">
           ${qs.map(q => `
             <div class="joc-scroll-item" role="listitem">
               ${renderBannerCard(q)}
@@ -262,19 +264,19 @@ function renderSetup() {
     </div>
 
     <!-- Compact random strip -->
-    <div class="joc-random-strip mb-5" role="region" aria-label="Mode aleatori">
+    <div class="joc-random-strip mb-5" role="region" aria-label="${t('joc.modeRandom')}">
       <div class="joc-random-strip__left">
         <span class="joc-random-strip__icon" aria-hidden="true">
           <i class="bi bi-shuffle"></i>
         </span>
         <div class="joc-random-strip__text">
-          <strong class="joc-random-strip__label">Mode Aleatori</strong>
-          <span class="joc-random-strip__desc">${totalCount} preguntes · barreja tots els formats</span>
+          <strong class="joc-random-strip__label">${t('joc.modeRandom')}</strong>
+          <span class="joc-random-strip__desc">${t('joc.modeRandomCountDesc', { count: totalCount })}</span>
         </div>
       </div>
       <div class="joc-random-strip__actions" role="group" aria-label="Longitud del mode aleatori">
-        ${presetBtn({ mode: 'random', length: 5,  label: 'Quick 5',  ariaLabel: 'Aleatori · 5 preguntes' })}
-        ${presetBtn({ mode: 'random', length: 20, label: 'Full 20', ariaLabel: 'Aleatori · 20 preguntes' })}
+        ${presetBtn({ mode: 'random', length: 5,  label: 'Quick 5',  ariaLabel: `${t('joc.random')} · ${t('joc.questionCount', { count: 5 })}` })}
+        ${presetBtn({ mode: 'random', length: 20, label: 'Full 20', ariaLabel: `${t('joc.random')} · ${t('joc.questionCount', { count: 20 })}` })}
       </div>
     </div>
 
@@ -297,11 +299,11 @@ function renderQuestion() {
 
   playing.innerHTML = `
     <div class="joc-hud mb-3">
-      <span class="joc-score-chip" aria-live="polite" aria-label="${gameState.score} punts">
-        <i class="bi bi-star-fill me-1" aria-hidden="true"></i>${gameState.score} pts
+      <span class="joc-score-chip" aria-live="polite" aria-label="${t('joc.score', { n: gameState.score })}">
+        <i class="bi bi-star-fill me-1" aria-hidden="true"></i>${t('joc.score', { n: gameState.score })}
       </span>
-      <span class="joc-counter" aria-label="Pregunta ${gameState.currentIndex + 1} de ${total}">
-        Pregunta <strong>${gameState.currentIndex + 1}</strong> / ${total}
+      <span class="joc-counter" aria-label="${t('joc.questionCounter', { current: gameState.currentIndex + 1, total })}">
+        ${t('joc.questionLabel')} <strong>${gameState.currentIndex + 1}</strong> / ${total}
       </span>
     </div>
 
@@ -311,7 +313,7 @@ function renderQuestion() {
       aria-valuenow="${gameState.currentIndex}"
       aria-valuemin="0"
       aria-valuemax="${total}"
-      aria-label="Progrés del joc">
+      aria-label="${t('joc.progressLabel')}">
       <div class="joc-progress-bar" style="width:${progress}%"></div>
     </div>
 
@@ -323,12 +325,12 @@ function renderQuestion() {
       ${renderMedia(q)}
     </div>
 
-    <div class="joc-options" id="jocOptions" role="group" aria-label="Opcions de resposta">
+    <div class="joc-options" id="jocOptions" role="group" aria-label="${t('joc.answerOptions')}">
       ${q.options.map((opt, i) => `
         <button
           class="joc-option-btn"
           data-option-index="${i}"
-          aria-label="Opció ${LETTERS[i]}: ${escapeHtml(opt)}">
+          aria-label="${t('joc.optionLabel', { letter: LETTERS[i], text: opt })}">
           <span class="joc-option-letter" aria-hidden="true">${LETTERS[i]}</span>
           <span class="joc-option-text">${escapeHtml(opt)}</span>
         </button>`).join('')}
@@ -337,8 +339,8 @@ function renderQuestion() {
     <div class="text-center mt-4">
       <button id="jocNextBtn" class="btn-bauxa px-4" style="display:none;">
         ${gameState.currentIndex + 1 < total
-          ? 'Següent <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>'
-          : 'Veure resultats <i class="bi bi-trophy ms-1" aria-hidden="true"></i>'}
+          ? `${t('joc.nextQuestion')} <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>`
+          : `${t('joc.viewResults')} <i class="bi bi-trophy ms-1" aria-hidden="true"></i>`}
       </button>
     </div>`;
 
@@ -372,11 +374,11 @@ function onOptionClick(e) {
     const idx = parseInt(b.dataset.optionIndex, 10);
     if (idx === q.answer) {
       b.classList.add('joc-option-btn--correct');
-      b.setAttribute('aria-label', `${b.querySelector('.joc-option-text').textContent} — Correcta`);
+      b.setAttribute('aria-label', `${b.querySelector('.joc-option-text').textContent} — ${t('joc.correct')}`);
     }
     if (idx === chosen && !isCorrect) {
       b.classList.add('joc-option-btn--wrong');
-      b.setAttribute('aria-label', `${b.querySelector('.joc-option-text').textContent} — Incorrecta`);
+      b.setAttribute('aria-label', `${b.querySelector('.joc-option-text').textContent} — ${t('joc.wrong')}`);
     }
   });
 
@@ -421,40 +423,40 @@ function renderResults() {
           ${a.isCorrect
             ? `<i class="bi bi-check-circle-fill text-success me-1" aria-hidden="true"></i>${escapeHtml(a.correctLabel)}`
             : `<i class="bi bi-x-circle-fill text-danger me-1" aria-hidden="true"></i>${escapeHtml(a.chosenLabel)}
-               <span class="joc-result-correct-hint">(correcta: ${escapeHtml(a.correctLabel)})</span>`
+               <span class="joc-result-correct-hint">${t('joc.correctHint', { text: escapeHtml(a.correctLabel) })}</span>`
           }
         </span>
       </div>
     </div>`).join('');
 
-  const displayName = gameState.questionnaire?.name ?? 'Aleatori';
-  const displayBadge = gameState.questionnaire?.badge ?? 'BARREJA';
+  const displayName = gameState.questionnaire?.name ?? t('joc.random');
+  const displayBadge = gameState.questionnaire?.badge ?? t('joc.shuffle');
 
   results.innerHTML = `
     <div class="joc-card text-center mb-4" aria-live="polite">
-      <div class="joc-result-emoji" role="img" aria-label="Resultat: ${pct}% encert">${emoji}</div>
+      <div class="joc-result-emoji" role="img" aria-label="Resultat: ${pct}${t('joc.correctPct')}">${emoji}</div>
       <h3 class="joc-result-score">${correct} / ${total}</h3>
-      <p class="joc-result-pct text-muted-custom">${pct}% encert</p>
+      <p class="joc-result-pct text-muted-custom">${pct}${t('joc.correctPct')}</p>
       <p class="joc-result-pts">
-        <i class="bi bi-star-fill me-1" aria-hidden="true"></i>${gameState.score} punts totals
+        <i class="bi bi-star-fill me-1" aria-hidden="true"></i>${t('joc.scoreTotals', { n: gameState.score })}
       </p>
       <p class="joc-result-meta">
         <span class="badge-genre">${escapeHtml(displayBadge)}</span>
         <span class="badge-genre">${escapeHtml(displayName)}</span>
-        <span class="badge-genre">${total} preguntes</span>
+        <span class="badge-genre">${t('joc.questionCount', { count: total })}</span>
       </p>
     </div>
 
-    <div class="joc-breakdown mb-5" aria-label="Resum de les respostes">
+    <div class="joc-breakdown mb-5" aria-label="${t('joc.resultsSummary')}">
       ${breakdown}
     </div>
 
     <div class="d-flex gap-3 justify-content-center flex-wrap">
       <button id="jocPlayAgainBtn" class="btn-bauxa px-4">
-        <i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Jugar de nou
+        <i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>${t('joc.playAgain')}
       </button>
       <button id="jocChangeModeBtn" class="btn-bauxa-outline px-4">
-        <i class="bi bi-sliders me-1" aria-hidden="true"></i>Canviar qüestionari
+        <i class="bi bi-sliders me-1" aria-hidden="true"></i>${t('joc.changeQuestionnaire')}
       </button>
     </div>`;
 
@@ -475,7 +477,7 @@ function startGame() {
   const pool = getQuestionPool();
 
   if (pool.length < gameState.length) {
-    showWarning(`Només hi ha ${pool.length} preguntes disponibles per a aquest qüestionari. Tria un joc més curt.`);
+    showWarning(t('joc.notEnoughQuestions', { count: pool.length }));
     return;
   }
 
@@ -537,7 +539,7 @@ export async function initJoc() {
       console.error('[joc] Error carregant preguntes:', err);
       const setup = document.getElementById('jocSetup');
       if (setup) {
-        setup.innerHTML = `<div class="alert alert-danger" role="alert">No s'han pogut carregar les preguntes. Torna-ho a intentar.</div>`;
+        setup.innerHTML = `<div class="alert alert-danger" role="alert">${t('joc.loadError')}</div>`;
         showPhase('setup');
       }
       return;

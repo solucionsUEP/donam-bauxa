@@ -3,8 +3,19 @@
  * @description Fetches and caches JSON data from the /data directory.
  */
 
+import { getLang } from '../i18n.js';
+
 /** @type {Map<string, any>} In-memory cache for loaded data */
 const cache = new Map();
+
+function sortByLangPriority(items) {
+  const lang = getLang();
+  return [...items].sort((a, b) => {
+    const aMatch = a.lang === lang ? -1 : 0;
+    const bMatch = b.lang === lang ? -1 : 0;
+    return aMatch - bMatch;
+  });
+}
 
 
 export function clearDataCache() {
@@ -74,7 +85,7 @@ export function extractItems(data) {
  */
 export async function loadArtists() {
   const data = await loadData('data/artists.json');
-  return extractItems(data);
+  return sortByLangPriority(extractItems(data));
 }
 
 /**
@@ -83,7 +94,7 @@ export async function loadArtists() {
  */
 export async function loadEvents() {
   const data = await loadData('data/events.json');
-  return extractItems(data);
+  return sortByLangPriority(extractItems(data));
 }
 
 /**
@@ -92,7 +103,7 @@ export async function loadEvents() {
  */
 export async function loadNews() {
   const data = await loadData('data/news.json');
-  return extractItems(data);
+  return sortByLangPriority(extractItems(data));
 }
 
 /**
