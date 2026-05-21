@@ -412,6 +412,28 @@ async function initFavorits() {
 /*  App initialization                                                 */
 /* ------------------------------------------------------------------ */
 
+// --- Theme management (fosc / clar) ---
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.setAttribute('data-bs-theme', theme);
+  const label = document.getElementById('themeLabel');
+  if (label) label.textContent = theme === 'dark' ? 'Mode fosc' : 'Mode clar';
+}
+
+function initTheme() {
+  const stored = localStorage.getItem('bauxa_theme');
+  const sysDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true;
+  applyTheme(stored || (sysDark ? 'dark' : 'light'));
+  document.getElementById('themeToggle')?.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem('bauxa_theme', next);
+  });
+}
+
+initTheme();
+// --- Fi theme management ---
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Load translations before rendering anything
   await initI18n();

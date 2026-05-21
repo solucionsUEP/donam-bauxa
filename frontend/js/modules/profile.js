@@ -46,6 +46,8 @@ export async function initProfile() {
     document.getElementById('profileAvatar').src = profile.image || '';
     document.getElementById('profileName').textContent = profile.name || '';
     document.getElementById('profileEmail').value = profile.email || '';
+    const inlineEmail = document.getElementById('profileEmailInline');
+    if (inlineEmail) inlineEmail.textContent = profile.email || '';
     document.getElementById('profileRole').textContent = profile.jobTitle || 'lector';
 
     const displayName = profile.additionalProperty?.find(p => p.name === 'displayName')?.value || profile.name;
@@ -61,12 +63,14 @@ export async function initProfile() {
       else roleBadge.classList.add('bg-secondary');
     }
 
-    // Show promotor request card only for lectors
+    // Show promotor request card only for lectors; expand main card when hidden
     const promotorCard = document.getElementById('promotorRequestCard');
+    const mainCol = document.getElementById('profileMainCol');
     if (promotorCard) {
       const role = profile.jobTitle || 'lector';
       if (role === 'lector') {
         promotorCard.style.display = 'block';
+        if (mainCol) mainCol.className = 'col-12 col-lg-6';
         // Check for existing role request via normal list endpoint
         try {
           const reqData = await apiFetch('/api/requests');
@@ -77,6 +81,8 @@ export async function initProfile() {
             showPromotorAlert(t('profile.requestPromotorPending'), 'info');
           }
         } catch { /* silent — show form by default */ }
+      } else {
+        if (mainCol) mainCol.className = 'col-12 col-lg-8';
       }
     }
   } catch {

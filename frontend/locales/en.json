@@ -26,6 +26,20 @@
     "exploreArtists": "Explore Artists",
     "openMap": "Open Map"
   },
+  "view": {
+    "artists": {
+      "title": "Artists of Mallorca",
+      "subtitle": "Explore the full directory of bands and musicians from the Mallorcan scene"
+    },
+    "events": {
+      "title": "Music Agenda",
+      "subtitle": "All concerts, festivals and popular festivals in Mallorca"
+    },
+    "map": {
+      "title": "Bauxa Map",
+      "subtitle": "Find the concerts and festivals closest to you on the island of Mallorca"
+    }
+  },
   "section": {
     "featuredEvents": "Featured Events",
     "featuredEventsSubtitle": "The concerts and festivals you can't miss",
@@ -100,7 +114,8 @@
       "title": "Legend",
       "concert": "Concert",
       "festival": "Festival",
-      "popularFestival": "Popular Festival"
+      "popularFestival": "Popular Festival",
+      "extern": "External / No category"
     }
   },
   "favorites": {
@@ -274,7 +289,12 @@
     "instagramAnalyzing": "Analyzing...",
     "instagramAnalyzingBody": "Analyzing the post...",
     "instagramSentOk": "Requests sent successfully.",
-    "instagramAnalyze": "Analyze"
+    "instagramAnalyze": "Analyze",
+    "agendaPosterTitle": "Generate Poster",
+    "agendaPosterDesc": "Generate an agenda poster image for a day or weekend",
+    "agendaPosterBtn": "Generate Poster",
+    "instagramTitle": "Analyse Instagram Post",
+    "instagramDesc": "Paste the poster image and add the link to extract the caption"
   },
   "joc": {
     "title": "Music Game",
@@ -338,6 +358,14 @@
   "auth": {
     "loginError": "Sign-in error: {{message}}",
     "genericError": "Error: {{message}}"
+  },
+  "footer": {
+    "tagline": "The platform for live music and events in Mallorca. Discover the island's talent.",
+    "sections": "Sections",
+    "zones": "Zones of Mallorca",
+    "contact": "Contact",
+    "copyright": "2026 Dona'm Bauxa. Academic project UIB - Multimedia Technology.",
+    "madeWith": "Made with"
   },
   "common": {
     "loading": "Loading...",

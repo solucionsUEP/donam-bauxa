@@ -260,18 +260,24 @@ export function renderFeaturedEvent(event) {
   const price = parseFloat(event.offers?.price || 0);
   const priceLabel = price === 0 ? t('event.free') : `${price.toFixed(0)} EUR`;
 
+  const cat = (event.category || 'concert').toLowerCase();
+  const badgeMod = cat.includes('concert') ? 'concert'
+    : cat.includes('festival') ? 'festival'
+    : cat.includes('festa') || cat.includes('popular') ? 'festa'
+    : '';
+
   return `
     <div class="col-md-6 mb-4 animate-fade-in-up">
       <article class="featured-event">
         ${event.image ? generatePictureElement(event.image, event.name, event.name, '#0F2E42', { lazy: false, highPriority: true, width: 800, height: 600, className: 'featured-event__img' }) : ''}
         <div class="featured-event__overlay"></div>
         <div class="featured-event__content">
-          <span class="featured-event__badge">${escapeHtml(event.category || 'concert')}</span>
+          <span class="featured-event__badge featured-event__badge--${badgeMod}">${escapeHtml(event.category || 'concert')}</span>
           <h3>${escapeHtml(event.name)}</h3>
-          <p class="mb-1"><i class="bi bi-calendar3"></i> ${date.full} &mdash; ${date.time}</p>
-          <p class="mb-1"><i class="bi bi-geo-alt-fill"></i> ${escapeHtml(event.location?.name || '')}, ${escapeHtml(event.location?.address?.addressLocality || '')}</p>
-          ${performers ? `<p class="mb-2"><i class="bi bi-music-note-beamed"></i> ${escapeHtml(performers)}</p>` : ''}
-          <div class="d-flex gap-2 align-items-center">
+          <p><i class="bi bi-calendar3"></i> ${date.full} &mdash; ${date.time}</p>
+          <p><i class="bi bi-geo-alt-fill"></i> ${escapeHtml(event.location?.name || '')}, ${escapeHtml(event.location?.address?.addressLocality || '')}</p>
+          ${performers ? `<p><i class="bi bi-music-note-beamed"></i> ${escapeHtml(performers)}</p>` : ''}
+          <div class="featured-event__actions">
             <span class="badge-price ${price === 0 ? 'badge-price--free' : ''}">${priceLabel}</span>
             ${event.offers?.url && event.offers.url !== '#' ? `
               <a href="${event.offers.url}" class="btn btn-sm btn-bauxa" target="_blank" rel="noopener noreferrer">

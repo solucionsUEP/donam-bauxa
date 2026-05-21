@@ -26,6 +26,20 @@
     "exploreArtists": "Explorar Artistas",
     "openMap": "Abrir Mapa"
   },
+  "view": {
+    "artists": {
+      "title": "Artistas de Mallorca",
+      "subtitle": "Explora el directorio completo de grupos y músicos de la escena mallorquina"
+    },
+    "events": {
+      "title": "Agenda Musical",
+      "subtitle": "Todos los conciertos, festivales y fiestas populares de Mallorca"
+    },
+    "map": {
+      "title": "Mapa de Bauxa",
+      "subtitle": "Encuentra los conciertos y fiestas más cercanos a ti en la isla de Mallorca"
+    }
+  },
   "section": {
     "featuredEvents": "Eventos Destacados",
     "featuredEventsSubtitle": "Los conciertos y festivales que no te puedes perder",
@@ -100,7 +114,8 @@
       "title": "Leyenda",
       "concert": "Concierto",
       "festival": "Festival",
-      "popularFestival": "Fiesta Popular"
+      "popularFestival": "Fiesta Popular",
+      "extern": "Externo / Sin categoría"
     }
   },
   "favorites": {
@@ -274,7 +289,12 @@
     "instagramAnalyzing": "Analizando...",
     "instagramAnalyzingBody": "Analizando la publicación...",
     "instagramSentOk": "Solicitudes enviadas correctamente.",
-    "instagramAnalyze": "Analizar"
+    "instagramAnalyze": "Analizar",
+    "agendaPosterTitle": "Generar Cartel",
+    "agendaPosterDesc": "Genera una imagen póster de la agenda para un día o fin de semana",
+    "agendaPosterBtn": "Generar Cartel",
+    "instagramTitle": "Analizar Post de Instagram",
+    "instagramDesc": "Pega la imagen del cartel y añade el link para extraer el caption"
   },
   "joc": {
     "title": "Juego Musical",
@@ -338,6 +358,14 @@
   "auth": {
     "loginError": "Error al iniciar sesión: {{message}}",
     "genericError": "Error: {{message}}"
+  },
+  "footer": {
+    "tagline": "La plataforma de música y eventos en directo de Mallorca. Descubre el talento de la isla.",
+    "sections": "Secciones",
+    "zones": "Zonas de Mallorca",
+    "contact": "Contacto",
+    "copyright": "2026 Dona'm Bauxa. Proyecto académico UIB - Tecnología Multimedia.",
+    "madeWith": "Hecho con"
   },
   "common": {
     "loading": "Cargando...",

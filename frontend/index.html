@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="ca" data-theme="dark" data-bs-theme="dark">
 
 <head>
   <meta charset="UTF-8">
@@ -31,11 +31,11 @@
 
   <!-- Google Fonts: async with display=swap -->
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
     media="print" onload="this.media='all'">
   <noscript>
     <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap">
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
   </noscript>
 
   <!-- Critical CSS: synchronous (own styles only) -->
@@ -87,110 +87,118 @@
   <!-- Skip to Content -->
   <a href="#main-content" class="skip-link" data-i18n="nav.skipToContent">Anar al contingut principal</a>
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-bauxa sticky-top" data-i18n-aria="nav.mainNav" aria-label="Navegació principal">
-    <div class="container">
-      <a class="navbar-brand" href="#home">
-        Dona'm <span>Bauxa</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-        aria-controls="mainNav" aria-expanded="false" data-i18n-aria="nav.openMenu" aria-label="Obrir menú de navegació">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center">
-          <li class="nav-item">
-            <a class="nav-link active" href="#home"><i class="bi bi-house-door" aria-hidden="true"></i> <span data-i18n="nav.home">Inici</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#artists"><i class="bi bi-music-note-list" aria-hidden="true"></i> <span data-i18n="nav.artists">Artistes</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#events"><i class="bi bi-calendar-event" aria-hidden="true"></i> <span data-i18n="nav.events">Agenda</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#map"><i class="bi bi-map" aria-hidden="true"></i> <span data-i18n="nav.map">Mapa</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#joc"><i class="bi bi-controller" aria-hidden="true"></i> <span data-i18n="nav.game">Joc</span></a>
-          </li>
-          <!-- Menú general: idioma + favorits + login -->
-          <li class="nav-item dropdown" id="navLangSwitcher">
-            <button class="nav-link btn btn-sm dropdown-toggle d-flex align-items-center gap-1 ms-lg-1"
-                    data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Menú">
-              <i class="bi bi-person-circle fs-5" aria-hidden="true"></i>
-              <span id="currentLangLabel" class="d-none"></span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <a class="dropdown-item" href="#favorits">
-                  <i class="bi bi-heart" aria-hidden="true"></i> <span data-i18n="nav.favorites">Favorits</span>
-                  <span id="favBadge" class="badge rounded-pill bg-danger ms-1" style="display:none;">0</span>
-                </a>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <button class="dropdown-item d-flex justify-content-between align-items-center lang-submenu-toggle">
-                  <span><i class="bi bi-translate" aria-hidden="true"></i> <span data-i18n="nav.language">Idioma</span></span>
-                  <i class="bi bi-chevron-down small lang-submenu-chevron"></i>
-                </button>
-                <ul class="lang-submenu list-unstyled ps-3 mb-0" style="display:none;">
-                  <li><button class="dropdown-item lang-btn" data-lang="ca"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt="CA"> Català</button></li>
-                  <li><button class="dropdown-item lang-btn" data-lang="en"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt="EN"> English</button></li>
-                  <li><button class="dropdown-item lang-btn" data-lang="de"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt="DE"> Deutsch</button></li>
-                  <li><button class="dropdown-item lang-btn" data-lang="es"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt="ES"> Castellano</button></li>
-                </ul>
-              </li>
-              <li id="navLogin">
-                <hr class="dropdown-divider">
-                <button class="dropdown-item" id="loginBtn">
-                  <i class="bi bi-google" aria-hidden="true"></i> <span data-i18n="nav.login">Iniciar Sessió</span>
-                </button>
-              </li>
-            </ul>
-          </li>
-          <!-- User dropdown (visible when authenticated) -->
-          <li class="nav-item dropdown d-none" id="navUser">
-            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button"
-              data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-              <img id="userAvatar" class="rounded-circle" width="28" height="28" alt="Avatar" src="">
-              <span id="userName"></span>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#profile"><i class="bi bi-person" aria-hidden="true"></i> <span data-i18n="nav.profile">El meu Perfil</span></a></li>
-              <li id="navSolicituds" class="d-none"><a class="dropdown-item" href="#solicituds"><i class="bi bi-pencil-square" aria-hidden="true"></i> <span data-i18n="nav.requests">Solicituds</span></a></li>
-              <li id="navAdmin" class="d-none"><a class="dropdown-item" href="#admin"><i class="bi bi-gear" aria-hidden="true"></i> <span data-i18n="nav.admin">Administració</span></a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <a class="dropdown-item" href="#favorits">
-                  <i class="bi bi-heart" aria-hidden="true"></i> <span data-i18n="nav.favorites">Favorits</span>
-                  <span id="favBadgeUser" class="badge rounded-pill bg-danger ms-1" style="display:none;">0</span>
-                </a>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <!-- Subdesplegable d'idiomes (toggle manual) -->
-              <li>
-                <button class="dropdown-item d-flex justify-content-between align-items-center lang-submenu-toggle">
-                  <span><i class="bi bi-translate" aria-hidden="true"></i> <span data-i18n="nav.language">Idioma</span></span>
-                  <i class="bi bi-chevron-down small lang-submenu-chevron"></i>
-                </button>
-                <ul class="lang-submenu list-unstyled ps-3 mb-0" style="display:none;">
-                  <li><button class="dropdown-item lang-btn" data-lang="ca"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt="CA"> Català</button></li>
-                  <li><button class="dropdown-item lang-btn" data-lang="en"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt="EN"> English</button></li>
-                  <li><button class="dropdown-item lang-btn" data-lang="de"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt="DE"> Deutsch</button></li>
-                  <li><button class="dropdown-item lang-btn" data-lang="es"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt="ES"> Castellano</button></li>
-                </ul>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <li><button class="dropdown-item text-danger" id="logoutBtn"><i class="bi bi-box-arrow-right" aria-hidden="true"></i> <span data-i18n="nav.logout">Tancar Sessió</span></button></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <div class="app">
 
-  <main id="main-content">
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside class="sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <a href="#home">
+          <p class="logo-eyebrow">Mallorca · Música · Festes</p>
+          <p class="logo-main">Dona'm <span>Bauxa</span></p>
+        </a>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav" id="mainNav" aria-label="Navegació principal">
+        <p class="sidebar-section-label">Descobreix</p>
+        <a href="#home"     class="sidebar-link active"><i class="bi bi-house-door" aria-hidden="true"></i> <span data-i18n="nav.home">Inici</span></a>
+        <a href="#artists"  class="sidebar-link"><i class="bi bi-music-note-list" aria-hidden="true"></i>  <span data-i18n="nav.artists">Artistes</span></a>
+        <a href="#events"   class="sidebar-link"><i class="bi bi-calendar-event" aria-hidden="true"></i>   <span data-i18n="nav.events">Agenda</span></a>
+        <a href="#map"      class="sidebar-link"><i class="bi bi-map" aria-hidden="true"></i>              <span data-i18n="nav.map">Mapa</span></a>
+        <a href="#joc"      class="sidebar-link"><i class="bi bi-controller" aria-hidden="true"></i>       <span data-i18n="nav.game">Joc</span></a>
+      </nav>
+
+      <!-- Footer del sidebar -->
+      <div class="sidebar-footer">
+
+        <!-- No autenticat: favorits + selector idioma + login -->
+        <div id="navLangSwitcher">
+          <span id="currentLangLabel" style="display:none;"></span>
+          <!-- Favorits visible when not logged in -->
+          <a href="#favorits" class="sidebar-link">
+            <i class="bi bi-heart" aria-hidden="true"></i>
+            <span data-i18n="nav.favorites">Favorits</span>
+            <span id="favBadge" class="fav-badge" style="display:none;">0</span>
+          </a>
+          <button class="sidebar-link lang-submenu-toggle" style="width:100%;">
+            <span><i class="bi bi-translate" aria-hidden="true"></i> <span data-i18n="nav.language">Idioma</span></span>
+            <i class="bi bi-chevron-down small lang-submenu-chevron"></i>
+          </button>
+          <ul class="lang-submenu list-unstyled ps-3 mb-1" style="display:none;">
+            <li><button class="sidebar-link lang-btn" data-lang="ca"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt="CA"> Català</button></li>
+            <li><button class="sidebar-link lang-btn" data-lang="en"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt="EN"> English</button></li>
+            <li><button class="sidebar-link lang-btn" data-lang="de"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt="DE"> Deutsch</button></li>
+            <li><button class="sidebar-link lang-btn" data-lang="es"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt="ES"> Castellano</button></li>
+          </ul>
+          <div id="navLogin">
+            <button class="btn-bauxa w-100 mt-1" id="loginBtn">
+              <i class="bi bi-google" aria-hidden="true"></i> <span data-i18n="nav.login">Iniciar Sessió</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Autenticat: desplegable d'usuari + llengua + logout -->
+        <div id="navUser" class="d-none">
+
+          <!-- Toggle: avatar + nom → obre/tanca submenu d'usuari -->
+          <button class="sidebar-link lang-submenu-toggle sidebar-user-toggle" style="width:100%;" aria-label="Menú usuari">
+            <div class="sidebar-user-info-inline">
+              <img id="userAvatar" src="" class="sidebar-avatar" alt="Avatar">
+              <span id="userName" class="sidebar-username"></span>
+            </div>
+            <i class="bi bi-chevron-down small lang-submenu-chevron"></i>
+          </button>
+          <!-- Submenu d'usuari (com l'idioma) -->
+          <ul class="lang-submenu list-unstyled ps-0 mb-1" style="display:none;">
+            <li>
+              <a href="#profile" class="sidebar-link"><i class="bi bi-person" aria-hidden="true"></i> <span data-i18n="nav.profile">El meu Perfil</span></a>
+            </li>
+            <li>
+              <a href="#favorits" class="sidebar-link">
+                <i class="bi bi-heart" aria-hidden="true"></i>
+                <span data-i18n="nav.favorites">Favorits</span>
+                <span id="favBadgeUser" class="fav-badge" style="display:none;">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#solicituds" class="sidebar-link d-none" id="navSolicituds"><i class="bi bi-pencil-square" aria-hidden="true"></i> <span data-i18n="nav.requests">Solicituds</span></a>
+            </li>
+            <li>
+              <a href="#admin" class="sidebar-link d-none" id="navAdmin"><i class="bi bi-gear" aria-hidden="true"></i> <span data-i18n="nav.admin">Administració</span></a>
+            </li>
+          </ul>
+
+          <!-- Language accordion -->
+          <button class="sidebar-link lang-submenu-toggle" style="width:100%;">
+            <span><i class="bi bi-translate" aria-hidden="true"></i> <span data-i18n="nav.language">Idioma</span></span>
+            <i class="bi bi-chevron-down small lang-submenu-chevron"></i>
+          </button>
+          <ul class="lang-submenu list-unstyled ps-3 mb-1" style="display:none;">
+            <li><button class="sidebar-link lang-btn" data-lang="ca"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt="CA"> Català</button></li>
+            <li><button class="sidebar-link lang-btn" data-lang="en"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt="EN"> English</button></li>
+            <li><button class="sidebar-link lang-btn" data-lang="de"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt="DE"> Deutsch</button></li>
+            <li><button class="sidebar-link lang-btn" data-lang="es"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt="ES"> Castellano</button></li>
+          </ul>
+
+          <button class="btn-bauxa-outline w-100 mt-1" id="logoutBtn">
+            <i class="bi bi-box-arrow-right" aria-hidden="true"></i> <span data-i18n="nav.logout">Tancar Sessió</span>
+          </button>
+        </div>
+
+        <!-- Toggle fosc/clar (sempre visible) -->
+        <div class="theme-row">
+          <span class="theme-label" id="themeLabel">Mode fosc</span>
+          <button class="toggle-track" id="themeToggle" aria-label="Canviar tema">
+            <div class="toggle-knob"></div>
+          </button>
+        </div>
+
+      </div><!-- /sidebar-footer -->
+    </aside><!-- /sidebar -->
+
+    <main class="main-content" id="main-content">
 
     <!-- ===================== HOME VIEW ===================== -->
     <div data-view="home">
@@ -237,19 +245,19 @@
           <div class="row" id="featuredEvents">
             <div class="col-md-6 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="min-height:350px;background:var(--color-bg-alt);border-radius:var(--card-radius);"></div>
+                style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
             </div>
             <div class="col-md-6 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="min-height:350px;background:var(--color-bg-alt);border-radius:var(--card-radius);"></div>
+                style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
             </div>
             <div class="col-md-6 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="min-height:350px;background:var(--color-bg-alt);border-radius:var(--card-radius);"></div>
+                style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
             </div>
             <div class="col-md-6 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="min-height:350px;background:var(--color-bg-alt);border-radius:var(--card-radius);"></div>
+                style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
             </div>
           </div>
         </div>
@@ -270,27 +278,27 @@
           <div class="row" id="upcomingEvents">
             <div class="col-12 mb-3" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:130px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:130px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
             <div class="col-12 mb-3" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:130px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:130px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
             <div class="col-12 mb-3" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:130px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:130px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
             <div class="col-12 mb-3" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:130px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:130px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
             <div class="col-12 mb-3" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:130px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:130px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
           </div>
@@ -312,22 +320,22 @@
           <div class="row" id="featuredArtists">
             <div class="col-md-6 col-lg-4 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:380px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:380px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
             <div class="col-md-6 col-lg-4 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:380px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:380px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
             <div class="col-md-6 col-lg-4 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:380px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:380px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
             <div class="col-md-6 col-lg-4 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:380px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:380px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
           </div>
@@ -342,17 +350,17 @@
           <div class="row" id="newsGrid">
             <div class="col-md-6 col-lg-4 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:320px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:320px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
             <div class="col-md-6 col-lg-4 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:320px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:320px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
             <div class="col-md-6 col-lg-4 mb-4" aria-hidden="true">
               <div class="skeleton-block"
-                style="height:320px;background:var(--color-bg-alt);border-radius:var(--card-radius);border:1px solid var(--color-border);">
+                style="height:320px;background:var(--surface-2);border-radius:var(--r-card);border:1px solid var(--border);">
               </div>
             </div>
           </div>
@@ -361,7 +369,7 @@
 
       <!-- CTA Section -->
       <section class="section-padding text-center"
-        style="background:linear-gradient(135deg, var(--color-secondary-dark), var(--color-primary-dark)); color:#fff;">
+        style="background:linear-gradient(135deg, var(--surface-3), var(--bg)); color:#fff;">
         <div class="container">
           <h2 style="color:#fff;" class="mb-3" data-i18n="section.cta">No et perdis cap bauxa!</h2>
           <p class="mb-4" style="opacity:0.9;max-width:500px;margin:0 auto;" data-i18n="section.ctaDesc">Explora el mapa de Mallorca per trobar els concerts més propers a tu.</p>
@@ -379,8 +387,8 @@
       <!-- Page Header -->
       <header class="hero" style="padding:3rem 0 2.5rem;">
         <div class="container">
-          <h1><i class="bi bi-music-note-list"></i> Artistes de <span>Mallorca</span></h1>
-          <p>Explora el directori complet de grups i musics de l'escena mallorquina</p>
+          <h1><i class="bi bi-music-note-list"></i> <span data-i18n="view.artists.title">Artistes de Mallorca</span></h1>
+          <p data-i18n="view.artists.subtitle">Explora el directori complet de grups i músics de l'escena mallorquina</p>
         </div>
       </header>
 
@@ -434,8 +442,8 @@
       <!-- Page Header -->
       <header class="hero" style="padding:3rem 0 2.5rem;">
         <div class="container">
-          <h1><i class="bi bi-calendar-event"></i> Agenda <span>Musical</span></h1>
-          <p>Tots els concerts, festivals i festes populars de Mallorca</p>
+          <h1><i class="bi bi-calendar-event"></i> <span data-i18n="view.events.title">Agenda Musical</span></h1>
+          <p data-i18n="view.events.subtitle">Tots els concerts, festivals i festes populars de Mallorca</p>
         </div>
       </header>
 
@@ -508,8 +516,8 @@
       <!-- Page Header -->
       <header class="hero" style="padding:2.5rem 0 2rem;">
         <div class="container">
-          <h1><i class="bi bi-map"></i> Mapa de <span>Bauxa</span></h1>
-          <p>Troba els concerts i festes mes propers a tu a l'illa de Mallorca</p>
+          <h1><i class="bi bi-map"></i> <span data-i18n="view.map.title">Mapa de Bauxa</span></h1>
+          <p data-i18n="view.map.subtitle">Troba els concerts i festes més propers a tu a l'illa de Mallorca</p>
         </div>
       </header>
 
@@ -520,24 +528,24 @@
             <!-- Map Column -->
             <div class="col-lg-8 mb-4">
               <!-- Map Filters -->
-              <div class="filter-bar mb-3" role="search" aria-label="Filtres del mapa">
+              <div class="filter-bar mb-3" role="search" data-i18n-aria="filter.eventsFilters" aria-label="Filtres del mapa">
                 <div class="row g-3 align-items-end">
                   <div class="col-sm-4">
-                    <label for="mapFilterZone" class="form-label small fw-semibold">Zona</label>
+                    <label for="mapFilterZone" class="form-label small fw-semibold" data-i18n="filter.zone">Zona</label>
                     <select class="form-select form-select-bauxa" id="mapFilterZone" aria-label="Filtrar per zona">
-                      <option value="">Totes les zones</option>
+                      <option value=""></option>
                     </select>
                   </div>
                   <div class="col-sm-4">
-                    <label for="mapFilterCategory" class="form-label small fw-semibold">Categoria</label>
+                    <label for="mapFilterCategory" class="form-label small fw-semibold" data-i18n="filter.category">Categoria</label>
                     <select class="form-select form-select-bauxa" id="mapFilterCategory"
                       aria-label="Filtrar per categoria">
-                      <option value="">Totes</option>
+                      <option value=""></option>
                     </select>
                   </div>
                   <div class="col-sm-4">
-                    <button class="btn btn-bauxa-outline w-100" id="mapClearFilters" aria-label="Netejar filtres">
-                      <i class="bi bi-x-circle"></i> Netejar
+                    <button class="btn btn-bauxa-outline w-100" id="mapClearFilters" data-i18n-aria="filter.clear" aria-label="Netejar filtres">
+                      <i class="bi bi-x-circle"></i> <span data-i18n="filter.clear">Netejar</span>
                     </button>
                   </div>
                 </div>
@@ -551,16 +559,20 @@
                 <strong class="small" data-i18n="map.legend.title">Llegenda:</strong>
                 <div class="d-flex flex-wrap gap-3 mt-2">
                   <div class="map-legend__item">
-                    <span class="map-legend__dot" style="background:#C45A3C;"></span>
+                    <span class="map-legend__dot" style="background:#ff4db5;"></span>
                     <span data-i18n="map.legend.concert">Concert</span>
                   </div>
                   <div class="map-legend__item">
-                    <span class="map-legend__dot" style="background:#D4A843;"></span>
+                    <span class="map-legend__dot" style="background:#ffb84d;"></span>
                     <span data-i18n="map.legend.festival">Festival</span>
                   </div>
                   <div class="map-legend__item">
-                    <span class="map-legend__dot" style="background:#6B8E4E;"></span>
+                    <span class="map-legend__dot" style="background:#4db5ff;"></span>
                     <span data-i18n="map.legend.popularFestival">Festa Popular</span>
+                  </div>
+                  <div class="map-legend__item">
+                    <span class="map-legend__dot" style="background:#94a3b8;border:none;opacity:0.8;"></span>
+                    <span data-i18n="map.legend.extern">Extern</span>
                   </div>
                 </div>
               </div>
@@ -589,8 +601,8 @@
       <!-- Page Header -->
       <header class="hero" style="padding:3rem 0 2.5rem;">
         <div class="container">
-          <h1><i class="bi bi-heart"></i> Els Meus <span>Favorits</span></h1>
-          <p>Els teus artistes i esdeveniments guardats</p>
+          <h1><i class="bi bi-heart"></i> <span data-i18n="favorites.title">Els Meus Favorits</span></h1>
+          <p data-i18n="favorites.subtitle">Els teus artistes i esdeveniments guardats</p>
         </div>
       </header>
 
@@ -609,8 +621,8 @@
 
       <header class="hero" style="padding:3rem 0 2.5rem;">
         <div class="container">
-          <h1><i class="bi bi-person"></i> El Meu <span>Perfil</span></h1>
-          <p>Gestiona la teva informacio personal</p>
+          <h1><i class="bi bi-person"></i> <span data-i18n="profile.title">El Meu Perfil</span></h1>
+          <p data-i18n="profile.subtitle">Gestiona el teu compte</p>
         </div>
       </header>
 
@@ -627,19 +639,24 @@
           <div id="profileContent" style="display:none;">
             <div id="profileAlert" style="display:none;" class="mb-4"></div>
 
-            <div class="row g-4 align-items-start">
-              <div class="col-12 col-lg-6">
+            <div class="row g-4 align-items-start" id="profileRow">
+              <div class="col-12 col-lg-6" id="profileMainCol">
                 <div class="card-bauxa h-100" style="padding:2rem;">
+
+                  <!-- Avatar + identity header -->
                   <div class="d-flex align-items-center gap-3 mb-4">
-                    <img id="profileAvatar" class="rounded-circle" width="64" height="64" alt="Avatar" src="">
-                    <div>
+                    <img id="profileAvatar" class="rounded-circle" width="72" height="72" alt="Avatar" src="">
+                    <div class="flex-grow-1 min-w-0">
                       <h2 class="h5 mb-0" id="profileName"></h2>
-                      <span class="badge bg-secondary" id="profileRole"></span>
+                      <div class="d-flex align-items-center flex-wrap gap-2 mt-1">
+                        <span class="badge bg-secondary" id="profileRole"></span>
+                      </div>
+                      <small class="text-muted d-block mt-1 text-truncate" id="profileEmailInline"></small>
                     </div>
                   </div>
 
                   <form id="profileForm">
-                    <div class="mb-3">
+                    <div class="mb-3 d-md-none">
                       <label for="profileEmail" class="form-label small fw-semibold" data-i18n="profile.emailLabel">Email</label>
                       <input type="email" class="form-control form-control-bauxa" id="profileEmail" disabled>
                     </div>
@@ -650,13 +667,14 @@
                     </div>
                     <div class="mb-3">
                       <label for="profileBio" class="form-label small fw-semibold" data-i18n="profile.bioLabel">Bio</label>
-                      <textarea class="form-control form-control-bauxa" id="profileBio" rows="3"
+                      <textarea class="form-control form-control-bauxa" id="profileBio" rows="4"
                         placeholder="..."></textarea>
                     </div>
                     <button type="submit" class="btn btn-bauxa">
                       <i class="bi bi-check-lg" aria-hidden="true"></i> <span data-i18n="profile.saveChanges">Guardar Canvis</span>
                     </button>
                   </form>
+
                 </div>
               </div>
 
@@ -692,8 +710,8 @@
 
       <header class="hero" style="padding:3rem 0 2.5rem;">
         <div class="container">
-          <h1><i class="bi bi-pencil-square"></i> Les Meves <span>Solicituds</span></h1>
-          <p>Envia solicituds d'edicio per artistes, events o noticies</p>
+          <h1><i class="bi bi-pencil-square"></i> <span data-i18n="solicituds.title">Les Meves Solicituds</span></h1>
+          <p data-i18n="solicituds.subtitle">Envia sol·licituds d'edició per artistes, events o notícies</p>
         </div>
       </header>
 
@@ -1447,7 +1465,7 @@
                       <div class="col-12">
                         <label class="form-label small fw-semibold">Preguntes assignades</label>
                         <div id="quizQuestionCheckboxes" class="border rounded p-2"
-                          style="max-height:250px;overflow-y:auto;background:var(--color-bg-alt);">
+                          style="max-height:250px;overflow-y:auto;background:var(--surface-2);">
                           <p class="text-muted small mb-0">Carregant preguntes...</p>
                         </div>
                       </div>
@@ -1685,45 +1703,42 @@
               <!-- Social Networks Panel -->
               <div class="tab-pane fade" id="panel-social" role="tabpanel">
                 <!-- Generador de Cartell -->
-                <div class="card mb-4 border-0 bg-light">
-                  <div class="card-body d-flex align-items-center gap-3 flex-wrap">
-                    <i class="bi bi-image fs-4 text-secondary"></i>
-                    <div>
-                      <div class="fw-semibold" data-i18n="admin.agendaPosterTitle">Generar Cartell</div>
-                      <div class="text-muted small" data-i18n="admin.agendaPosterDesc">Genera una imatge pòster de l'agenda per a un dia o cap de setmana</div>
-                    </div>
-                    <div class="d-flex align-items-center gap-2 ms-auto">
-                      <input type="date" id="agendaDateFrom" class="form-control form-control-sm" style="max-width:145px">
-                      <span class="text-muted small">—</span>
-                      <input type="date" id="agendaDateTo" class="form-control form-control-sm" style="max-width:145px">
-                      <button id="btnGenerarCartell" class="btn btn-sm btn-bauxa-outline">
-                        <i class="bi bi-image"></i> <span data-i18n="admin.agendaPosterBtn">Generar Cartell</span>
-                      </button>
-                    </div>
+                <div class="card-bauxa mb-4 p-3 d-flex align-items-center gap-3 flex-wrap">
+                  <i class="bi bi-image fs-4 text-secondary"></i>
+                  <div>
+                    <div class="fw-semibold" data-i18n="admin.agendaPosterTitle">Generar Cartell</div>
+                    <div class="text-muted small" data-i18n="admin.agendaPosterDesc">Genera una imatge pòster de l'agenda per a un dia o cap de setmana</div>
+                  </div>
+                  <div class="d-flex align-items-center gap-2 ms-auto">
+                    <input type="date" id="agendaDateFrom" class="form-control form-control-sm" style="max-width:145px">
+                    <span class="text-muted small">—</span>
+                    <input type="date" id="agendaDateTo" class="form-control form-control-sm" style="max-width:145px">
+                    <button id="btnGenerarCartell" class="btn btn-sm btn-bauxa-outline">
+                      <i class="bi bi-image"></i> <span data-i18n="admin.agendaPosterBtn">Generar Cartell</span>
+                    </button>
                   </div>
                 </div>
                 <!-- Analitzar post d'Instagram -->
-                <div class="card mb-4 border-0 bg-light">
-                  <div class="card-body">
-                    <div class="d-flex align-items-center gap-3 mb-3">
-                      <i class="bi bi-instagram fs-4 text-secondary"></i>
-                      <div>
-                        <div class="fw-semibold" data-i18n="admin.instagramTitle">Analitzar Post d'Instagram</div>
-                        <div class="text-muted small" data-i18n="admin.instagramDesc">Enganxa la imatge del cartell i afegeix el link per extreure el caption</div>
+                <div class="card-bauxa mb-4 p-3">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <i class="bi bi-instagram fs-4 text-secondary"></i>
+                    <div>
+                      <div class="fw-semibold" data-i18n="admin.instagramTitle">Analitzar Post d'Instagram</div>
+                      <div class="text-muted small" data-i18n="admin.instagramDesc">Enganxa la imatge del cartell i afegeix el link per extreure el caption</div>
+                    </div>
+                  </div>
+                  <div class="row g-2 align-items-start">
+                    <div class="col-md-4">
+                      <div id="instagramPasteZone" tabindex="0"
+                        style="border:2px dashed var(--border-2); border-radius:8px; min-height:100px; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--surface-2); position:relative;">
+                        <span class="text-muted small text-center px-2" id="instagramPasteHint">
+                          <i class="bi bi-clipboard-image d-block fs-3 mb-1"></i>
+                          Ctrl+V per enganxar imatge
+                        </span>
+                        <img id="instagramPastePreview"
+                          style="display:none; max-width:100%; max-height:150px; border-radius:6px;">
                       </div>
                     </div>
-                    <div class="row g-2 align-items-start">
-                      <div class="col-md-4">
-                        <div id="instagramPasteZone" tabindex="0"
-                          style="border:2px dashed #ccc; border-radius:8px; min-height:100px; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff; position:relative;">
-                          <span class="text-muted small text-center px-2" id="instagramPasteHint">
-                            <i class="bi bi-clipboard-image d-block fs-3 mb-1"></i>
-                            Ctrl+V per enganxar imatge
-                          </span>
-                          <img id="instagramPastePreview"
-                            style="display:none; max-width:100%; max-height:150px; border-radius:6px;">
-                        </div>
-                      </div>
                       <div class="col-md-8 d-flex flex-column gap-2">
                         <select id="captionMode" class="form-select form-select-sm">
                           <option value="instagram">Caption des d'Instagram</option>
@@ -1760,7 +1775,7 @@
     <!-- ===================== JOC VIEW ===================== -->
     <div data-view="joc" style="display:none;">
 
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-controller"></i> Joc de <span>Música</span></h1>
           <p>Endevina l'artista o la cançó! Tria el mode i la dificultat per començar.</p>
@@ -1768,7 +1783,7 @@
       </header>
 
       <section class="section-padding">
-        <div class="container" style="max-width:700px;">
+        <div class="container" style="max-width:900px;">
           <div id="jocSetup"></div>
           <div id="jocPlaying" style="display:none;"></div>
           <div id="jocResults" style="display:none;"></div>
@@ -1777,7 +1792,6 @@
 
     </div>
 
-  </main>
 
   <!-- Footer -->
   <footer class="footer-bauxa">
@@ -1785,20 +1799,19 @@
       <div class="row">
         <div class="col-md-4 mb-4">
           <div class="footer-brand mb-2">Dona'm Bauxa</div>
-          <p class="small">La plataforma de musica i esdeveniments en directe de Mallorca. Descobreix el talent de
-            l'illa.</p>
+          <p class="small" data-i18n="footer.tagline">La plataforma de musica i esdeveniments en directe de Mallorca. Descobreix el talent de l'illa.</p>
         </div>
         <div class="col-md-2 mb-4">
-          <h2>Seccions</h2>
+          <h2 data-i18n="footer.sections">Seccions</h2>
           <ul class="list-unstyled">
-            <li class="mb-1"><a href="#home">Inici</a></li>
-            <li class="mb-1"><a href="#artists">Artistes</a></li>
-            <li class="mb-1"><a href="#events">Agenda</a></li>
-            <li class="mb-1"><a href="#map">Mapa</a></li>
+            <li class="mb-1"><a href="#home" data-i18n="nav.home">Inici</a></li>
+            <li class="mb-1"><a href="#artists" data-i18n="nav.artists">Artistes</a></li>
+            <li class="mb-1"><a href="#events" data-i18n="nav.events">Agenda</a></li>
+            <li class="mb-1"><a href="#map" data-i18n="nav.map">Mapa</a></li>
           </ul>
         </div>
         <div class="col-md-3 mb-4">
-          <h2>Zones de Mallorca</h2>
+          <h2 data-i18n="footer.zones">Zones de Mallorca</h2>
           <ul class="list-unstyled">
             <li class="mb-1">Palma</li>
             <li class="mb-1">Serra de Tramuntana</li>
@@ -1808,7 +1821,7 @@
           </ul>
         </div>
         <div class="col-md-3 mb-4">
-          <h2>Contacte</h2>
+          <h2 data-i18n="footer.contact">Contacte</h2>
           <ul class="list-unstyled">
             <li class="mb-1"><i class="bi bi-envelope"></i> info@donambauxa.cat</li>
             <li class="mb-1"><i class="bi bi-instagram"></i> @donambauxa</li>
@@ -1817,12 +1830,14 @@
       </div>
       <hr>
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-        <p class="small mb-0">2026 Dona'm Bauxa. Projecte academic UIB - Tecnologia Multimedia.</p>
-        <p class="small mb-0">Fet amb <i class="bi bi-heart-fill" style="color:var(--color-primary-light);"></i> a
-          Mallorca</p>
+        <p class="small mb-0" data-i18n="footer.copyright">2026 Dona'm Bauxa. Projecte acadèmic UIB - Tecnologia Multimèdia.</p>
+        <p class="small mb-0"><span data-i18n="footer.madeWith">Fet amb</span> <i class="bi bi-heart-fill" style="color:var(--accent-text);"></i> a Mallorca</p>
       </div>
     </div>
   </footer>
+
+  </main><!-- /main-content -->
+  </div><!-- /app -->
 
   <!-- Artist Detail Modal -->
   <div class="modal fade modal-bauxa" id="artistModal" role="dialog" tabindex="-1" aria-labelledby="artistModalLabel"

@@ -91,7 +91,7 @@ export function initGlobalEventHandlers(allEvents = []) {
  */
 export function setActiveNavLink() {
   const hash = window.location.hash || '#home';
-  document.querySelectorAll('.navbar-bauxa .nav-link').forEach(link => {
+  document.querySelectorAll('.sidebar-link[href]').forEach(link => {
     const href = link.getAttribute('href');
     link.classList.toggle('active', href === hash);
   });

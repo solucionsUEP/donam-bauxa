@@ -26,6 +26,20 @@
     "exploreArtists": "Explorar Artistes",
     "openMap": "Obrir Mapa"
   },
+  "view": {
+    "artists": {
+      "title": "Artistes de Mallorca",
+      "subtitle": "Explora el directori complet de grups i músics de l'escena mallorquina"
+    },
+    "events": {
+      "title": "Agenda Musical",
+      "subtitle": "Tots els concerts, festivals i festes populars de Mallorca"
+    },
+    "map": {
+      "title": "Mapa de Bauxa",
+      "subtitle": "Troba els concerts i festes més propers a tu a l'illa de Mallorca"
+    }
+  },
   "section": {
     "featuredEvents": "Esdeveniments Destacats",
     "featuredEventsSubtitle": "Els concerts i festivals que no et pots perdre",
@@ -100,7 +114,8 @@
       "title": "Llegenda",
       "concert": "Concert",
       "festival": "Festival",
-      "popularFestival": "Festa Popular"
+      "popularFestival": "Festa Popular",
+      "extern": "Extern / Sense categoria"
     }
   },
   "favorites": {
@@ -274,7 +289,12 @@
     "instagramAnalyzing": "Analitzant...",
     "instagramAnalyzingBody": "Analitzant el post...",
     "instagramSentOk": "Sol·licituds enviades correctament.",
-    "instagramAnalyze": "Analitzar"
+    "instagramAnalyze": "Analitzar",
+    "agendaPosterTitle": "Generar Cartell",
+    "agendaPosterDesc": "Genera una imatge pòster de l'agenda per a un dia o cap de setmana",
+    "agendaPosterBtn": "Generar Cartell",
+    "instagramTitle": "Analitzar Post d'Instagram",
+    "instagramDesc": "Enganxa la imatge del cartell i afegeix el link per extreure el caption"
   },
   "joc": {
     "title": "Joc Musical",
@@ -338,6 +358,14 @@
   "auth": {
     "loginError": "Error inici de sessió: {{message}}",
     "genericError": "Error: {{message}}"
+  },
+  "footer": {
+    "tagline": "La plataforma de musica i esdeveniments en directe de Mallorca. Descobreix el talent de l'illa.",
+    "sections": "Seccions",
+    "zones": "Zones de Mallorca",
+    "contact": "Contacte",
+    "copyright": "2026 Dona'm Bauxa. Projecte acadèmic UIB - Tecnologia Multimèdia.",
+    "madeWith": "Fet amb"
   },
   "common": {
     "loading": "Carregant...",

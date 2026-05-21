@@ -245,11 +245,13 @@ function renderSetup() {
           </span>
           <h3 id="jocSec-${sec.id}" class="joc-section__title">${sec.label}</h3>
         </div>
-        <div class="joc-scroll-row" role="list">
-          ${qs.map(q => `
-            <div class="joc-scroll-item" role="listitem">
-              ${renderBannerCard(q)}
-            </div>`).join('')}
+        <div class="joc-scroll-wrapper">
+          <div class="joc-scroll-row" role="list">
+            ${qs.map(q => `
+              <div class="joc-scroll-item" role="listitem">
+                ${renderBannerCard(q)}
+              </div>`).join('')}
+          </div>
         </div>
       </section>`;
   }).join('');

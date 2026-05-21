@@ -26,6 +26,20 @@
     "exploreArtists": "Künstler entdecken",
     "openMap": "Karte öffnen"
   },
+  "view": {
+    "artists": {
+      "title": "Künstler auf Mallorca",
+      "subtitle": "Entdecke das vollständige Verzeichnis der Bands und Musiker der mallorquinischen Szene"
+    },
+    "events": {
+      "title": "Musikprogramm",
+      "subtitle": "Alle Konzerte, Festivals und Volksfeste auf Mallorca"
+    },
+    "map": {
+      "title": "Bauxa-Karte",
+      "subtitle": "Finde die Konzerte und Feste, die dir auf der Insel am nächsten sind"
+    }
+  },
   "section": {
     "featuredEvents": "Ausgewählte Veranstaltungen",
     "featuredEventsSubtitle": "Die Konzerte und Festivals, die Sie nicht verpassen dürfen",
@@ -100,7 +114,8 @@
       "title": "Legende",
       "concert": "Konzert",
       "festival": "Festival",
-      "popularFestival": "Volksfest"
+      "popularFestival": "Volksfest",
+      "extern": "Extern / Keine Kategorie"
     }
   },
   "favorites": {
@@ -274,7 +289,12 @@
     "instagramAnalyzing": "Analysiere...",
     "instagramAnalyzingBody": "Post wird analysiert...",
     "instagramSentOk": "Anfragen erfolgreich gesendet.",
-    "instagramAnalyze": "Analysieren"
+    "instagramAnalyze": "Analysieren",
+    "agendaPosterTitle": "Plakat generieren",
+    "agendaPosterDesc": "Erstelle ein Plakat-Bild der Agenda für einen Tag oder ein Wochenende",
+    "agendaPosterBtn": "Plakat generieren",
+    "instagramTitle": "Instagram-Post analysieren",
+    "instagramDesc": "Füge das Plakat-Bild ein und gib den Link an, um die Caption zu extrahieren"
   },
   "joc": {
     "title": "Musikspiel",
@@ -338,6 +358,14 @@
   "auth": {
     "loginError": "Anmeldefehler: {{message}}",
     "genericError": "Fehler: {{message}}"
+  },
+  "footer": {
+    "tagline": "Die Plattform für Live-Musik und Veranstaltungen auf Mallorca. Entdecke das Talent der Insel.",
+    "sections": "Bereiche",
+    "zones": "Zonen Mallorcas",
+    "contact": "Kontakt",
+    "copyright": "2026 Dona'm Bauxa. Akademisches Projekt UIB - Multimedia-Technologie.",
+    "madeWith": "Gemacht mit"
   },
   "common": {
     "loading": "Laden...",
