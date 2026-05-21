@@ -54,6 +54,49 @@ let markerLayer = null;
 /** @type {Set<string>} Views that have been initialized */
 const initializedViews = new Set();
 
+/**
+ * Spawns a colourful particle burst (firework) on the home hero and toggles
+ * the active state for the ambient blob pulse on touch/hover.
+ */
+function initHeroFx() {
+  const hero = document.getElementById('homeHero');
+  if (!hero) return;
+  const COLORS = ['#b5ff4d', '#4dd0ff', '#ff4d8d', '#ffce4d', '#a14dff'];
+
+  const spawn = (clientX, clientY) => {
+    const rect = hero.getBoundingClientRect();
+    const cx = clientX - rect.left;
+    const cy = clientY - rect.top;
+    const n = 18;
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement('span');
+      const color = COLORS[i % COLORS.length];
+      const angle = (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+      const dist = 70 + Math.random() * 90;
+      s.className = 'hero-spark';
+      s.style.left = `${cx}px`;
+      s.style.top = `${cy}px`;
+      s.style.background = color;
+      s.style.boxShadow = `0 0 12px 2px ${color}`;
+      s.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+      s.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+      hero.appendChild(s);
+      setTimeout(() => s.remove(), 950);
+    }
+  };
+
+  hero.addEventListener('click', (e) => {
+    if (e.target.closest('a, button')) return;
+    spawn(e.clientX, e.clientY);
+  });
+  hero.addEventListener('touchstart', (e) => {
+    hero.classList.add('is-active');
+    const t = e.touches[0];
+    if (t && !e.target.closest('a, button')) spawn(t.clientX, t.clientY);
+  }, { passive: true });
+  hero.addEventListener('touchend', () => hero.classList.remove('is-active'));
+}
+
 /* ------------------------------------------------------------------ */
 /*  Data loading                                                       */
 /* ------------------------------------------------------------------ */
@@ -469,6 +512,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initialize shared UI
   initScrollToTop();
   initMobileFab();
+  initHeroFx();
   updateFavoriteBadge();
 
   // Check auth state for admin nav
