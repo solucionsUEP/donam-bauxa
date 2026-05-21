@@ -146,7 +146,8 @@
     "requestPromotorSent": "Request sent successfully. The administrator will review it soon.",
     "requestPromotorPending": "You have a promotor request pending review.",
     "requestPromotorAlready": "You are already a promotor or administrator.",
-    "requestPromotorErrorMotiv": "Please write the reason for your request."
+    "requestPromotorErrorMotiv": "Please write the reason for the request.",
+    "developersTitle": "Developers"
   },
   "solicituds": {
     "title": "Edit Requests",
@@ -251,7 +252,7 @@
     "saveError": "Error saving: {{error}}",
     "archiveToggleOk": "Item {{action}} successfully",
     "archiveAction": "archived",
-    "unarchiveAction": "unarchived",
+    "unarchiveAction": "ununarchived",
     "noRequests": "No requests.",
     "noUsers": "No registered users.",
     "noApiKeys": "No API keys created.",
@@ -365,7 +366,8 @@
     "zones": "Zones of Mallorca",
     "contact": "Contact",
     "copyright": "2026 Dona'm Bauxa. Academic project UIB - Multimedia Technology.",
-    "madeWith": "Made with"
+    "madeWith": "Made with",
+    "developersTitle": "Created by:"
   },
   "common": {
     "loading": "Loading...",

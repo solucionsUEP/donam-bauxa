@@ -385,7 +385,7 @@
     <div data-view="artists" style="display:none;">
 
       <!-- Page Header -->
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-music-note-list"></i> <span data-i18n="view.artists.title">Artistes de Mallorca</span></h1>
           <p data-i18n="view.artists.subtitle">Explora el directori complet de grups i músics de l'escena mallorquina</p>
@@ -440,7 +440,7 @@
     <div data-view="events" style="display:none;">
 
       <!-- Page Header -->
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-calendar-event"></i> <span data-i18n="view.events.title">Agenda Musical</span></h1>
           <p data-i18n="view.events.subtitle">Tots els concerts, festivals i festes populars de Mallorca</p>
@@ -514,7 +514,7 @@
     <div data-view="map" style="display:none;">
 
       <!-- Page Header -->
-      <header class="hero" style="padding:2.5rem 0 2rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-map"></i> <span data-i18n="view.map.title">Mapa de Bauxa</span></h1>
           <p data-i18n="view.map.subtitle">Troba els concerts i festes més propers a tu a l'illa de Mallorca</p>
@@ -599,7 +599,7 @@
     <div data-view="favorits" style="display:none;">
 
       <!-- Page Header -->
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-heart"></i> <span data-i18n="favorites.title">Els Meus Favorits</span></h1>
           <p data-i18n="favorites.subtitle">Els teus artistes i esdeveniments guardats</p>
@@ -619,7 +619,7 @@
     <!-- ===================== PROFILE VIEW ===================== -->
     <div data-view="profile" style="display:none;">
 
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-person"></i> <span data-i18n="profile.title">El Meu Perfil</span></h1>
           <p data-i18n="profile.subtitle">Gestiona el teu compte</p>
@@ -699,6 +699,10 @@
               </div>
             </div>
 
+            <!-- Developers Section -->
+            <div id="developersSection" class="mt-5 pt-5 border-top">
+              <!-- Dynamically loaded -->
+            </div>
           </div>
         </div>
       </div>
@@ -708,7 +712,7 @@
     <!-- ===================== SOLICITUDS VIEW (PROMOTORS) ===================== -->
     <div data-view="solicituds" style="display:none;">
 
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-pencil-square"></i> <span data-i18n="solicituds.title">Les Meves Solicituds</span></h1>
           <p data-i18n="solicituds.subtitle">Envia sol·licituds d'edició per artistes, events o notícies</p>
@@ -1015,7 +1019,7 @@
     <!-- ===================== ADMIN VIEW ===================== -->
     <div data-view="admin" style="display:none;">
 
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-gear"></i> Panel d'<span>Administracio</span></h1>
           <p>Gestiona contingut, solicituds i usuaris</p>
@@ -1448,7 +1452,7 @@
                       </div>
                       <div class="col-md-3">
                         <label for="quizColor2" class="form-label small fw-semibold">Color 2</label>
-                        <input type="color" class="form-control form-control-color" id="quizColor2" value="#2D6A8F">
+                        <input type="color" class="form-control font-control-color" id="quizColor2" value="#2D6A8F">
                       </div>
                       <div class="col-md-6">
                         <label for="quizImageJpg" class="form-label small fw-semibold">Imatge JPG (path)</label>
@@ -1770,8 +1774,6 @@
         </div>
       </div>
 
-    </div>
-
     <!-- ===================== JOC VIEW ===================== -->
     <div data-view="joc" style="display:none;">
 
@@ -1797,6 +1799,7 @@
 
     </div>
 
+  </main><!-- /main-content -->
 
   <!-- Footer -->
   <footer class="footer-bauxa">
@@ -1834,6 +1837,10 @@
         </div>
       </div>
       <hr>
+      <!-- Developer Attribution Section -->
+      <div id="footerDevelopers" class="mb-4">
+        <!-- Dynamically loaded -->
+      </div>
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
         <p class="small mb-0" data-i18n="footer.copyright">2026 Dona'm Bauxa. Projecte acadèmic UIB - Tecnologia Multimèdia.</p>
         <p class="small mb-0"><span data-i18n="footer.madeWith">Fet amb</span> <i class="bi bi-heart-fill" style="color:var(--accent-text);"></i> a Mallorca</p>
@@ -1841,7 +1848,6 @@
     </div>
   </footer>
 
-  </main><!-- /main-content -->
   </div><!-- /app -->
 
   <!-- Artist Detail Modal -->

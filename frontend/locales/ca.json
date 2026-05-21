@@ -145,8 +145,9 @@
     "requestPromotorBtn": "Enviar sol·licitud",
     "requestPromotorSent": "Sol·licitud enviada correctament. L'administrador la revisarà aviat.",
     "requestPromotorPending": "Tens una sol·licitud de promotor pendent de revisió.",
-    "requestPromotorAlready": "Ja ets promotor o administrador.",
-    "requestPromotorErrorMotiv": "Escriu el motiu de la sol·licitud."
+    "requestPromotorAlready": "Ya ets promotor o administrador.",
+    "requestPromotorErrorMotiv": "Escriu el motiu de la sol·licitud.",
+    "developersTitle": "Desenvolupadors"
   },
   "solicituds": {
     "title": "Solicituds d'Edició",

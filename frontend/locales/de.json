@@ -102,14 +102,14 @@
     "addToCalendarShort": "Kalender",
     "favorite": "Favorit",
     "notFound": "Keine Veranstaltungen mit diesen Filtern gefunden.",
-    "notFoundZone": "Keine Veranstaltungen in dieser Zone.",
+    "notFoundZone": "Noch keine Veranstaltungen in dieser Zone.",
     "emptyState": "Keine Veranstaltungen verfügbar"
   },
   "map": {
     "title": "Veranstaltungskarte",
     "subtitle": "Entdecken Sie, wo Sie hingehen können",
     "eventsCount": "{{count}} Events auf der Karte",
-    "emptyState": "Keine Veranstaltungen in dieser Zone.",
+    "emptyState": "Noch keine Veranstaltungen in dieser Zone.",
     "legend": {
       "title": "Legende",
       "concert": "Konzert",
@@ -145,8 +145,9 @@
     "requestPromotorBtn": "Anfrage senden",
     "requestPromotorSent": "Anfrage erfolgreich gesendet. Der Administrator wird sie bald prüfen.",
     "requestPromotorPending": "Sie haben eine ausstehende Promotor-Anfrage.",
-    "requestPromotorAlready": "Sie sind bereits Promotor oder Administrator.",
-    "requestPromotorErrorMotiv": "Bitte schreiben Sie den Grund Ihrer Anfrage."
+    "requestPromotorAlready": "Sie sind bereits Promoter oder Administrator.",
+    "requestPromotorErrorMotiv": "Bitte schreiben Sie den Grund Ihrer Anfrage.",
+    "developersTitle": "Entwickler"
   },
   "solicituds": {
     "title": "Bearbeitungsanfragen",
@@ -205,7 +206,7 @@
     "colActions": "Aktionen",
     "colDate": "Datum",
     "colType": "Typ",
-    "colAction": "Aktion",
+    "colAction": "Action",
     "colEntity": "Entität",
     "colRequestedBy": "Angefordert von",
     "colRole": "Rolle",
@@ -357,7 +358,7 @@
   },
   "auth": {
     "loginError": "Anmeldefehler: {{message}}",
-    "genericError": "Fehler: {{message}}"
+    "genericError": "Error: {{message}}"
   },
   "footer": {
     "tagline": "Die Plattform für Live-Musik und Veranstaltungen auf Mallorca. Entdecke das Talent der Insel.",
@@ -365,7 +366,8 @@
     "zones": "Zonen Mallorcas",
     "contact": "Kontakt",
     "copyright": "2026 Dona'm Bauxa. Akademisches Projekt UIB - Multimedia-Technologie.",
-    "madeWith": "Gemacht mit"
+    "madeWith": "Gemacht mit",
+    "developersTitle": "Erstellt von:"
   },
   "common": {
     "loading": "Laden...",

@@ -7,7 +7,8 @@
 import { loadArtists, loadEvents, loadNews, loadExternEvents } from './modules/dataLoader.js';
 import {
   renderFeaturedEvent, renderEventCard, renderNewsCard, renderArtistCard,
-  renderLoading, renderEmptyState, renderArtistDetail, renderEventDetail
+  renderLoading, renderEmptyState, renderArtistDetail, renderEventDetail,
+  renderDeveloperProfiles
 } from './modules/renderer.js';
 import {
   filterArtists, filterEvents, sortEventsByDate, getUpcomingEvents,
@@ -98,6 +99,27 @@ async function ensureDataLoaded() {
 
   } catch (error) {
     console.error('[app] Error loading data:', error);
+  }
+}
+
+/**
+ * Loads developer profiles from GitHub and renders them in the footer.
+ */
+async function initFooterDevelopers() {
+  const footerContainer = document.getElementById('footerDevelopers');
+  const profileContainer = document.getElementById('developersSection');
+  if (!footerContainer && !profileContainer) return;
+
+  try {
+    const usernames = ['dylanluigi', 'JoFeF08'];
+    const devData = await Promise.all(usernames.map(user =>
+      fetch(`https://api.github.com/users/${user}`).then(r => r.json())
+    ));
+    const html = renderDeveloperProfiles(devData);
+    if (footerContainer) footerContainer.innerHTML = html;
+    if (profileContainer) profileContainer.innerHTML = html;
+  } catch (err) {
+    console.error('[app] Error loading developer profiles:', err);
   }
 }
 
@@ -446,6 +468,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Check auth state for admin nav
   checkAuth();
 
+  // Load footer developers
+  initFooterDevelopers();
+
   // Actualitza el navbar automàticament quan canvia la sessió de Supabase
   supabase.auth.onAuthStateChange((event, session) => {
     console.log('[auth] onAuthStateChange:', event, session?.user?.email);
@@ -495,6 +520,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Re-render dynamic content when language changes
   document.addEventListener('langChanged', () => {
     applyTranslations();
+    // Update footer developers title translation
+    initFooterDevelopers();
     // Update filter select default options (first option, no listener re-binding)
     const selectDefaults = [
       ['artistsFilterGenre', 'filter.allGenres'],

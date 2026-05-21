@@ -412,6 +412,34 @@ export function renderEventDetail(event) {
 }
 
 /**
+ * Renders developer profiles for attribution.
+ * @param {Array<Object>} devs - Array of GitHub user objects
+ * @returns {string} HTML string
+ */
+export function renderDeveloperProfiles(devs) {
+  const devCards = devs.map(dev => `
+    <div class="col-6 col-md-3">
+      <a href="${dev.html_url}" target="_blank" rel="noopener noreferrer" class="d-flex align-items-center gap-2 text-decoration-none text-muted-custom hover-white">
+        <img src="${dev.avatar_url}" class="rounded-circle border border-secondary" width="32" height="32" alt="${escapeHtml(dev.name || dev.login)}">
+        <span class="small fw-semibold text-truncate">${escapeHtml(dev.name || dev.login)}</span>
+      </a>
+    </div>
+  `).join('');
+
+  return `
+    <div class="row justify-content-center g-3 mt-2">
+      <div class="col-12 text-center">
+        <p class="small text-muted mb-2" data-i18n="footer.developersTitle">Creat per:</p>
+      </div>
+      <div class="col-11 col-lg-8">
+        <div class="row justify-content-center">
+          ${devCards}
+        </div>
+      </div>
+    </div>`;
+}
+
+/**
  * Renders a loading spinner.
  * @param {string} [message='Carregant...']
  * @returns {string}
