@@ -3,12 +3,14 @@
  * @description Initializes and manages the Leaflet map for event locations.
  */
 
-/** Category colors for map markers */
+/** Category colors for map markers (design palette) */
 const CATEGORY_COLORS = {
-  'concert': '#C45A3C',
-  'festival': '#D4A843',
-  'festa popular': '#6B8E4E'
+  'concert':       '#ff4db5',
+  'festival':      '#ffb84d',
+  'festa popular': '#4db5ff',
+  'extern':        '#94a3b8'
 };
+const DEFAULT_MARKER_COLOR = '#94a3b8';
 
 /** Default map center (Mallorca) */
 const MALLORCA_CENTER = [39.6153, 2.9110];
@@ -89,7 +91,7 @@ export function addEventMarkers(map, events) {
     const geo = event.location?.geo;
     if (!geo || !geo.latitude || !geo.longitude) return;
 
-    const color = CATEGORY_COLORS[event.category] || '#1B4965';
+    const color = CATEGORY_COLORS[event.category?.toLowerCase?.()] || DEFAULT_MARKER_COLOR;
     const icon = createMarkerIcon(color);
 
     const date = new Date(event.startDate);
@@ -103,21 +105,21 @@ export function addEventMarkers(map, events) {
       : event.performer?.name || '';
 
     const price = parseFloat(event.offers?.price || 0);
-    const priceStr = price === 0 ? '<span style="color:#5A9E6F;font-weight:700">Gratuit</span>' : `<strong>${price.toFixed(0)} EUR</strong>`;
+    const priceClass = price === 0 ? 'map-popup__price--free' : 'map-popup__price';
+    const priceLabel = price === 0 ? 'Gratuït' : `${price.toFixed(0)} EUR`;
 
     const popupContent = `
-      <div style="min-width:200px;font-family:Inter,sans-serif;">
-        <strong style="font-size:1rem;color:#1B4965;">${event.name}</strong>
-        <hr style="margin:0.4rem 0;border-color:#E0D5CA;">
-        <p style="margin:0.3rem 0;font-size:0.85rem;"><i class="bi bi-calendar3"></i> ${dateStr} &mdash; ${timeStr}</p>
-        <p style="margin:0.3rem 0;font-size:0.85rem;"><i class="bi bi-geo-alt-fill" style="color:#C45A3C;"></i> ${event.location.name}</p>
-        ${performers ? `<p style="margin:0.3rem 0;font-size:0.85rem;"><i class="bi bi-music-note-beamed"></i> ${performers}</p>` : ''}
-        <p style="margin:0.3rem 0;font-size:0.85rem;"><i class="bi bi-tag"></i> ${priceStr}</p>
-        ${event.offers?.url && event.offers.url !== '#' ? `<a href="${event.offers.url}" target="_blank" rel="noopener" style="font-size:0.85rem;color:#C45A3C;font-weight:600;">Entrades &rarr;</a>` : ''}
+      <div style="min-width:210px;">
+        <p class="map-popup__title">${event.name}</p>
+        <div class="map-popup__row"><i class="bi bi-calendar3"></i> ${dateStr} &mdash; ${timeStr}</div>
+        <div class="map-popup__row"><i class="bi bi-geo-alt-fill"></i> ${event.location.name}</div>
+        ${performers ? `<div class="map-popup__row"><i class="bi bi-music-note-beamed"></i> ${performers}</div>` : ''}
+        <div class="map-popup__row"><i class="bi bi-tag"></i> <span class="${priceClass}">${priceLabel}</span></div>
+        ${event.offers?.url && event.offers.url !== '#' ? `<a href="${event.offers.url}" target="_blank" rel="noopener" class="map-popup__link">Entrades &rarr;</a>` : ''}
       </div>`;
 
     const marker = L.marker([geo.latitude, geo.longitude], { icon })
-      .bindPopup(popupContent, { maxWidth: 280 });
+      .bindPopup(popupContent, { maxWidth: 290 });
 
     markers.addLayer(marker);
   });

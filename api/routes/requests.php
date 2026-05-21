@@ -17,6 +17,8 @@ $CONTENT_FILES = [
     'news'   => DATA_DIR . '/news.json',
 ];
 
+$ROLE_ENTITY_TYPE = 'role';
+
 function rowToRequest(array $row, array $STATUS): array {
     // current_data i proposed_data arriben com a arrays (JSONB) o strings (text)
     $currentData  = is_string($row['current_data'])  ? json_decode($row['current_data'],  true) : ($row['current_data']  ?? null);
@@ -70,30 +72,43 @@ if ($method === 'PUT' && $id && $action === 'approve') {
     if (!$row) { http_response_code(404); echo json_encode(['error' => 'Solicitud no trobada']); return; }
     if ($row['status'] !== 'pending') { http_response_code(400); echo json_encode(['error' => 'Aquesta solicitud ja ha estat processada']); return; }
 
-    // Aplicar els canvis al JSON
+    // Aplicar els canvis al JSON o canviar rol
     $entityType   = $row['entity_type'];
-    $filePath     = $CONTENT_FILES[$entityType] ?? null;
     $proposedData = is_string($row['proposed_data']) ? json_decode($row['proposed_data'], true) : ($row['proposed_data'] ?? []);
 
-    if ($filePath && $proposedData) {
-        if ($row['type'] === 'CreateAction') {
-            $prefix = $ENTITY_PREFIXES[$entityType] ?? $entityType;
-            writeJSONSafe($filePath, function (&$data) use ($proposedData, $prefix) {
-                ['id' => $newId, 'position' => $pos] = generateId($prefix, $data['itemListElement']);
-                $proposedData['@id'] = $newId;
-                $data['itemListElement'][] = ['@type' => 'ListItem', 'position' => $pos, 'item' => $proposedData];
-                $data['numberOfItems'] = count($data['itemListElement']);
-            });
-        } elseif ($row['type'] === 'UpdateAction' && $row['entity_id']) {
-            $entityId = $row['entity_id'];
-            writeJSONSafe($filePath, function (&$data) use ($entityId, $proposedData) {
-                foreach ($data['itemListElement'] as &$el) {
-                    if (($el['item']['@id'] ?? null) === $entityId) {
-                        foreach ($proposedData as $k => $v) $el['item'][$k] = $v;
-                        break;
+    if ($entityType === $ROLE_ENTITY_TYPE) {
+        // Role request: promote agent to requested role
+        $newRole = $proposedData['role'] ?? 'promotor';
+        $valid = ['lector', 'promotor', 'admin'];
+        if (!in_array($newRole, $valid)) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Rol invàlid a la solicitud']);
+            return;
+        }
+        $updated = sbUpdate('users', ['id' => 'eq.' . $row['agent_id']], ['role' => $newRole]);
+        if (!$updated) { http_response_code(404); echo json_encode(['error' => 'Usuari no trobat']); return; }
+    } else {
+        $filePath = $CONTENT_FILES[$entityType] ?? null;
+        if ($filePath && $proposedData) {
+            if ($row['type'] === 'CreateAction') {
+                $prefix = $ENTITY_PREFIXES[$entityType] ?? $entityType;
+                writeJSONSafe($filePath, function (&$data) use ($proposedData, $prefix) {
+                    ['id' => $newId, 'position' => $pos] = generateId($prefix, $data['itemListElement']);
+                    $proposedData['@id'] = $newId;
+                    $data['itemListElement'][] = ['@type' => 'ListItem', 'position' => $pos, 'item' => $proposedData];
+                    $data['numberOfItems'] = count($data['itemListElement']);
+                });
+            } elseif ($row['type'] === 'UpdateAction' && $row['entity_id']) {
+                $entityId = $row['entity_id'];
+                writeJSONSafe($filePath, function (&$data) use ($entityId, $proposedData) {
+                    foreach ($data['itemListElement'] as &$el) {
+                        if (($el['item']['@id'] ?? null) === $entityId) {
+                            foreach ($proposedData as $k => $v) $el['item'][$k] = $v;
+                            break;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -144,7 +159,7 @@ if ($method === 'PUT' && $id && $action === 'approve') {
 
 // GET /api/requests (només les del usuari actual)
 } elseif ($method === 'GET') {
-    $userRow = requireRole(['promotor', 'admin']);
+    $userRow = requireRole(['lector', 'promotor', 'admin']);
 
     $filters = ['order' => 'created_at.desc', 'agent_id' => 'eq.' . $userRow['id']];
     $statusFilter = $_GET['status'] ?? null;
@@ -165,15 +180,55 @@ if ($method === 'PUT' && $id && $action === 'approve') {
 
 // POST /api/requests
 } elseif ($method === 'POST') {
-    $userRow    = requireRole(['promotor', 'admin']);
+    $userRow    = requireRole(['lector', 'promotor', 'admin']);
     $entityType = $body['entityType'] ?? '';
     $entityId   = $body['entityId'] ?? null;
     $action2    = $body['action'] ?? '';
     $proposed   = $body['proposedData'] ?? null;
     $desc       = $body['description'] ?? null;
 
-    if (!in_array($entityType, ['artist', 'event', 'news'])) {
-        http_response_code(400); echo json_encode(['error' => 'entityType invàlid (artist, event, news)']); return;
+    $validEntityTypes = ['artist', 'event', 'news', 'role'];
+    if (!in_array($entityType, $validEntityTypes)) {
+        http_response_code(400); echo json_encode(['error' => 'entityType invàlid (artist, event, news, role)']); return;
+    }
+
+    if ($entityType === $ROLE_ENTITY_TYPE) {
+        // Role requests: only lectors can send them (promotors/admins already have access)
+        if ($userRow['role'] !== 'lector') {
+            http_response_code(400); echo json_encode(['error' => 'Ja tens rol de promotor o superior']); return;
+        }
+        if (!$desc) {
+            http_response_code(400); echo json_encode(['error' => 'Falta la motivació (description)']); return;
+        }
+        // Prevent duplicate pending requests
+        $existing = sbSelectOne('requests', [
+            'agent_id'    => 'eq.' . $userRow['id'],
+            'entity_type' => 'eq.role',
+            'status'      => 'eq.pending',
+        ]);
+        if ($existing) {
+            http_response_code(409); echo json_encode(['error' => 'Ja tens una sol·licitud de promotor pendent']); return;
+        }
+        $newRow = sbInsert('requests', [
+            'type'          => 'RoleRequestAction',
+            'agent_id'      => $userRow['id'],
+            'agent_name'    => $userRow['name'],
+            'agent_email'   => $userRow['email'],
+            'entity_type'   => 'role',
+            'entity_id'     => null,
+            'current_data'  => ['role' => 'lector'],
+            'proposed_data' => ['role' => 'promotor'],
+            'description'   => $desc,
+        ]);
+        if (!$newRow) { http_response_code(500); echo json_encode(['error' => 'Error creant la solicitud']); return; }
+        http_response_code(201);
+        echo json_encode(['success' => true, 'request' => rowToRequest($newRow, $STATUS)]);
+        return;
+    }
+
+    // Content requests require promotor or admin
+    if (!in_array($userRow['role'], ['promotor', 'admin'])) {
+        http_response_code(403); echo json_encode(['error' => 'Necessites rol de promotor per crear solicituds de contingut']); return;
     }
     if (!in_array($action2, ['create', 'update'])) {
         http_response_code(400); echo json_encode(['error' => 'action invàlida (create, update)']); return;

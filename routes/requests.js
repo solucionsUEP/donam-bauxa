@@ -50,12 +50,56 @@ function rowToRequest(row) {
 const router = Router();
 
 // POST /api/requests
-router.post('/', requireRole('promotor', 'admin'), async (req, res) => {
+router.post('/', requireRole('lector', 'promotor', 'admin'), async (req, res) => {
   try {
     const { entityType, entityId, action, proposedData, description } = req.body;
+    const role = req.userProfile.jobTitle || 'lector';
 
-    if (!['artist', 'event', 'news'].includes(entityType)) {
-      return res.status(400).json({ error: 'entityType invàlid (artist, event, news)' });
+    if (!['artist', 'event', 'news', 'role'].includes(entityType)) {
+      return res.status(400).json({ error: 'entityType invàlid (artist, event, news, role)' });
+    }
+
+    // Role request — only lectors
+    if (entityType === 'role') {
+      if (role !== 'lector') {
+        return res.status(400).json({ error: 'Ja tens rol de promotor o superior' });
+      }
+      if (!description) {
+        return res.status(400).json({ error: 'Falta la motivació (description)' });
+      }
+      // Prevent duplicate pending requests
+      const { data: existing } = await supabase
+        .from('requests')
+        .select('id')
+        .eq('agent_id', req.userProfile['@id'])
+        .eq('entity_type', 'role')
+        .eq('status', 'pending')
+        .maybeSingle();
+      if (existing) {
+        return res.status(409).json({ error: 'Ja tens una sol·licitud de promotor pendent' });
+      }
+      const { data: newRow, error } = await supabase
+        .from('requests')
+        .insert({
+          type: 'RoleRequestAction',
+          agent_id: req.userProfile['@id'],
+          agent_name: req.userProfile.name,
+          agent_email: req.userProfile.email,
+          entity_type: 'role',
+          entity_id: null,
+          current_data: { role: 'lector' },
+          proposed_data: { role: 'promotor' },
+          description
+        })
+        .select()
+        .single();
+      if (error) throw error;
+      return res.status(201).json({ success: true, request: rowToRequest(newRow) });
+    }
+
+    // Content requests — require promotor or admin
+    if (!['promotor', 'admin'].includes(role)) {
+      return res.status(403).json({ error: 'Necessites rol de promotor per crear solicituds de contingut' });
     }
     if (!['create', 'update'].includes(action)) {
       return res.status(400).json({ error: 'action invàlida (create, update)' });
@@ -97,7 +141,7 @@ router.post('/', requireRole('promotor', 'admin'), async (req, res) => {
 });
 
 // GET /api/requests (només les del usuari actual)
-router.get('/', requireRole('promotor', 'admin'), async (req, res) => {
+router.get('/', requireRole('lector', 'promotor', 'admin'), async (req, res) => {
   const { status } = req.query;
   const isAdminList = req.baseUrl === '/api/admin/requests';
 
@@ -149,6 +193,18 @@ router.put('/:id/approve', requireRole('admin'), async (req, res) => {
 
   if (fetchErr || !row) return res.status(404).json({ error: 'Solicitud no trobada' });
   if (row.status !== 'pending') return res.status(400).json({ error: 'Aquesta solicitud ja ha estat processada' });
+
+  // Apply changes based on entity type
+  if (row.entity_type === 'role') {
+    const newRole = row.proposed_data?.role || 'promotor';
+    const { error: roleErr } = await supabase
+      .from('users')
+      .update({ role: newRole })
+      .eq('id', row.agent_id);
+    if (roleErr) return res.status(500).json({ error: roleErr.message });
+  }
+  // Content entity approvals (write to JSON) are handled by PHP in production;
+  // dev server skips the file write and just marks approved
 
   await supabase
     .from('requests')

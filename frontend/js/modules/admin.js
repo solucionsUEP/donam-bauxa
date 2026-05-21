@@ -6,6 +6,7 @@
 import { clearDataCache } from './dataLoader.js';
 import { supabase, BACKEND_URL, apiFetch } from '../config.js';
 import { initDownloadAgenda } from './downloadAgenda.js';
+import { t, getIntlLocale, applyTranslations } from '../i18n.js';
 
 /** @type {{ authenticated: boolean, user: Object|null, profile: Object|null }|null} */
 let authState = null;
@@ -38,6 +39,7 @@ export async function checkAuth() {
 
   const navLogin = document.getElementById('navLogin');
   const navUser = document.getElementById('navUser');
+  const navLangSwitcher = document.getElementById('navLangSwitcher');
   const navSolicituds = document.getElementById('navSolicituds');
   const navAdmin = document.getElementById('navAdmin');
   const userAvatar = document.getElementById('userAvatar');
@@ -47,6 +49,7 @@ export async function checkAuth() {
     const role = authState.profile.role;
 
     if (navLogin) navLogin.classList.add('d-none');
+    if (navLangSwitcher) navLangSwitcher.classList.add('d-none');
     if (navUser) navUser.classList.remove('d-none');
     if (userAvatar) userAvatar.src = authState.profile.image || '';
     if (userName) userName.textContent = authState.profile.displayName || authState.user?.name || '';
@@ -61,6 +64,7 @@ export async function checkAuth() {
     }
   } else {
     if (navLogin) navLogin.classList.remove('d-none');
+    if (navLangSwitcher) navLangSwitcher.classList.remove('d-none');
     if (navUser) navUser.classList.add('d-none');
     if (navSolicituds) navSolicituds?.classList.add('d-none');
     if (navAdmin) navAdmin?.classList.add('d-none');
@@ -84,13 +88,13 @@ function showAlert(message, type) {
 // --- Content table rendering ---
 
 function renderContentTable(items, entityType) {
-  if (!items.length) return '<p class="text-muted">No hi ha elements.</p>';
+  if (!items.length) return `<p class="text-muted">${t('admin.noItems')}</p>`;
 
-  const getName = (item) => item.name || item.headline || 'Sense nom';
+  const getName = (item) => item.name || item.headline || t('admin.noName');
   const isArchived = (item) => item.additionalProperty?.find(p => p.name === 'archived')?.value === true;
 
   let html = `<table class="table table-sm">
-    <thead><tr><th>ID</th><th>Nom</th><th>Estat</th><th>Accions</th></tr></thead><tbody>`;
+    <thead><tr><th>${t('admin.colId')}</th><th>${t('admin.colName')}</th><th>${t('admin.colStatus')}</th><th>${t('admin.colActions')}</th></tr></thead><tbody>`;
 
   for (const el of items) {
     const item = el.item;
@@ -98,7 +102,7 @@ function renderContentTable(items, entityType) {
     html += `<tr class="${archived ? 'opacity-50' : ''}">
       <td><small>${item['@id']}</small></td>
       <td>${getName(item)}</td>
-      <td>${archived ? '<span class="badge bg-warning">Arxivat</span>' : '<span class="badge bg-success">Actiu</span>'}</td>
+      <td>${archived ? `<span class="badge bg-warning">${t('admin.statusArchived')}</span>` : `<span class="badge bg-success">${t('admin.statusActive')}</span>`}</td>
       <td>
         <button class="btn btn-sm btn-bauxa-outline me-1 admin-edit-btn" data-type="${entityType}" data-id="${item['@id']}"><i class="bi bi-pencil"></i></button>
         <button class="btn btn-sm btn-bauxa-outline me-1 admin-archive-btn" data-type="${entityType}" data-id="${item['@id']}" data-archived="${archived}">
@@ -121,7 +125,7 @@ async function loadContentList(entityType, containerId) {
     if (container) container.innerHTML = renderContentTable(data.itemListElement || [], entityType);
     bindContentActions(entityType);
   } catch (err) {
-    showAlert(`Error carregant ${entityType}: ${err.message}`, 'danger');
+    showAlert(t('admin.loadError', { type: entityType, error: err.message }), 'danger');
   }
 }
 
@@ -136,7 +140,7 @@ function bindContentActions(entityType) {
           method: 'PUT',
           body: JSON.stringify({ archived: !currentlyArchived })
         });
-        showAlert(`Element ${currentlyArchived ? 'desarxivat' : 'arxivat'} correctament`, 'success');
+        showAlert(t(currentlyArchived ? 'admin.unarchivedOk' : 'admin.archivedOk'), 'success');
         loadContentList(entityType, `admin${capitalize(entityType)}List`);
       } catch (err) {
         showAlert(err.message, 'danger');
@@ -147,10 +151,10 @@ function bindContentActions(entityType) {
   // Delete buttons
   document.querySelectorAll(`.admin-delete-btn[data-type="${entityType}"]`).forEach(btn => {
     btn.addEventListener('click', async () => {
-      if (!confirm('Segur que vols eliminar aquest element permanentment?')) return;
+      if (!confirm(t('admin.confirmDelete'))) return;
       try {
         await apiFetch(`/api/admin/${entityType}/${btn.dataset.id}`, { method: 'DELETE' });
-        showAlert('Element eliminat correctament', 'success');
+        showAlert(t('admin.deletedOk'), 'success');
         loadContentList(entityType, `admin${capitalize(entityType)}List`);
       } catch (err) {
         showAlert(err.message, 'danger');
@@ -181,15 +185,15 @@ function capitalize(str) {
 function openEditForm(entityType, item) {
   if (entityType === 'artists') {
     fillArtistForm(item);
-    document.getElementById('adminArtistFormTitle').textContent = 'Editar Artista';
+    document.getElementById('adminArtistFormTitle').textContent = t('admin.formTitleEditArtist');
     document.getElementById('adminArtistForm').style.display = 'block';
   } else if (entityType === 'events') {
     fillEventForm(item);
-    document.getElementById('adminEventFormTitle').textContent = 'Editar Esdeveniment';
+    document.getElementById('adminEventFormTitle').textContent = t('admin.formTitleEditEvent');
     document.getElementById('adminEventForm').style.display = 'block';
   } else if (entityType === 'news') {
     fillNewsForm(item);
-    document.getElementById('adminNewsFormTitle').textContent = 'Editar Noticia';
+    document.getElementById('adminNewsFormTitle').textContent = t('admin.formTitleEditNews');
     document.getElementById('adminNewsForm').style.display = 'block';
   }
 }
@@ -205,6 +209,7 @@ function fillArtistForm(item) {
   document.getElementById('artistLocation').value = item.foundingLocation?.name || '';
   document.getElementById('artistZone').value = item.areaServed || '';
   document.getElementById('artistImage').value = item.image || '';
+  document.getElementById('artistLang').value = item.lang || '';
   document.getElementById('artistFeatured').checked = item.additionalProperty?.find(p => p.name === 'featured')?.value === true;
 
   const sameAs = item.sameAs || [];
@@ -262,6 +267,9 @@ function collectArtistFormData() {
   const zone = document.getElementById('artistZone').value;
   if (zone) data.areaServed = zone;
 
+  const lang = document.getElementById('artistLang').value;
+  if (lang) data.lang = lang;
+
   const additionalProperty = [];
   if (spotify) {
     const match = spotify.match(/artist\/([a-zA-Z0-9]+)/);
@@ -282,6 +290,7 @@ function fillEventForm(item) {
   document.getElementById('eventCategory').value = item.category || 'concert';
   document.getElementById('eventZone').value = item.zone || '';
   document.getElementById('eventImage').value = item.image || '';
+  document.getElementById('eventLang').value = item.lang || '';
   document.getElementById('eventFeatured').checked = item.featured === true;
   document.getElementById('eventLocationName').value = item.location?.name || '';
   document.getElementById('eventLat').value = item.location?.geo?.latitude || '';
@@ -338,6 +347,9 @@ function collectEventFormData() {
 
   data.featured = document.getElementById('eventFeatured').checked;
 
+  const eventLang = document.getElementById('eventLang').value;
+  if (eventLang) data.lang = eventLang;
+
   return data;
 }
 
@@ -350,6 +362,7 @@ function fillNewsForm(item) {
   document.getElementById('newsCategory').value = item.category || '';
   document.getElementById('newsImage').value = item.image || '';
   document.getElementById('newsAuthor').value = item.author?.name || '';
+  document.getElementById('newsLang').value = item.lang || '';
   if (item.datePublished) {
     document.getElementById('newsDate').value = item.datePublished.slice(0, 10);
   }
@@ -375,6 +388,9 @@ function collectNewsFormData() {
   const image = document.getElementById('newsImage').value.trim();
   if (image) data.image = image;
 
+  const newsLang = document.getElementById('newsLang').value;
+  if (newsLang) data.lang = newsLang;
+
   return data;
 }
 
@@ -386,33 +402,33 @@ async function loadApiKeys() {
   try {
     const rows = await apiFetch('/api/admin/api-keys');
     if (!rows.length) {
-      container.innerHTML = '<p class="text-muted">Cap clau API creada.</p>';
+      container.innerHTML = `<p class="text-muted">${t('admin.noApiKeys')}</p>`;
       return;
     }
     container.innerHTML = `
       <table class="table table-bauxa table-sm">
         <thead><tr>
-          <th>Nom</th><th>Agent</th><th>Creada</th><th>Darrer ús</th><th>Estat</th><th></th>
+          <th>${t('admin.colName')}</th><th>${t('admin.colAgent')}</th><th>${t('admin.colCreated')}</th><th>${t('admin.colLastUsed')}</th><th>${t('admin.colStatus')}</th><th></th>
         </tr></thead>
         <tbody>
           ${rows.map(k => `
             <tr>
               <td>${k.name}</td>
               <td>${k.agent_name}<br><small class="text-muted">${k.agent_email}</small></td>
-              <td><small>${new Date(k.created_at).toLocaleDateString('ca')}</small></td>
-              <td><small>${k.last_used_at ? new Date(k.last_used_at).toLocaleDateString('ca') : '—'}</small></td>
-              <td>${k.revoked ? '<span class="badge bg-secondary">Revocada</span>' : '<span class="badge bg-success">Activa</span>'}</td>
-              <td>${!k.revoked ? `<button class="btn btn-sm btn-danger revoke-api-key" data-id="${k.id}"><i class="bi bi-x-circle"></i> Revocar</button>` : ''}</td>
+              <td><small>${new Date(k.created_at).toLocaleDateString(getIntlLocale())}</small></td>
+              <td><small>${k.last_used_at ? new Date(k.last_used_at).toLocaleDateString(getIntlLocale()) : '—'}</small></td>
+              <td>${k.revoked ? `<span class="badge bg-secondary">${t('admin.keyStatusRevoked')}</span>` : `<span class="badge bg-success">${t('admin.keyStatusActive')}</span>`}</td>
+              <td>${!k.revoked ? `<button class="btn btn-sm btn-danger revoke-api-key" data-id="${k.id}"><i class="bi bi-x-circle"></i> ${t('admin.revokeKey')}</button>` : ''}</td>
             </tr>`).join('')}
         </tbody>
       </table>`;
 
     container.querySelectorAll('.revoke-api-key').forEach(btn => {
       btn.addEventListener('click', async () => {
-        if (!confirm('Revocar aquesta clau? No es podrà desfer.')) return;
+        if (!confirm(t('admin.confirmRevokeKey'))) return;
         try {
           await apiFetch(`/api/admin/api-keys/${btn.dataset.id}`, { method: 'DELETE' });
-          showAlert('Clau revocada', 'success');
+          showAlert(t('admin.keyRevokedOk'), 'success');
           loadApiKeys();
         } catch (err) { showAlert(err.message, 'danger'); }
       });
@@ -431,17 +447,17 @@ async function loadUsers() {
     if (!container) return;
 
     if (!data.itemListElement?.length) {
-      container.innerHTML = '<p class="text-muted">No hi ha usuaris registrats.</p>';
+      container.innerHTML = `<p class="text-muted">${t('admin.noUsers')}</p>`;
       return;
     }
 
     let html = `<table class="table table-sm">
-      <thead><tr><th>Nom</th><th>Email</th><th>Rol</th><th>Registrat</th><th>Accions</th></tr></thead><tbody>`;
+      <thead><tr><th>${t('admin.colName')}</th><th>${t('admin.colEmail')}</th><th>${t('admin.colRole')}</th><th>${t('admin.colRegistered')}</th><th>${t('admin.colActions')}</th></tr></thead><tbody>`;
 
     for (const el of data.itemListElement) {
       const user = el.item;
       const displayName = user.additionalProperty?.find(p => p.name === 'displayName')?.value || user.name;
-      const date = user.dateCreated ? new Date(user.dateCreated).toLocaleDateString('ca') : '-';
+      const date = user.dateCreated ? new Date(user.dateCreated).toLocaleDateString(getIntlLocale()) : '-';
 
       html += `<tr>
         <td>${displayName}</td>
@@ -470,7 +486,7 @@ async function loadUsers() {
             method: 'PUT',
             body: JSON.stringify({ role: sel.value })
           });
-          showAlert('Rol actualitzat correctament', 'success');
+          showAlert(t('admin.roleSavedOk'), 'success');
         } catch (err) {
           showAlert(err.message, 'danger');
           loadUsers();
@@ -481,10 +497,10 @@ async function loadUsers() {
     // Bind delete user
     container.querySelectorAll('.admin-delete-user').forEach(btn => {
       btn.addEventListener('click', async () => {
-        if (!confirm('Segur que vols eliminar aquest usuari?')) return;
+        if (!confirm(t('admin.confirmDeleteUser'))) return;
         try {
           await apiFetch(`/api/admin/users/${btn.dataset.id}`, { method: 'DELETE' });
-          showAlert('Usuari eliminat', 'success');
+          showAlert(t('admin.userDeletedOk'), 'success');
           loadUsers();
         } catch (err) {
           showAlert(err.message, 'danger');
@@ -492,62 +508,110 @@ async function loadUsers() {
       });
     });
   } catch (err) {
-    showAlert(`Error carregant usuaris: ${err.message}`, 'danger');
+    showAlert(t('admin.loadError', { type: t('admin.tabUsers'), error: err.message }), 'danger');
   }
 }
 
 // --- Requests management (admin side) ---
 
+function getActiveEntityFilter() {
+  const active = document.querySelector('#requestsEntityFilter .nav-link.active');
+  return active?.dataset.entity ?? '';
+}
+
 async function loadAdminRequests() {
-  const filter = document.getElementById('adminRequestsFilter')?.value || '';
+  const statusFilter = document.getElementById('adminRequestsFilter')?.value || '';
+  const entityFilter = getActiveEntityFilter();
   try {
-    const url = filter ? `/api/admin/requests?status=${filter}` : '/api/admin/requests';
+    const url = statusFilter ? `/api/admin/requests?status=${statusFilter}` : '/api/admin/requests';
     const data = await apiFetch(url);
     const container = document.getElementById('adminRequestsList');
     if (!container) return;
 
-    const items = data.itemListElement || [];
+    let items = data.itemListElement || [];
+    // Client-side entity filter
+    if (entityFilter) {
+      items = items.filter(el => (el.item.instrument?.description || '') === entityFilter);
+    }
 
-    // Update pending badge
-    if (filter === 'pending' || filter === '') {
-      const pendingCount = items.filter(el =>
-        el.item.actionStatus === 'https://schema.org/PotentialActionStatus'
-      ).length;
-      const badge = document.getElementById('pendingRequestsBadge');
-      if (badge) {
-        badge.textContent = pendingCount;
-        badge.style.display = pendingCount > 0 ? '' : 'none';
-      }
+    // Update pending badge (always from full unfiltered count)
+    const allPendingCount = (data.itemListElement || []).filter(el =>
+      el.item.actionStatus === 'https://schema.org/PotentialActionStatus'
+    ).length;
+    const badge = document.getElementById('pendingRequestsBadge');
+    if (badge) {
+      badge.textContent = allPendingCount;
+      badge.style.display = allPendingCount > 0 ? '' : 'none';
+    }
+
+    const pendingItems = items.filter(el => el.item.actionStatus === 'https://schema.org/PotentialActionStatus');
+    const approveAllBtn = document.getElementById('approveAllRequestsBtn');
+    const rejectAllBtn = document.getElementById('rejectAllRequestsBtn');
+
+    if (approveAllBtn) {
+      approveAllBtn.style.display = pendingItems.length > 0 ? '' : 'none';
+      const newApproveAll = approveAllBtn.cloneNode(true);
+      approveAllBtn.replaceWith(newApproveAll);
+      newApproveAll.addEventListener('click', async () => {
+        if (!confirm(t('admin.confirmApproveAll', {}, pendingItems.length))) return;
+        for (const el of pendingItems) {
+          try { await apiFetch(`/api/admin/requests/${el.item['@id']}/approve`, { method: 'PUT' }); } catch {}
+        }
+        showAlert(t('admin.approvedAllOk'), 'success');
+        loadAdminRequests();
+      });
+    }
+    if (rejectAllBtn) {
+      rejectAllBtn.style.display = pendingItems.length > 0 ? '' : 'none';
+      const newRejectAll = rejectAllBtn.cloneNode(true);
+      rejectAllBtn.replaceWith(newRejectAll);
+      newRejectAll.addEventListener('click', async () => {
+        if (!confirm(t('admin.confirmRejectAll', {}, pendingItems.length))) return;
+        for (const el of pendingItems) {
+          try { await apiFetch(`/api/admin/requests/${el.item['@id']}/reject`, { method: 'PUT', body: JSON.stringify({ notes: '' }) }); } catch {}
+        }
+        showAlert(t('admin.rejectedAllOk'), 'success');
+        loadAdminRequests();
+      });
     }
 
     if (!items.length) {
-      container.innerHTML = '<p class="text-muted">No hi ha solicituds.</p>';
+      container.innerHTML = `<p class="text-muted">${t('admin.noRequests')}</p>`;
       return;
     }
 
-    const statusLabels = {
-      'https://schema.org/PotentialActionStatus': '<span class="badge bg-warning">Pendent</span>',
-      'https://schema.org/CompletedActionStatus': '<span class="badge bg-success">Aprovada</span>',
-      'https://schema.org/FailedActionStatus': '<span class="badge bg-danger">Rebutjada</span>'
-    };
-
     let html = `<table class="table table-sm">
-      <thead><tr><th>ID</th><th>Sol·licitant</th><th>Tipus</th><th>Accio</th><th>Estat</th><th>Data</th><th></th></tr></thead><tbody>`;
+      <thead><tr><th>${t('admin.colId')}</th><th>${t('admin.colRequestedBy')}</th><th>${t('admin.colType')}</th><th>${t('admin.colAction')}</th><th>${t('admin.colStatus')}</th><th>${t('admin.colDate')}</th><th></th></tr></thead><tbody>`;
 
     for (const el of items) {
       const req = el.item;
       const entityType = req.instrument?.description || '-';
-      const actionLabel = req['@type'] === 'CreateAction' ? 'Crear' : 'Editar';
-      const date = req.startTime ? new Date(req.startTime).toLocaleDateString('ca') : '-';
+      const isRoleReq = entityType === 'role';
+      const actionLabel = isRoleReq
+        ? `<span class="badge bg-warning text-dark">${t('admin.typeRoleRequest')}</span>`
+        : req['@type'] === 'CreateAction' ? t('solicituds.actionCreate') : t('solicituds.actionEdit');
+      const date = req.startTime ? new Date(req.startTime).toLocaleDateString(getIntlLocale()) : '-';
+      const isPending = req.actionStatus === 'https://schema.org/PotentialActionStatus';
+      const statusBadge = isPending
+        ? `<span class="badge bg-warning">${t('solicituds.statusPending')}</span>`
+        : req.actionStatus === 'https://schema.org/CompletedActionStatus'
+        ? `<span class="badge bg-success">${t('solicituds.statusApproved')}</span>`
+        : req.actionStatus === 'https://schema.org/FailedActionStatus'
+        ? `<span class="badge bg-danger">${t('solicituds.statusRejected')}</span>`
+        : '-';
+      const inlineActions = isPending ? `
+        <button class="btn btn-sm btn-success admin-inline-approve me-1" data-id="${req['@id']}" data-role="${isRoleReq}" title="${t('admin.approve')}"><i class="bi bi-check-lg"></i></button>
+        <button class="btn btn-sm btn-danger admin-inline-reject me-1" data-id="${req['@id']}" title="${t('admin.reject')}"><i class="bi bi-x-lg"></i></button>
+      ` : '';
 
-      html += `<tr>
+      html += `<tr data-req-id="${req['@id']}">
         <td><small>${req['@id']}</small></td>
         <td>${req.agent?.name || '-'}</td>
-        <td>${entityType}</td>
+        <td>${isRoleReq ? '<i class="bi bi-person-badge"></i>' : entityType}</td>
         <td>${actionLabel}</td>
-        <td>${statusLabels[req.actionStatus] || '-'}</td>
+        <td>${statusBadge}</td>
         <td><small>${date}</small></td>
-        <td><button class="btn btn-sm btn-bauxa-outline admin-view-request" data-id="${req['@id']}"><i class="bi bi-eye"></i></button></td>
+        <td class="text-nowrap">${inlineActions}<button class="btn btn-sm btn-bauxa-outline admin-view-request" data-id="${req['@id']}"><i class="bi bi-eye"></i></button></td>
       </tr>`;
     }
     html += '</tbody></table>';
@@ -557,8 +621,35 @@ async function loadAdminRequests() {
     container.querySelectorAll('.admin-view-request').forEach(btn => {
       btn.addEventListener('click', () => viewRequestDetail(btn.dataset.id));
     });
+
+    // Bind inline approve buttons
+    container.querySelectorAll('.admin-inline-approve').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const isRole = btn.dataset.role === 'true';
+        try {
+          await apiFetch(`/api/admin/requests/${btn.dataset.id}/approve`, { method: 'PUT' });
+          showAlert(isRole ? t('admin.approveRoleOk') : t('admin.approvedOk'), 'success');
+          loadAdminRequests();
+        } catch (err) {
+          showAlert(err.message, 'danger');
+        }
+      });
+    });
+
+    // Bind inline reject buttons
+    container.querySelectorAll('.admin-inline-reject').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try {
+          await apiFetch(`/api/admin/requests/${btn.dataset.id}/reject`, { method: 'PUT', body: JSON.stringify({ notes: '' }) });
+          showAlert(t('admin.rejectedOk'), 'success');
+          loadAdminRequests();
+        } catch (err) {
+          showAlert(err.message, 'danger');
+        }
+      });
+    });
   } catch (err) {
-    showAlert(`Error carregant solicituds: ${err.message}`, 'danger');
+    showAlert(t('admin.loadError', { type: t('admin.tabRequests'), error: err.message }), 'danger');
   }
 }
 
@@ -573,23 +664,40 @@ async function viewRequestDetail(requestId) {
     if (!detail || !content) return;
 
     const isPending = req.actionStatus === 'https://schema.org/PotentialActionStatus';
+    const isRoleReq = req.instrument?.description === 'role';
 
-    content.innerHTML = `
-      <div class="row">
-        <div class="col-md-6">
-          <h6>Dades Actuals</h6>
-          <pre class="p-2" style="background:var(--color-bg-alt);border-radius:8px;font-size:0.75rem;max-height:300px;overflow:auto;">${JSON.stringify(req.object, null, 2)}</pre>
+    if (isRoleReq) {
+      content.innerHTML = `
+        <div class="mb-3">
+          <span class="badge bg-warning text-dark fs-6 mb-2"><i class="bi bi-person-badge me-1"></i>${t('admin.typeRoleRequest')}</span>
+          <p class="mb-1"><strong>${t('admin.colRequestedBy')}:</strong> ${req.agent?.name || '-'} <span class="text-muted small">&lt;${req.agent?.email || ''}&gt;</span></p>
         </div>
-        <div class="col-md-6">
-          <h6>Dades Proposades</h6>
-          <pre class="p-2" style="background:var(--color-bg-alt);border-radius:8px;font-size:0.75rem;max-height:300px;overflow:auto;">${JSON.stringify(req.result, null, 2)}</pre>
+        <p><strong>${t('admin.motive')}:</strong> ${req.description || '-'}</p>
+      `;
+    } else {
+      content.innerHTML = `
+        <div class="row">
+          <div class="col-md-6">
+            <h6>${t('admin.currentData')}</h6>
+            <pre class="p-2" style="background:var(--color-bg-alt);border-radius:8px;font-size:0.75rem;max-height:300px;overflow:auto;">${JSON.stringify(req.object, null, 2)}</pre>
+          </div>
+          <div class="col-md-6">
+            <h6>${t('admin.proposedData')}</h6>
+            <pre class="p-2" style="background:var(--color-bg-alt);border-radius:8px;font-size:0.75rem;max-height:300px;overflow:auto;">${JSON.stringify(req.result, null, 2)}</pre>
+          </div>
         </div>
-      </div>
-      <p class="mt-2"><strong>Motiu:</strong> ${req.description || '-'}</p>
-    `;
+        <p class="mt-2"><strong>${t('admin.motive')}:</strong> ${req.description || '-'}</p>
+      `;
+    }
+
+    // Highlight active row and scroll to detail
+    document.querySelectorAll('#adminRequestsList tr[data-req-id]').forEach(tr => tr.classList.remove('table-active'));
+    const activeRow = document.querySelector(`#adminRequestsList tr[data-req-id="${requestId}"]`);
+    if (activeRow) activeRow.classList.add('table-active');
 
     detail.style.display = 'block';
     if (actions) actions.style.display = isPending ? 'block' : 'none';
+    detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     // Bind approve/reject
     const approveBtn = document.getElementById('approveRequestBtn');
@@ -608,7 +716,7 @@ async function viewRequestDetail(requestId) {
       approveBtn?.addEventListener('click', async () => {
         try {
           await apiFetch(`/api/admin/requests/${requestId}/approve`, { method: 'PUT' });
-          showAlert('Solicitud aprovada i canvis aplicats', 'success');
+          showAlert(isRoleReq ? t('admin.approveRoleOk') : t('admin.approvedOk'), 'success');
           cleanup();
           loadAdminRequests();
         } catch (err) {
@@ -623,7 +731,7 @@ async function viewRequestDetail(requestId) {
             method: 'PUT',
             body: JSON.stringify({ notes })
           });
-          showAlert('Solicitud rebutjada', 'success');
+          showAlert(t('admin.rejectedOk'), 'success');
           cleanup();
           loadAdminRequests();
         } catch (err) {
@@ -632,7 +740,7 @@ async function viewRequestDetail(requestId) {
       }, { once: true });
     }
   } catch (err) {
-    showAlert(`Error carregant detall: ${err.message}`, 'danger');
+    showAlert(t('admin.loadError', { type: 'detall', error: err.message }), 'danger');
   }
 }
 
@@ -641,8 +749,8 @@ async function viewRequestDetail(requestId) {
 let cachedQuestions = [];
 
 function renderQuizTable(items) {
-  if (!items.length) return '<p class="text-muted">No hi ha qüestionaris.</p>';
-  let html = `<table class="table table-sm"><thead><tr><th>ID</th><th>Nom</th><th>Badge</th><th>Secció</th><th>Preguntes</th><th>Accions</th></tr></thead><tbody>`;
+  if (!items.length) return `<p class="text-muted">${t('admin.noQuizzes')}</p>`;
+  let html = `<table class="table table-sm"><thead><tr><th>${t('admin.colId')}</th><th>${t('admin.colName')}</th><th>${t('admin.colBadge')}</th><th>${t('admin.colSection')}</th><th>${t('admin.colQuestions')}</th><th>${t('admin.colActions')}</th></tr></thead><tbody>`;
   for (const el of items) {
     const item = el.item;
     html += `<tr>
@@ -658,8 +766,8 @@ function renderQuizTable(items) {
 }
 
 function renderQuestionTable(items) {
-  if (!items.length) return '<p class="text-muted">No hi ha preguntes.</p>';
-  let html = `<table class="table table-sm"><thead><tr><th>ID</th><th>Categoria</th><th>Tipus</th><th>Correcta</th><th>Accions</th></tr></thead><tbody>`;
+  if (!items.length) return `<p class="text-muted">${t('admin.noQuestions')}</p>`;
+  let html = `<table class="table table-sm"><thead><tr><th>${t('admin.colId')}</th><th>${t('admin.colCategory')}</th><th>${t('admin.colType')}</th><th>${t('admin.colCorrect')}</th><th>${t('admin.colActions')}</th></tr></thead><tbody>`;
   for (const el of items) {
     const item = el.item;
     const mt = item.associatedMedia?.['@type'] || '?';
@@ -682,7 +790,7 @@ async function loadQuizzesList() {
     const data = await apiFetch('/api/admin/questionnaires');
     document.getElementById('adminQuizzesList').innerHTML = renderQuizTable(data.itemListElement || []);
     bindQuizActions(data.itemListElement || []);
-  } catch (err) { showAlert('Error: ' + err.message, 'danger'); }
+  } catch (err) { showAlert(t('admin.loadError', { type: t('admin.tabQuizzes'), error: err.message }), 'danger'); }
 }
 
 async function loadQuestionsList() {
@@ -691,7 +799,7 @@ async function loadQuestionsList() {
     cachedQuestions = data.itemListElement || [];
     document.getElementById('adminQuestionsList').innerHTML = renderQuestionTable(cachedQuestions);
     bindQuestionActions(cachedQuestions);
-  } catch (err) { showAlert('Error: ' + err.message, 'danger'); }
+  } catch (err) { showAlert(t('admin.loadError', { type: t('admin.tabQuizzes'), error: err.message }), 'danger'); }
 }
 
 function bindQuizActions(items) {
@@ -703,10 +811,10 @@ function bindQuizActions(items) {
   });
   document.querySelectorAll('.admin-delete-quiz').forEach(btn => {
     btn.addEventListener('click', async () => {
-      if (!confirm('Eliminar qüestionari?')) return;
+      if (!confirm(t('admin.confirmDeleteQuestionnaire'))) return;
       try {
         await apiFetch(`/api/admin/questionnaires/${btn.dataset.id}`, { method: 'DELETE' });
-        showAlert('Eliminat', 'success'); loadQuizzesList();
+        showAlert(t('admin.deletedOk'), 'success'); loadQuizzesList();
       } catch (err) { showAlert(err.message, 'danger'); }
     });
   });
@@ -721,10 +829,10 @@ function bindQuestionActions(items) {
   });
   document.querySelectorAll('.admin-delete-question').forEach(btn => {
     btn.addEventListener('click', async () => {
-      if (!confirm('Eliminar pregunta?')) return;
+      if (!confirm(t('admin.confirmDeleteQuestion'))) return;
       try {
         await apiFetch(`/api/admin/questions/${btn.dataset.id}`, { method: 'DELETE' });
-        showAlert('Eliminada', 'success'); loadQuestionsList();
+        showAlert(t('admin.deletedOk'), 'success'); loadQuestionsList();
       } catch (err) { showAlert(err.message, 'danger'); }
     });
   });
@@ -732,7 +840,7 @@ function bindQuestionActions(items) {
 
 function populateQuestionCheckboxes(selectedIds = []) {
   const container = document.getElementById('quizQuestionCheckboxes');
-  if (!container || !cachedQuestions.length) { if (container) container.innerHTML = '<p class="text-muted small mb-0">Cap pregunta disponible.</p>'; return; }
+  if (!container || !cachedQuestions.length) { if (container) container.innerHTML = `<p class="text-muted small mb-0">${t('admin.noQuestionsAvailable')}</p>`; return; }
   const sel = new Set(selectedIds);
   container.innerHTML = cachedQuestions.map(el => {
     const q = el.item;
@@ -756,7 +864,7 @@ function openQuizForm(item) {
   document.getElementById('quizImageJpg').value = enc.find(e => e.encodingFormat === 'image/jpeg')?.contentUrl || '';
   document.getElementById('quizImageWebp').value = enc.find(e => e.encodingFormat === 'image/webp')?.contentUrl || '';
   populateQuestionCheckboxes((item?.hasPart || []).map(r => r['@id']));
-  document.getElementById('adminQuizFormTitle').textContent = item ? 'Editar Qüestionari' : 'Nou Qüestionari';
+  document.getElementById('adminQuizFormTitle').textContent = item ? t('admin.formTitleEditQuiz') : t('admin.formTitleNewQuiz');
   document.getElementById('adminQuizForm').style.display = 'block';
 }
 
@@ -789,7 +897,7 @@ function openQuestionForm(item) {
   for (let i = 0; i < 4; i++) document.getElementById(`questionOption${i}`).value = answers[i]?.text || '';
   const correctIdx = answers.findIndex(a => a['@id'] === item?.acceptedAnswer?.['@id']);
   document.getElementById('questionCorrect').value = correctIdx >= 0 ? correctIdx : 0;
-  document.getElementById('adminQuestionFormTitle').textContent = item ? 'Editar Pregunta' : 'Nova Pregunta';
+  document.getElementById('adminQuestionFormTitle').textContent = item ? t('admin.formTitleEditQuestion') : t('admin.formTitleNewQuestion');
   document.getElementById('adminQuestionForm').style.display = 'block';
   document.getElementById('questionMediaUrl2Group').style.display = document.getElementById('questionMediaType').value !== 'audio' ? '' : 'none';
 }
@@ -826,6 +934,8 @@ export async function initAdmin() {
   if (notAuth) notAuth.style.display = 'none';
   if (content) content.style.display = 'block';
 
+  applyTranslations();
+
   initDownloadAgenda();
   initInstagramAnalyzer();
 
@@ -835,12 +945,13 @@ export async function initAdmin() {
   loadContentList('news', 'adminNewsList');
   loadAdminRequests();
   loadUsers();
+  loadQuestionsList().then(() => loadQuizzesList());
 
   // --- Artist form bindings ---
   document.getElementById('adminNewArtist')?.addEventListener('click', () => {
     document.getElementById('addArtistForm')?.reset();
     document.getElementById('editArtistId').value = '';
-    document.getElementById('adminArtistFormTitle').textContent = 'Nou Artista';
+    document.getElementById('adminArtistFormTitle').textContent = t('admin.formTitleNewArtist');
     document.getElementById('adminArtistForm').style.display = 'block';
   });
 
@@ -866,8 +977,8 @@ export async function initAdmin() {
     const editId = document.getElementById('editArtistId').value;
     const data = collectArtistFormData();
     try {
-      if (editId) { await apiFetch(`/api/admin/artists/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Artista actualitzat correctament', 'success'); }
-      else { await apiFetch('/api/admin/artists', { method: 'POST', body: JSON.stringify(data) }); showAlert('Artista creat correctament', 'success'); }
+      if (editId) { await apiFetch(`/api/admin/artists/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert(t('admin.artistUpdatedOk'), 'success'); }
+      else { await apiFetch('/api/admin/artists', { method: 'POST', body: JSON.stringify(data) }); showAlert(t('admin.artistCreatedOk'), 'success'); }
       document.getElementById('adminArtistForm').style.display = 'none';
       loadContentList('artists', 'adminArtistsList');
     } catch (err) { showAlert(err.message, 'danger'); }
@@ -877,7 +988,7 @@ export async function initAdmin() {
   document.getElementById('adminNewEvent')?.addEventListener('click', () => {
     document.getElementById('addEventForm')?.reset();
     document.getElementById('editEventId').value = '';
-    document.getElementById('adminEventFormTitle').textContent = 'Nou Esdeveniment';
+    document.getElementById('adminEventFormTitle').textContent = t('admin.formTitleNewEvent');
     document.getElementById('adminEventForm').style.display = 'block';
   });
 
@@ -890,8 +1001,8 @@ export async function initAdmin() {
     const editId = document.getElementById('editEventId').value;
     const data = collectEventFormData();
     try {
-      if (editId) { await apiFetch(`/api/admin/events/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Esdeveniment actualitzat correctament', 'success'); }
-      else { await apiFetch('/api/admin/events', { method: 'POST', body: JSON.stringify(data) }); showAlert('Esdeveniment creat correctament', 'success'); }
+      if (editId) { await apiFetch(`/api/admin/events/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert(t('admin.eventUpdatedOk'), 'success'); }
+      else { await apiFetch('/api/admin/events', { method: 'POST', body: JSON.stringify(data) }); showAlert(t('admin.eventCreatedOk'), 'success'); }
       document.getElementById('adminEventForm').style.display = 'none';
       loadContentList('events', 'adminEventsList');
     } catch (err) { showAlert(err.message, 'danger'); }
@@ -901,7 +1012,7 @@ export async function initAdmin() {
   document.getElementById('adminNewNews')?.addEventListener('click', () => {
     document.getElementById('addNewsForm')?.reset();
     document.getElementById('editNewsId').value = '';
-    document.getElementById('adminNewsFormTitle').textContent = 'Nova Noticia';
+    document.getElementById('adminNewsFormTitle').textContent = t('admin.formTitleNewNews');
     document.getElementById('adminNewsForm').style.display = 'block';
   });
 
@@ -914,8 +1025,8 @@ export async function initAdmin() {
     const editId = document.getElementById('editNewsId').value;
     const data = collectNewsFormData();
     try {
-      if (editId) { await apiFetch(`/api/admin/news/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Noticia actualitzada correctament', 'success'); }
-      else { await apiFetch('/api/admin/news', { method: 'POST', body: JSON.stringify(data) }); showAlert('Noticia creada correctament', 'success'); }
+      if (editId) { await apiFetch(`/api/admin/news/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert(t('admin.newsUpdatedOk'), 'success'); }
+      else { await apiFetch('/api/admin/news', { method: 'POST', body: JSON.stringify(data) }); showAlert(t('admin.newsCreatedOk'), 'success'); }
       document.getElementById('adminNewsForm').style.display = 'none';
       loadContentList('news', 'adminNewsList');
     } catch (err) { showAlert(err.message, 'danger'); }
@@ -936,8 +1047,8 @@ export async function initAdmin() {
     const editId = document.getElementById('editQuizId').value;
     const data = collectQuizFormData();
     try {
-      if (editId) { await apiFetch(`/api/admin/questionnaires/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Qüestionari actualitzat', 'success'); }
-      else { await apiFetch('/api/admin/questionnaires', { method: 'POST', body: JSON.stringify(data) }); showAlert('Qüestionari creat', 'success'); }
+      if (editId) { await apiFetch(`/api/admin/questionnaires/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert(t('admin.quizUpdatedOk'), 'success'); }
+      else { await apiFetch('/api/admin/questionnaires', { method: 'POST', body: JSON.stringify(data) }); showAlert(t('admin.quizCreatedOk'), 'success'); }
       document.getElementById('adminQuizForm').style.display = 'none';
       loadQuizzesList();
     } catch (err) { showAlert(err.message, 'danger'); }
@@ -962,8 +1073,8 @@ export async function initAdmin() {
     const editId = document.getElementById('editQuestionId').value;
     const data = collectQuestionFormData();
     try {
-      if (editId) { await apiFetch(`/api/admin/questions/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert('Pregunta actualitzada', 'success'); }
-      else { await apiFetch('/api/admin/questions', { method: 'POST', body: JSON.stringify(data) }); showAlert('Pregunta creada', 'success'); }
+      if (editId) { await apiFetch(`/api/admin/questions/${editId}`, { method: 'PUT', body: JSON.stringify(data) }); showAlert(t('admin.questionUpdatedOk'), 'success'); }
+      else { await apiFetch('/api/admin/questions', { method: 'POST', body: JSON.stringify(data) }); showAlert(t('admin.questionCreatedOk'), 'success'); }
       document.getElementById('adminQuestionForm').style.display = 'none';
       loadQuestionsList();
     } catch (err) { showAlert(err.message, 'danger'); }
@@ -972,6 +1083,15 @@ export async function initAdmin() {
   // --- Requests filter ---
   document.getElementById('adminRequestsFilter')?.addEventListener('change', () => {
     loadAdminRequests();
+  });
+
+  // Entity type filter pills for requests
+  document.querySelectorAll('#requestsEntityFilter .nav-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#requestsEntityFilter .nav-link').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadAdminRequests();
+    });
   });
 
   // --- API Keys bindings ---
@@ -1004,13 +1124,13 @@ export async function initAdmin() {
 
   document.getElementById('copyApiKey')?.addEventListener('click', () => {
     const val = document.getElementById('apiKeyRevealValue').value;
-    navigator.clipboard.writeText(val).then(() => showAlert('Clau copiada', 'success'));
+    navigator.clipboard.writeText(val).then(() => showAlert(t('admin.keyCopiedOk'), 'success'));
   });
 
   // --- Tab change listeners to reload data ---
   document.getElementById('tab-requests')?.addEventListener('shown.bs.tab', loadAdminRequests);
   document.getElementById('tab-users')?.addEventListener('shown.bs.tab', loadUsers);
-  document.getElementById('tab-quizzes')?.addEventListener('shown.bs.tab', () => {
+  document.getElementById('subtab-quizzes')?.addEventListener('shown.bs.tab', () => {
     loadQuestionsList().then(() => loadQuizzesList());
   });
   document.getElementById('tab-api-keys')?.addEventListener('shown.bs.tab', loadApiKeys);
@@ -1072,21 +1192,21 @@ function initInstagramAnalyzer() {
 
   // Analitzar
   btnAnalyze?.addEventListener('click', async () => {
-    if (!pastedImageBase64) return showAlert('Enganxa primer una imatge', 'warning');
+    if (!pastedImageBase64) return showAlert(t('admin.instagramPasteFirst'), 'warning');
 
     const mode         = document.getElementById('captionMode')?.value;
     const instagramUrl = document.getElementById('instagramUrlInput')?.value.trim();
     const manualCaption = document.getElementById('manualCaptionText')?.value.trim();
 
-    if (mode === 'instagram' && !instagramUrl) return showAlert('Introdueix la URL d\'Instagram per obtenir el caption', 'warning');
-    if (mode === 'manual'    && !manualCaption) return showAlert('Introdueix el caption manualment', 'warning');
+    if (mode === 'instagram' && !instagramUrl) return showAlert(t('admin.instagramNeedUrl'), 'warning');
+    if (mode === 'manual'    && !manualCaption) return showAlert(t('admin.instagramNeedCaption'), 'warning');
 
     const modalBody = document.getElementById('instagramAnalyzeBody');
     const modal = new bootstrap.Modal(document.getElementById('instagramAnalyzeModal'));
 
     btnAnalyze.disabled = true;
-    btnAnalyze.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Analitzant...';
-    modalBody.innerHTML = '<div class="text-center py-4"><span class="spinner-border"></span><p class="mt-2 text-muted">Analitzant el post...</p></div>';
+    btnAnalyze.innerHTML = `<span class="spinner-border spinner-border-sm"></span> ${t('admin.instagramAnalyzing')}`;
+    modalBody.innerHTML = `<div class="text-center py-4"><span class="spinner-border"></span><p class="mt-2 text-muted">${t('admin.instagramAnalyzingBody')}</p></div>`;
     modal.show();
 
     const payload = {
@@ -1101,12 +1221,12 @@ function initInstagramAnalyzer() {
         body: JSON.stringify(payload),
       });
 
-      modalBody.innerHTML = `<div class="alert alert-success mb-0"><i class="bi bi-check-circle"></i> Sol·licituds enviades correctament.</div>`;
+      modalBody.innerHTML = `<div class="alert alert-success mb-0"><i class="bi bi-check-circle"></i> ${t('admin.instagramSentOk')}</div>`;
     } catch (err) {
       modalBody.innerHTML = `<div class="alert alert-danger">${err.message}</div>`;
     } finally {
       btnAnalyze.disabled = false;
-      btnAnalyze.innerHTML = '<i class="bi bi-search"></i> Analitzar';
+      btnAnalyze.innerHTML = `<i class="bi bi-search"></i> ${t('admin.instagramAnalyze')}`;
     }
   });
 }
