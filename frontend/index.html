@@ -1018,71 +1018,6 @@
           <div id="adminContent" style="display:none;">
             <div id="adminAlert" style="display:none;" class="mb-4"></div>
 
-            <!-- Generador de Cartell -->
-            <div class="card mb-4 border-0 bg-light">
-              <div class="card-body d-flex align-items-center gap-3 flex-wrap">
-                <i class="bi bi-image fs-4 text-secondary"></i>
-                <div>
-                  <div class="fw-semibold">Generar Cartell</div>
-                  <div class="text-muted small">Genera una imatge pòster de l'agenda per a un dia o cap de setmana</div>
-                </div>
-                <div class="d-flex align-items-center gap-2 ms-auto">
-                  <input type="date" id="agendaDateFrom" class="form-control form-control-sm" style="max-width:145px">
-                  <span class="text-muted small">—</span>
-                  <input type="date" id="agendaDateTo" class="form-control form-control-sm" style="max-width:145px">
-                  <button id="btnGenerarCartell" class="btn btn-sm btn-bauxa-outline">
-                    <i class="bi bi-image"></i> Generar Cartell
-                  </button>
-                </div>
-              </div>
-            </div>
-            <!-- Analitzar post d'Instagram -->
-            <div class="card mb-4 border-0 bg-light">
-              <div class="card-body">
-                <div class="d-flex align-items-center gap-3 mb-3">
-                  <i class="bi bi-instagram fs-4 text-secondary"></i>
-                  <div>
-                    <div class="fw-semibold">Analitzar Post d'Instagram</div>
-                    <div class="text-muted small">Enganxa la imatge del cartell i afegeix el link per extreure el
-                      caption</div>
-                  </div>
-                </div>
-                <div class="row g-2 align-items-start">
-                  <div class="col-md-4">
-                    <div id="instagramPasteZone" tabindex="0"
-                      style="border:2px dashed #ccc; border-radius:8px; min-height:100px; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff; position:relative;">
-                      <span class="text-muted small text-center px-2" id="instagramPasteHint">
-                        <i class="bi bi-clipboard-image d-block fs-3 mb-1"></i>
-                        Ctrl+V per enganxar imatge
-                      </span>
-                      <img id="instagramPastePreview"
-                        style="display:none; max-width:100%; max-height:150px; border-radius:6px;">
-                    </div>
-                  </div>
-                  <div class="col-md-8 d-flex flex-column gap-2">
-                    <select id="captionMode" class="form-select form-select-sm">
-                      <option value="instagram">Caption des d'Instagram</option>
-                      <option value="manual">Caption manual</option>
-                    </select>
-                    <div id="captionInstagramInput">
-                      <input type="url" id="instagramUrlInput" class="form-control form-control-sm"
-                        placeholder="https://www.instagram.com/p/...">
-                    </div>
-                    <div id="captionManualInput" style="display:none;">
-                      <textarea id="manualCaptionText" class="form-control form-control-sm" rows="4"
-                        placeholder="Enganxa aquí el text del post..."></textarea>
-                    </div>
-                    <button id="btnAnalitzarPost" class="btn btn-sm btn-bauxa-outline" disabled>
-                      <i class="bi bi-search"></i> Analitzar
-                    </button>
-                    <button id="btnClearPaste" class="btn btn-sm btn-link text-muted p-0" style="display:none;">
-                      <i class="bi bi-x-circle"></i> Esborrar imatge
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <!-- Modal resultat anàlisi Instagram -->
             <div class="modal fade" id="instagramAnalyzeModal" tabindex="-1">
               <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -1121,6 +1056,10 @@
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-api-keys" data-bs-toggle="tab" data-bs-target="#panel-api-keys"
                   type="button" role="tab"><i class="bi bi-key"></i> <span data-i18n="admin.tabApiKeys">Claus API</span></button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-social" data-bs-toggle="tab" data-bs-target="#panel-social"
+                  type="button" role="tab"><i class="bi bi-share"></i> <span data-i18n="admin.tabSocial">Xarxes Socials</span></button>
               </li>
             </ul>
 
@@ -1637,6 +1576,8 @@
                     <option value="approved" data-i18n="solicituds.statusApproved">Aprovades</option>
                     <option value="rejected" data-i18n="solicituds.statusRejected">Rebutjades</option>
                   </select>
+                  <button class="btn btn-sm btn-success" id="approveAllRequestsBtn" style="display:none;"><i class="bi bi-check-all me-1"></i><span data-i18n="admin.approveAll">Aprovar tots</span></button>
+                  <button class="btn btn-sm btn-danger" id="rejectAllRequestsBtn" style="display:none;"><i class="bi bi-x-circle me-1"></i><span data-i18n="admin.rejectAll">Rebutjar tots</span></button>
                 </div>
                 <div id="adminRequestsList">
                   <!-- Dynamically loaded -->
@@ -1738,6 +1679,73 @@
 
                 <div id="adminApiKeysList" class="table-responsive">
                   <!-- Dynamically loaded -->
+                </div>
+              </div>
+
+              <!-- Social Networks Panel -->
+              <div class="tab-pane fade" id="panel-social" role="tabpanel">
+                <!-- Generador de Cartell -->
+                <div class="card mb-4 border-0 bg-light">
+                  <div class="card-body d-flex align-items-center gap-3 flex-wrap">
+                    <i class="bi bi-image fs-4 text-secondary"></i>
+                    <div>
+                      <div class="fw-semibold" data-i18n="admin.agendaPosterTitle">Generar Cartell</div>
+                      <div class="text-muted small" data-i18n="admin.agendaPosterDesc">Genera una imatge pòster de l'agenda per a un dia o cap de setmana</div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 ms-auto">
+                      <input type="date" id="agendaDateFrom" class="form-control form-control-sm" style="max-width:145px">
+                      <span class="text-muted small">—</span>
+                      <input type="date" id="agendaDateTo" class="form-control form-control-sm" style="max-width:145px">
+                      <button id="btnGenerarCartell" class="btn btn-sm btn-bauxa-outline">
+                        <i class="bi bi-image"></i> <span data-i18n="admin.agendaPosterBtn">Generar Cartell</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <!-- Analitzar post d'Instagram -->
+                <div class="card mb-4 border-0 bg-light">
+                  <div class="card-body">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                      <i class="bi bi-instagram fs-4 text-secondary"></i>
+                      <div>
+                        <div class="fw-semibold" data-i18n="admin.instagramTitle">Analitzar Post d'Instagram</div>
+                        <div class="text-muted small" data-i18n="admin.instagramDesc">Enganxa la imatge del cartell i afegeix el link per extreure el caption</div>
+                      </div>
+                    </div>
+                    <div class="row g-2 align-items-start">
+                      <div class="col-md-4">
+                        <div id="instagramPasteZone" tabindex="0"
+                          style="border:2px dashed #ccc; border-radius:8px; min-height:100px; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fff; position:relative;">
+                          <span class="text-muted small text-center px-2" id="instagramPasteHint">
+                            <i class="bi bi-clipboard-image d-block fs-3 mb-1"></i>
+                            Ctrl+V per enganxar imatge
+                          </span>
+                          <img id="instagramPastePreview"
+                            style="display:none; max-width:100%; max-height:150px; border-radius:6px;">
+                        </div>
+                      </div>
+                      <div class="col-md-8 d-flex flex-column gap-2">
+                        <select id="captionMode" class="form-select form-select-sm">
+                          <option value="instagram">Caption des d'Instagram</option>
+                          <option value="manual">Caption manual</option>
+                        </select>
+                        <div id="captionInstagramInput">
+                          <input type="url" id="instagramUrlInput" class="form-control form-control-sm"
+                            placeholder="https://www.instagram.com/p/...">
+                        </div>
+                        <div id="captionManualInput" style="display:none;">
+                          <textarea id="manualCaptionText" class="form-control form-control-sm" rows="4"
+                            placeholder="Enganxa aquí el text del post..."></textarea>
+                        </div>
+                        <button id="btnAnalitzarPost" class="btn btn-sm btn-bauxa-outline" disabled>
+                          <i class="bi bi-search"></i> <span data-i18n="admin.instagramAnalyze">Analitzar</span>
+                        </button>
+                        <button id="btnClearPaste" class="btn btn-sm btn-link text-muted p-0" style="display:none;">
+                          <i class="bi bi-x-circle"></i> Esborrar imatge
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

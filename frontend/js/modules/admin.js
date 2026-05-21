@@ -6,7 +6,7 @@
 import { clearDataCache } from './dataLoader.js';
 import { supabase, BACKEND_URL, apiFetch } from '../config.js';
 import { initDownloadAgenda } from './downloadAgenda.js';
-import { t, getIntlLocale } from '../i18n.js';
+import { t, getIntlLocale, applyTranslations } from '../i18n.js';
 
 /** @type {{ authenticated: boolean, user: Object|null, profile: Object|null }|null} */
 let authState = null;
@@ -514,26 +514,65 @@ async function loadUsers() {
 
 // --- Requests management (admin side) ---
 
+function getActiveEntityFilter() {
+  const active = document.querySelector('#requestsEntityFilter .nav-link.active');
+  return active?.dataset.entity ?? '';
+}
+
 async function loadAdminRequests() {
-  const filter = document.getElementById('adminRequestsFilter')?.value || '';
+  const statusFilter = document.getElementById('adminRequestsFilter')?.value || '';
+  const entityFilter = getActiveEntityFilter();
   try {
-    const url = filter ? `/api/admin/requests?status=${filter}` : '/api/admin/requests';
+    const url = statusFilter ? `/api/admin/requests?status=${statusFilter}` : '/api/admin/requests';
     const data = await apiFetch(url);
     const container = document.getElementById('adminRequestsList');
     if (!container) return;
 
-    const items = data.itemListElement || [];
+    let items = data.itemListElement || [];
+    // Client-side entity filter
+    if (entityFilter) {
+      items = items.filter(el => (el.item.instrument?.description || '') === entityFilter);
+    }
 
-    // Update pending badge
-    if (filter === 'pending' || filter === '') {
-      const pendingCount = items.filter(el =>
-        el.item.actionStatus === 'https://schema.org/PotentialActionStatus'
-      ).length;
-      const badge = document.getElementById('pendingRequestsBadge');
-      if (badge) {
-        badge.textContent = pendingCount;
-        badge.style.display = pendingCount > 0 ? '' : 'none';
-      }
+    // Update pending badge (always from full unfiltered count)
+    const allPendingCount = (data.itemListElement || []).filter(el =>
+      el.item.actionStatus === 'https://schema.org/PotentialActionStatus'
+    ).length;
+    const badge = document.getElementById('pendingRequestsBadge');
+    if (badge) {
+      badge.textContent = allPendingCount;
+      badge.style.display = allPendingCount > 0 ? '' : 'none';
+    }
+
+    const pendingItems = items.filter(el => el.item.actionStatus === 'https://schema.org/PotentialActionStatus');
+    const approveAllBtn = document.getElementById('approveAllRequestsBtn');
+    const rejectAllBtn = document.getElementById('rejectAllRequestsBtn');
+
+    if (approveAllBtn) {
+      approveAllBtn.style.display = pendingItems.length > 0 ? '' : 'none';
+      const newApproveAll = approveAllBtn.cloneNode(true);
+      approveAllBtn.replaceWith(newApproveAll);
+      newApproveAll.addEventListener('click', async () => {
+        if (!confirm(t('admin.confirmApproveAll', {}, pendingItems.length))) return;
+        for (const el of pendingItems) {
+          try { await apiFetch(`/api/admin/requests/${el.item['@id']}/approve`, { method: 'PUT' }); } catch {}
+        }
+        showAlert(t('admin.approvedAllOk'), 'success');
+        loadAdminRequests();
+      });
+    }
+    if (rejectAllBtn) {
+      rejectAllBtn.style.display = pendingItems.length > 0 ? '' : 'none';
+      const newRejectAll = rejectAllBtn.cloneNode(true);
+      rejectAllBtn.replaceWith(newRejectAll);
+      newRejectAll.addEventListener('click', async () => {
+        if (!confirm(t('admin.confirmRejectAll', {}, pendingItems.length))) return;
+        for (const el of pendingItems) {
+          try { await apiFetch(`/api/admin/requests/${el.item['@id']}/reject`, { method: 'PUT', body: JSON.stringify({ notes: '' }) }); } catch {}
+        }
+        showAlert(t('admin.rejectedAllOk'), 'success');
+        loadAdminRequests();
+      });
     }
 
     if (!items.length) {
@@ -552,22 +591,27 @@ async function loadAdminRequests() {
         ? `<span class="badge bg-warning text-dark">${t('admin.typeRoleRequest')}</span>`
         : req['@type'] === 'CreateAction' ? t('solicituds.actionCreate') : t('solicituds.actionEdit');
       const date = req.startTime ? new Date(req.startTime).toLocaleDateString(getIntlLocale()) : '-';
-      const statusBadge = req.actionStatus === 'https://schema.org/PotentialActionStatus'
+      const isPending = req.actionStatus === 'https://schema.org/PotentialActionStatus';
+      const statusBadge = isPending
         ? `<span class="badge bg-warning">${t('solicituds.statusPending')}</span>`
         : req.actionStatus === 'https://schema.org/CompletedActionStatus'
         ? `<span class="badge bg-success">${t('solicituds.statusApproved')}</span>`
         : req.actionStatus === 'https://schema.org/FailedActionStatus'
         ? `<span class="badge bg-danger">${t('solicituds.statusRejected')}</span>`
         : '-';
+      const inlineActions = isPending ? `
+        <button class="btn btn-sm btn-success admin-inline-approve me-1" data-id="${req['@id']}" data-role="${isRoleReq}" title="${t('admin.approve')}"><i class="bi bi-check-lg"></i></button>
+        <button class="btn btn-sm btn-danger admin-inline-reject me-1" data-id="${req['@id']}" title="${t('admin.reject')}"><i class="bi bi-x-lg"></i></button>
+      ` : '';
 
-      html += `<tr>
+      html += `<tr data-req-id="${req['@id']}">
         <td><small>${req['@id']}</small></td>
         <td>${req.agent?.name || '-'}</td>
         <td>${isRoleReq ? '<i class="bi bi-person-badge"></i>' : entityType}</td>
         <td>${actionLabel}</td>
         <td>${statusBadge}</td>
         <td><small>${date}</small></td>
-        <td><button class="btn btn-sm btn-bauxa-outline admin-view-request" data-id="${req['@id']}"><i class="bi bi-eye"></i></button></td>
+        <td class="text-nowrap">${inlineActions}<button class="btn btn-sm btn-bauxa-outline admin-view-request" data-id="${req['@id']}"><i class="bi bi-eye"></i></button></td>
       </tr>`;
     }
     html += '</tbody></table>';
@@ -576,6 +620,33 @@ async function loadAdminRequests() {
     // Bind view buttons
     container.querySelectorAll('.admin-view-request').forEach(btn => {
       btn.addEventListener('click', () => viewRequestDetail(btn.dataset.id));
+    });
+
+    // Bind inline approve buttons
+    container.querySelectorAll('.admin-inline-approve').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const isRole = btn.dataset.role === 'true';
+        try {
+          await apiFetch(`/api/admin/requests/${btn.dataset.id}/approve`, { method: 'PUT' });
+          showAlert(isRole ? t('admin.approveRoleOk') : t('admin.approvedOk'), 'success');
+          loadAdminRequests();
+        } catch (err) {
+          showAlert(err.message, 'danger');
+        }
+      });
+    });
+
+    // Bind inline reject buttons
+    container.querySelectorAll('.admin-inline-reject').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try {
+          await apiFetch(`/api/admin/requests/${btn.dataset.id}/reject`, { method: 'PUT', body: JSON.stringify({ notes: '' }) });
+          showAlert(t('admin.rejectedOk'), 'success');
+          loadAdminRequests();
+        } catch (err) {
+          showAlert(err.message, 'danger');
+        }
+      });
     });
   } catch (err) {
     showAlert(t('admin.loadError', { type: t('admin.tabRequests'), error: err.message }), 'danger');
@@ -619,8 +690,14 @@ async function viewRequestDetail(requestId) {
       `;
     }
 
+    // Highlight active row and scroll to detail
+    document.querySelectorAll('#adminRequestsList tr[data-req-id]').forEach(tr => tr.classList.remove('table-active'));
+    const activeRow = document.querySelector(`#adminRequestsList tr[data-req-id="${requestId}"]`);
+    if (activeRow) activeRow.classList.add('table-active');
+
     detail.style.display = 'block';
     if (actions) actions.style.display = isPending ? 'block' : 'none';
+    detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     // Bind approve/reject
     const approveBtn = document.getElementById('approveRequestBtn');
@@ -857,6 +934,8 @@ export async function initAdmin() {
   if (notAuth) notAuth.style.display = 'none';
   if (content) content.style.display = 'block';
 
+  applyTranslations();
+
   initDownloadAgenda();
   initInstagramAnalyzer();
 
@@ -866,6 +945,7 @@ export async function initAdmin() {
   loadContentList('news', 'adminNewsList');
   loadAdminRequests();
   loadUsers();
+  loadQuestionsList().then(() => loadQuizzesList());
 
   // --- Artist form bindings ---
   document.getElementById('adminNewArtist')?.addEventListener('click', () => {
@@ -1005,6 +1085,15 @@ export async function initAdmin() {
     loadAdminRequests();
   });
 
+  // Entity type filter pills for requests
+  document.querySelectorAll('#requestsEntityFilter .nav-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#requestsEntityFilter .nav-link').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      loadAdminRequests();
+    });
+  });
+
   // --- API Keys bindings ---
   document.getElementById('adminNewApiKey')?.addEventListener('click', () => {
     document.getElementById('addApiKeyForm')?.reset();
@@ -1041,7 +1130,7 @@ export async function initAdmin() {
   // --- Tab change listeners to reload data ---
   document.getElementById('tab-requests')?.addEventListener('shown.bs.tab', loadAdminRequests);
   document.getElementById('tab-users')?.addEventListener('shown.bs.tab', loadUsers);
-  document.getElementById('tab-quizzes')?.addEventListener('shown.bs.tab', () => {
+  document.getElementById('subtab-quizzes')?.addEventListener('shown.bs.tab', () => {
     loadQuestionsList().then(() => loadQuizzesList());
   });
   document.getElementById('tab-api-keys')?.addEventListener('shown.bs.tab', loadApiKeys);
