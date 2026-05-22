@@ -88,11 +88,15 @@ function proxy(req, res) {
     port: OLLAMA_URL.port || 80,
     method: req.method,
     path: req.url,
-    headers: { ...req.headers, host: `${OLLAMA_URL.hostname}:${OLLAMA_URL.port || 80}` },
+    headers: { ...req.headers },
   };
   delete opts.headers.authorization; // strip; Ollama doesn't need it
   delete opts.headers['x-forwarded-for'];
   delete opts.headers['x-forwarded-proto'];
+  // Let http.request set Host automatically from hostname:port — overriding
+  // it here can confuse strict origins, and forgetting to set .end() on the
+  // upstream for bodyless requests causes a "socket hang up" against Ollama.
+  delete opts.headers.host;
 
   const upstream = upstreamRequest(opts, (upRes) => {
     res.writeHead(upRes.statusCode || 502, upRes.headers);
@@ -105,8 +109,21 @@ function proxy(req, res) {
     res.end(JSON.stringify({ error: `upstream: ${err.message}` }));
   });
 
-  req.on('close', () => { try { upstream.destroy(); } catch {} });
-  req.pipe(upstream);
+  // If the client aborts mid-request, kill the upstream stream too. Guard
+  // against destroying the upstream *after* the response is already flowing
+  // back; we only care about aborts that arrive while we're still receiving
+  // the request body.
+  let upstreamDone = false;
+  upstream.on('response', () => { upstreamDone = true; });
+  req.on('aborted', () => { if (!upstreamDone) try { upstream.destroy(); } catch {} });
+
+  // GET/HEAD/DELETE have no body — end the upstream request immediately.
+  // For other methods, pipe the incoming body through.
+  if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'DELETE') {
+    upstream.end();
+  } else {
+    req.pipe(upstream);
+  }
 }
 
 const server = http.createServer(async (req, res) => {
