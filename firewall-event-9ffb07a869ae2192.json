@@ -1,0 +1,39 @@
+{
+  "action": "managed_challenge",
+  "clientASNDescription": "TELEFONICA DE ESPANA S.A.U.",
+  "clientAsn": "3352",
+  "clientCountryName": "ES",
+  "clientIP": "88.21.84.105",
+  "clientRefererHost": "",
+  "clientRequestHTTPHost": "ollama.hashingbug.uk",
+  "clientRequestHTTPMethodName": "GET",
+  "clientRequestHTTPProtocol": "HTTP/2",
+  "clientRequestPath": "/healthz",
+  "clientRequestQuery": "",
+  "contentScanObjTypes": [],
+  "datetime": "2026-05-22T10:10:14Z",
+  "ref": "",
+  "rayName": "9ffb07a869ae2192",
+  "ruleId": "7e38fdfc91a64b138bab33fbe0c0da55",
+  "description": "test",
+  "rulesetId": "318a39aaee8d4a76b4008a74f7f77abc",
+  "source": "firewallCustom",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+  "zoneVersion": 0,
+  "matchIndex": 0,
+  "metadata": [
+    {
+      "key": "ruleset_version",
+      "value": "6"
+    },
+    {
+      "key": "version",
+      "value": "6"
+    },
+    {
+      "key": "type",
+      "value": "customer"
+    }
+  ],
+  "sampleInterval": 1
+}
