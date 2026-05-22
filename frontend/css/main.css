@@ -1712,7 +1712,14 @@ img { max-width: 100%; }
   line-height: 1.2;
 }
 
-.chatbot-close {
+.chatbot-header-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.chatbot-close,
+.chatbot-reset {
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -1728,7 +1735,8 @@ img { max-width: 100%; }
   font-size: 0.85rem;
 }
 
-.chatbot-close:hover {
+.chatbot-close:hover,
+.chatbot-reset:hover {
   background: var(--surface-2);
   color: var(--text);
 }
@@ -2109,6 +2117,43 @@ img { max-width: 100%; }
 #scrollTopBtn, .scroll-top-btn { position: fixed; bottom: 5.25rem; right: 1.5rem; width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border-2); color: var(--text-muted); display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; transition: all var(--tr); }
 #scrollTopBtn:hover, .scroll-top-btn:hover { background: var(--surface-3); color: var(--text); }
 #scrollTopBtn.visible, .scroll-top-btn.visible { display: flex; }
+
+/* --------------------------------------------------------------------------
+   Mobile-only "Preferences" card on the Profile view
+   -------------------------------------------------------------------------- */
+.mobile-settings__row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem;
+}
+.mobile-settings__row--stack { flex-wrap: wrap; }
+.mobile-settings__label { font-weight: 600; font-size: 0.95rem; }
+.mobile-settings__label i { color: var(--accent-text); margin-right: 0.4rem; }
+.mobile-settings__hint  { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem; }
+.mobile-settings__langs {
+  display: flex; flex-wrap: wrap; gap: 0.45rem;
+  margin-top: 0.5rem; width: 100%;
+}
+.mobile-lang-btn {
+  flex: 1 1 calc(50% - 0.45rem);
+  display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+  padding: 0.55rem 0.7rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 0.8rem; font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--tr), background var(--tr), transform var(--tr);
+  -webkit-tap-highlight-color: transparent;
+}
+.mobile-lang-btn:hover,
+.mobile-lang-btn.active {
+  border-color: var(--accent);
+  background: var(--surface-3);
+}
+.mobile-lang-btn.active { box-shadow: inset 0 0 0 1px var(--accent); }
+.mobile-lang-btn:active { transform: scale(0.97); }
+.mobile-lang-btn .flag-icon { width: 20px; height: 14px; border-radius: 2px; }
 
 /* --------------------------------------------------------------------------
    Mobile multi-action FAB (hidden on desktop)

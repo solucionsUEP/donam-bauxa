@@ -1,0 +1,37 @@
+# cloudflared config — exposes the local Ollama proxy at a public HTTPS URL.
+#
+# Setup steps (one-time):
+#   1. Install cloudflared:   https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/
+#   2. Authenticate:          cloudflared tunnel login
+#   3. Create the tunnel:     cloudflared tunnel create donam-bauxa-ollama
+#                             (writes credentials to ~/.cloudflared/<UUID>.json)
+#   4. Add donambauxa.online as a Cloudflare zone (DNS-only is fine — Dondominio
+#      keeps serving the apex; you just need DNS authority for the subdomain).
+#      Update the nameservers at Dondominio if you choose full delegation, OR
+#      create just the CNAME for `ollama` if your registrar supports it via API.
+#   5. Route DNS to the tunnel:
+#        cloudflared tunnel route dns donam-bauxa-ollama ollama.donambauxa.online
+#   6. Drop this file at /etc/cloudflared/config.yml (edit paths + UUID).
+#   7. Install + start the service:
+#        sudo cloudflared service install
+#        sudo systemctl enable --now cloudflared
+#
+# After this, https://ollama.donambauxa.online/healthz should return "ok".
+
+tunnel: <UUID-from-step-3>
+credentials-file: /etc/cloudflared/<UUID>.json
+
+# Sane defaults for streaming Ollama responses (NDJSON chunks).
+originRequest:
+  noTLSVerify: false
+  connectTimeout: 10s
+  # Generations can take >30s for longer prompts on a small model.
+  tcpKeepAlive: 30s
+  http2Origin: false
+
+ingress:
+  - hostname: ollama.donambauxa.online
+    service: http://127.0.0.1:11500
+  # Cloudflare requires a catch-all at the end. Anything that doesn't match
+  # the hostname above gets a clean 404 instead of being proxied.
+  - service: http_status:404

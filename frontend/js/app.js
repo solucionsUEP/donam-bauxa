@@ -20,7 +20,7 @@ import {
 } from './modules/ui.js';
 import { initMap, addEventMarkers, fitToMarkers } from './modules/mapModule.js';
 import { initRouter, registerRoutes, registerMapCleanup, refreshView } from './router.js';
-import { initI18n, setLang, t, applyTranslations } from './i18n.js';
+import { initI18n, setLang, getLang, t, applyTranslations } from './i18n.js';
 import { getFavorites as getFavoritesForType } from './modules/favorites.js';
 import { initAdmin, checkAuth } from './modules/admin.js';
 import { supabase } from './config.js';
@@ -28,6 +28,7 @@ import { initProfile } from './modules/profile.js';
 import { initSolicituds } from './modules/solicituds.js';
 import { initJoc } from './modules/joc.js';
 import { initChatbot, setDataContext as setChatbotData } from './modules/chatbot.js';
+import { initPwa } from './pwa.js';
 
 /* ------------------------------------------------------------------ */
 /*  Shared state                                                       */
@@ -494,17 +495,32 @@ function initTheme() {
   const stored = localStorage.getItem('bauxa_theme');
   const sysDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true;
   applyTheme(stored || (sysDark ? 'dark' : 'light'));
-  document.getElementById('themeToggle')?.addEventListener('click', () => {
+
+  // Desktop sidebar toggle + mobile Profile-card toggle share one behaviour.
+  const toggleTheme = () => {
     const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     applyTheme(next);
     localStorage.setItem('bauxa_theme', next);
-  });
+  };
+  document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+  document.getElementById('mobileThemeToggle')?.addEventListener('click', toggleTheme);
 }
 
 initTheme();
 // --- Fi theme management ---
 
-document.addEventListener('DOMContentLoaded', async () => {
+// `config.js` uses top-level await to resolve the backend URL, which can
+// delay app.js evaluation past DOMContentLoaded. Run boot immediately when
+// the document is already interactive; otherwise wait for the event.
+const onReady = (cb) => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', cb, { once: true });
+  } else {
+    cb();
+  }
+};
+
+onReady(async () => {
   // Load translations before rendering anything
   await initI18n();
   applyTranslations();
@@ -567,9 +583,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  // Highlight the active language on the mobile Profile-card buttons.
+  const markActiveLang = () => {
+    const current = (typeof getLang === 'function') ? getLang() : document.documentElement.lang || 'ca';
+    document.querySelectorAll('.mobile-lang-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === current);
+      b.setAttribute('aria-pressed', String(b.dataset.lang === current));
+    });
+  };
+  markActiveLang();
+
   // Re-render dynamic content when language changes
   document.addEventListener('langChanged', () => {
     applyTranslations();
+    markActiveLang();
     // Update footer developers title translation
     initFooterDevelopers();
     // Update filter select default options (first option, no listener re-binding)
@@ -623,4 +650,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Start router
   initRouter();
+
+  // Register service worker + freshness coordinator. Done last so it never
+  // blocks first paint or interactive readiness.
+  initPwa();
+
+  // Background refresh of catalogs when the SW reports new data.
+  window.addEventListener('bauxa:data-updated', () => {
+    // Force the next ensureDataLoaded() call to actually re-fetch.
+    dataLoaded = false;
+    dataLoadingPromise = null;
+    ensureDataLoaded().then(() => refreshView()).catch(() => {});
+  });
 });

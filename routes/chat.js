@@ -1,9 +1,34 @@
 import { Router } from 'express';
+import { supabase } from '../helpers/supabase.js';
 
 const router = Router();
 
-const OLLAMA_URL = process.env.OLLAMA_URL || 'http://127.0.0.1:11434';
+// Where to send chat requests. In prod this is the public Cloudflare Tunnel URL
+// (e.g. https://ollama.donambauxa.online). Locally it falls back to direct Ollama.
+const OLLAMA_URL = process.env.OLLAMA_TUNNEL_URL || process.env.OLLAMA_URL || 'http://127.0.0.1:11434';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'gemma4:e2b';
+// Shared secret the home-server proxy validates. Required in prod, ignored locally.
+const OLLAMA_SHARED_SECRET = process.env.OLLAMA_SHARED_SECRET || '';
+
+// Per-user rate limit: best-effort, in-memory. Vercel's serverless model means
+// this resets when the function cold-starts, so it caps burst abuse from a
+// single warm instance — the hard cap lives in the home-server proxy semaphore.
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = 8;
+const rateBuckets = new Map(); // userId → number[] of recent timestamps
+
+function checkRateLimit(userId) {
+  const now = Date.now();
+  const bucket = rateBuckets.get(userId) || [];
+  const recent = bucket.filter(t => now - t < RATE_WINDOW_MS);
+  if (recent.length >= RATE_MAX) {
+    const retryAfter = Math.ceil((RATE_WINDOW_MS - (now - recent[0])) / 1000);
+    return { ok: false, retryAfter };
+  }
+  recent.push(now);
+  rateBuckets.set(userId, recent);
+  return { ok: true };
+}
 
 const SYSTEM_INSTRUCTION = `Ets l'assistent virtual de Dona'm Bauxa, una plataforma de descoberta musical i d'esdeveniments a Mallorca. Respons en catala per defecte (canvia a castella o angles si l'usuari ho fa). Mante un to amistos, breu i concret.
 
@@ -22,9 +47,37 @@ DADES DE LA PLATAFORMA: Quan rebis un bloc "CONTEXT (dades reals…)" abans del 
 
 Format: usa llistes Markdown quan ajudin a la lectura. Evita disclaimers innecessaris.`;
 
+// Resolves the authenticated Supabase user, or null in prod when there is no
+// valid token. In dev (anything but NODE_ENV=production) we fall back to a
+// synthetic user so you can test chat at localhost without dealing with the
+// OAuth dance — Vercel always sets NODE_ENV=production, so prod stays strict.
+async function authenticate(req) {
+  const token = req.headers.authorization?.replace(/^Bearer\s+/i, '');
+  const isProd = process.env.NODE_ENV === 'production';
+
+  // Dev: no Supabase project configured at all → always a fake user.
+  if (!process.env.SUPABASE_URL) {
+    return { id: 'dev-user', email: 'dev@local' };
+  }
+
+  // Token present: validate it. Works in both dev and prod.
+  if (token) {
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (!error && user) return user;
+    // In dev, a stale/expired token shouldn't block testing.
+    if (!isProd) return { id: 'local-dev', email: 'local-dev@local' };
+    return null;
+  }
+
+  // No token: allowed only in dev.
+  if (!isProd) return { id: 'local-dev', email: 'local-dev@local' };
+  return null;
+}
+
 router.get('/health', async (_req, res) => {
   try {
-    const r = await fetch(`${OLLAMA_URL}/api/tags`, { signal: AbortSignal.timeout(3000) });
+    const headers = OLLAMA_SHARED_SECRET ? { Authorization: `Bearer ${OLLAMA_SHARED_SECRET}` } : {};
+    const r = await fetch(`${OLLAMA_URL}/api/tags`, { headers, signal: AbortSignal.timeout(3000) });
     if (!r.ok) return res.status(502).json({ ok: false, error: `Ollama HTTP ${r.status}` });
     const data = await r.json();
     res.json({ ok: true, model: OLLAMA_MODEL, models: (data.models || []).map(m => m.name) });
@@ -34,6 +87,15 @@ router.get('/health', async (_req, res) => {
 });
 
 router.post('/', async (req, res) => {
+  const user = await authenticate(req);
+  if (!user) return res.status(401).json({ error: 'sign_in_required' });
+
+  const rate = checkRateLimit(user.id);
+  if (!rate.ok) {
+    res.setHeader('Retry-After', String(rate.retryAfter));
+    return res.status(429).json({ error: 'rate_limited', retryAfter: rate.retryAfter });
+  }
+
   const { messages, model } = req.body || {};
   if (!Array.isArray(messages) || messages.length === 0) {
     return res.status(400).json({ error: 'messages[] required' });
@@ -46,15 +108,26 @@ router.post('/', async (req, res) => {
     options: { temperature: 0.7, num_ctx: 8192 },
   };
 
+  const upstreamHeaders = { 'Content-Type': 'application/json' };
+  if (OLLAMA_SHARED_SECRET) upstreamHeaders.Authorization = `Bearer ${OLLAMA_SHARED_SECRET}`;
+
   let upstream;
   try {
     upstream = await fetch(`${OLLAMA_URL}/api/chat`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: upstreamHeaders,
       body: JSON.stringify(payload),
     });
   } catch (err) {
     return res.status(502).json({ error: `Cannot reach Ollama: ${err.message}` });
+  }
+
+  // Bubble up the proxy's 429 (concurrency cap hit on home server) so the
+  // frontend can show a "busy, try in a moment" message with the right delay.
+  if (upstream.status === 429) {
+    const retryAfter = upstream.headers.get('Retry-After') || '5';
+    res.setHeader('Retry-After', retryAfter);
+    return res.status(429).json({ error: 'assistant_busy', retryAfter: Number(retryAfter) });
   }
 
   if (!upstream.ok || !upstream.body) {

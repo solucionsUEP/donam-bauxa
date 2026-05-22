@@ -128,6 +128,11 @@
   "profile": {
     "title": "Mi Perfil",
     "subtitle": "Gestiona tu cuenta",
+    "preferences": "Preferencias",
+    "themeLabel": "Tema",
+    "themeHint": "Claro u oscuro",
+    "languageLabel": "Idioma",
+    "languageHint": "Elige tu idioma",
     "notAuth": "Debes iniciar sesión para ver tu perfil.",
     "loginBtn": "Iniciar Sesión con Google",
     "emailLabel": "Email",
@@ -342,6 +347,7 @@
     "subtitle": "Puedo ayudarte a planificar tu fin de semana",
     "openAssistant": "Abrir asistente",
     "closeAssistant": "Cerrar asistente",
+    "resetAssistant": "Empezar conversación nueva",
     "placeholder": "Pídeme un plan, música…",
     "inputLabel": "Escribe un mensaje",
     "send": "Enviar",
@@ -354,7 +360,11 @@
     "statusUnavailable": "Modelo no disponible en este dispositivo",
     "statusDownloadable": "Modelo listo para descargar (empezará con el primer mensaje)",
     "statusDownloading": "El modelo se está descargando en segundo plano…",
-    "errorGeneric": "El asistente no pudo responder. Consulta la consola para más detalles."
+    "errorGeneric": "El asistente no pudo responder. Consulta la consola para más detalles.",
+    "signInRequired": "Para hablar con el asistente necesitas iniciar sesión. Cierra el chat y pulsa **Iniciar sesión** arriba.",
+    "assistantBusy": "El asistente está ocupado ahora mismo. Inténtalo de nuevo en {seconds} segundos.",
+    "backendError": "El servicio de chat no responde. Inténtalo en unos minutos.",
+    "networkError": "No se ha podido conectar con el servicio de chat. Comprueba tu conexión e inténtalo de nuevo."
   },
   "auth": {
     "loginError": "Error al iniciar sesión: {{message}}",

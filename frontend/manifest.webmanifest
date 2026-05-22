@@ -1,0 +1,74 @@
+{
+  "id": "/?source=pwa",
+  "name": "Dona'm Bauxa — Música i festes a Mallorca",
+  "short_name": "Dona'm Bauxa",
+  "description": "Descobreix concerts, festivals i artistes de Mallorca. Itineraris, mapa i favorits en una sola app.",
+  "lang": "ca",
+  "dir": "ltr",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "any",
+  "theme_color": "#0c0c14",
+  "background_color": "#0c0c14",
+  "categories": ["music", "entertainment", "lifestyle", "travel"],
+  "prefer_related_applications": false,
+  "launch_handler": { "client_mode": ["navigate-existing", "auto"] },
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Agenda",
+      "short_name": "Agenda",
+      "description": "Veure els pròxims concerts i festivals",
+      "url": "/?source=pwa-shortcut#events",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Mapa",
+      "short_name": "Mapa",
+      "description": "Esdeveniments al voltant teu",
+      "url": "/?source=pwa-shortcut#map",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Joc Musical",
+      "short_name": "Joc",
+      "description": "Endevina l'artista o la cançó",
+      "url": "/?source=pwa-shortcut#joc",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Favorits",
+      "short_name": "Favorits",
+      "description": "Els teus artistes i esdeveniments guardats",
+      "url": "/?source=pwa-shortcut#favorits",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

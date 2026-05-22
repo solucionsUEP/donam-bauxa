@@ -128,6 +128,11 @@
   "profile": {
     "title": "Mein Profil",
     "subtitle": "Konto verwalten",
+    "preferences": "Einstellungen",
+    "themeLabel": "Theme",
+    "themeHint": "Hell oder dunkel",
+    "languageLabel": "Sprache",
+    "languageHint": "Wähle deine Sprache",
     "notAuth": "Sie müssen sich anmelden, um Ihr Profil anzuzeigen.",
     "loginBtn": "Mit Google anmelden",
     "emailLabel": "E-Mail",
@@ -342,6 +347,7 @@
     "subtitle": "Ich helfe Ihnen, Ihr Wochenende zu planen",
     "openAssistant": "Assistenten öffnen",
     "closeAssistant": "Assistenten schließen",
+    "resetAssistant": "Neues Gespräch beginnen",
     "placeholder": "Fragen Sie mich nach einem Plan, Musik…",
     "inputLabel": "Nachricht schreiben",
     "send": "Senden",
@@ -354,7 +360,11 @@
     "statusUnavailable": "Modell nicht auf diesem Gerät verfügbar",
     "statusDownloadable": "Modell zum Herunterladen bereit (startet mit der ersten Nachricht)",
     "statusDownloading": "Modell wird im Hintergrund heruntergeladen…",
-    "errorGeneric": "Der Assistent konnte nicht antworten. Details in der Konsole."
+    "errorGeneric": "Der Assistent konnte nicht antworten. Details in der Konsole.",
+    "signInRequired": "Du musst dich anmelden, um mit dem Assistenten zu chatten. Schließe den Chat und klicke oben auf **Anmelden**.",
+    "assistantBusy": "Der Assistent ist gerade beschäftigt. Versuche es in {seconds} Sekunden erneut.",
+    "backendError": "Der Chat-Dienst antwortet nicht. Bitte versuche es in einigen Minuten erneut.",
+    "networkError": "Verbindung zum Chat-Dienst nicht möglich. Prüfe deine Verbindung und versuche es erneut."
   },
   "auth": {
     "loginError": "Anmeldefehler: {{message}}",

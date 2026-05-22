@@ -128,6 +128,11 @@
   "profile": {
     "title": "El meu Perfil",
     "subtitle": "Gestiona el teu compte",
+    "preferences": "Preferències",
+    "themeLabel": "Tema",
+    "themeHint": "Clar o fosc",
+    "languageLabel": "Idioma",
+    "languageHint": "Tria la teva llengua",
     "notAuth": "Has d'iniciar sessió per veure el teu perfil.",
     "loginBtn": "Iniciar Sessió amb Google",
     "emailLabel": "Email",
@@ -342,6 +347,7 @@
     "subtitle": "Et puc ajudar a planificar el teu cap de setmana",
     "openAssistant": "Obrir assistent",
     "closeAssistant": "Tancar assistent",
+    "resetAssistant": "Començar conversa nova",
     "placeholder": "Demana'm un pla, música…",
     "inputLabel": "Escriu un missatge",
     "send": "Enviar",
@@ -354,7 +360,11 @@
     "statusUnavailable": "Model no disponible al dispositiu",
     "statusDownloadable": "Model llest per descarregar (s'iniciarà amb el primer missatge)",
     "statusDownloading": "El model s'està descarregant en segon pla…",
-    "errorGeneric": "L'assistent no ha pogut respondre. Mira la consola per detalls."
+    "errorGeneric": "L'assistent no ha pogut respondre. Mira la consola per detalls.",
+    "signInRequired": "Per parlar amb l'assistent necessites iniciar sessió. Tanca el xat i prem **Inicia sessió** a dalt.",
+    "assistantBusy": "L'assistent està ocupat ara mateix. Torna-ho a provar d'aquí {seconds} segons.",
+    "backendError": "El servei de xat no respon. Torna-ho a provar d'aquí uns minuts.",
+    "networkError": "No s'ha pogut connectar amb el servei de xat. Comprova la teva connexió i torna a provar."
   },
   "auth": {
     "loginError": "Error inici de sessió: {{message}}",

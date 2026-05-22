@@ -15,6 +15,7 @@
  */
 
 import { t } from '../i18n.js';
+import { supabase, BACKEND_URL } from '../config.js';
 
 /* ------------------------------------------------------------------ */
 /*  System instruction                                                 */
@@ -83,41 +84,88 @@ export function setDataContext({ events, artists }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Ollama backend (localhost:11434)                                  */
+/*  Ollama backend — Vercel /api/chat → home-server tunnel             */
 /* ------------------------------------------------------------------ */
 
-const OLLAMA_URL = 'http://localhost:11434';
-const OLLAMA_MODEL = 'gemma3n:e2b';
+// Cosmetic only: shown in the status bar so the user knows which model is
+// answering. Actual model selection lives on the backend.
+const OLLAMA_MODEL = 'gemma4:e2b';
 
-/** Returns true if Ollama is reachable. Caches result after first probe. */
+// Where we send chat requests. Empty `BACKEND_URL` means same-origin (Node dev).
+const chatEndpoint = () => `${BACKEND_URL}/api/chat`;
+const chatHealthEndpoint = () => `${BACKEND_URL}/api/chat/health`;
+
+/** Returns the current Supabase access token, or null if not signed in. */
+async function getAuthToken() {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Probes whether the chat backend is reachable. We don't gate on sign-in here
+ * — health is anonymous, the per-message gate is the actual auth check. Caches
+ * the result for the lifetime of the page.
+ */
 async function probeOllama() {
   if (ollamaAvailable !== null) return ollamaAvailable;
   try {
-    const r = await fetch(`${OLLAMA_URL}/api/tags`, { signal: AbortSignal.timeout(500) });
-    ollamaAvailable = r.ok;
+    const r = await fetch(chatHealthEndpoint(), { signal: AbortSignal.timeout(3000) });
+    const body = await r.json().catch(() => ({}));
+    ollamaAvailable = r.ok && body.ok === true;
   } catch {
     ollamaAvailable = false;
   }
-  console.log('[chatbot] ollama available:', ollamaAvailable);
+  console.log('[chatbot] backend chat available:', ollamaAvailable);
   return ollamaAvailable;
 }
 
 /**
- * Streams a response from Ollama. Each chunk call receives the cumulative text.
- * Stores clean turns (without RAG block) in ollamaMessages for context continuity.
+ * Streams a response from the backend. Each chunk call receives the cumulative
+ * text. Throws auth-tagged errors so the UI layer can react with a sign-in CTA
+ * or a "busy, try again" banner.
  */
 async function ollamaGenerate(cleanUserText, ragEnrichedContent, onChunk, abortSignal) {
+  const token = await getAuthToken();
+  if (!token) {
+    const err = new Error('sign_in_required');
+    err.name = 'SignInRequired';
+    throw err;
+  }
+
   const requestMessages = [
-    ...ollamaMessages,
+    // Don't ship the system prompt from the client — the backend prepends its
+    // own canonical one. We only send actual user/assistant turns.
+    ...ollamaMessages.filter(m => m.role !== 'system'),
     { role: 'user', content: ragEnrichedContent },
   ];
-  const response = await fetch(`${OLLAMA_URL}/api/chat`, {
+
+  const response = await fetch(chatEndpoint(), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: OLLAMA_MODEL, messages: requestMessages, stream: true }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ messages: requestMessages }),
     signal: abortSignal,
   });
-  if (!response.ok) throw new Error(`Ollama HTTP ${response.status}`);
+
+  if (response.status === 401) {
+    const err = new Error('sign_in_required');
+    err.name = 'SignInRequired';
+    throw err;
+  }
+  if (response.status === 429) {
+    const retryAfter = Number(response.headers.get('Retry-After') || '5');
+    const err = new Error('busy');
+    err.name = 'AssistantBusy';
+    err.retryAfter = retryAfter;
+    throw err;
+  }
+  if (!response.ok) throw new Error(`Backend HTTP ${response.status}`);
 
   const reader = response.body.getReader();
   const dec = new TextDecoder();
@@ -137,10 +185,25 @@ async function ollamaGenerate(cleanUserText, ragEnrichedContent, onChunk, abortS
       } catch { /* skip malformed */ }
     }
   }
-  // Store clean turn in history so follow-up messages have context.
   ollamaMessages.push({ role: 'user', content: cleanUserText });
   ollamaMessages.push({ role: 'assistant', content: full });
   return full;
+}
+
+/**
+ * Resets the chat back to an empty conversation. Since context lives on the
+ * client (the server is stateless), this is just a memory wipe + UI refresh.
+ */
+export function resetChat() {
+  ollamaMessages.length = 0;
+  ollamaMessages.push({ role: 'system', content: SYSTEM_INSTRUCTION });
+  history.length = 0;
+  try { session?.destroy?.(); } catch {}
+  session = null;
+  currentAbort?.abort();
+  const list = document.getElementById(MESSAGES_ID);
+  if (list) list.innerHTML = '';
+  appendMessage('assistant', t('chatbot.greeting'));
 }
 
 /* ------------------------------------------------------------------ */
@@ -547,9 +610,14 @@ function mountUI() {
           <div class="chatbot-subtitle" id="${STATUS_ID}">${t('chatbot.deviceStatus')}</div>
         </div>
       </div>
-      <button type="button" class="chatbot-close" aria-label="${t('chatbot.closeAssistant')}">
-        <i class="bi bi-x-lg" aria-hidden="true"></i>
-      </button>
+      <div class="chatbot-header-actions">
+        <button type="button" class="chatbot-reset" aria-label="${t('chatbot.resetAssistant')}" title="${t('chatbot.resetAssistant')}">
+          <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="chatbot-close" aria-label="${t('chatbot.closeAssistant')}">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
     </header>
     <div id="${MESSAGES_ID}" class="chatbot-messages" aria-live="polite" aria-atomic="false"></div>
     <form id="${FORM_ID}" class="chatbot-input-row" autocomplete="off">
@@ -762,11 +830,16 @@ export async function sendMessage(text) {
     let msg;
     if (err?.name === 'AbortError') {
       msg = t('chatbot.cancelledMsg');
-    } else if (err?.message?.startsWith('Ollama HTTP')) {
-      msg = `Error Ollama (${err.message}). Comprova que el model \`${OLLAMA_MODEL}\` esta descarregat: \`ollama pull ${OLLAMA_MODEL}\`.`;
+    } else if (err?.name === 'SignInRequired') {
+      msg = t('chatbot.signInRequired');
+    } else if (err?.name === 'AssistantBusy') {
+      const sec = err.retryAfter || 5;
+      msg = t('chatbot.assistantBusy').replace('{seconds}', String(sec));
+    } else if (err?.message?.startsWith('Backend HTTP')) {
+      msg = t('chatbot.backendError');
     } else if (err?.name === 'TypeError' && /fetch|network/i.test(String(err?.message))) {
       ollamaAvailable = false;
-      msg = "No s'ha pogut connectar amb Ollama. Comprova que esta actiu (`ollama serve`) i torna a provar.";
+      msg = t('chatbot.networkError');
     } else if (err?.name === 'InvalidStateError') {
       msg = "El model encara no esta llest al dispositiu. Comprova a `chrome://components` que **Optimization Guide On Device Model** te una versio diferent de `0.0.0.0`.";
     } else if (err?.name === 'QuotaExceededError') {
@@ -829,10 +902,11 @@ function closeWindow() {
 async function primeModel() {
   diagnose();
 
-  // Prefer Ollama if it's running locally — no download required.
+  // Prefer the backend assistant (proxied to the home-server Ollama) — no
+  // browser model download required.
   if (await probeOllama()) {
     modelStatus = 'ready';
-    renderStatus(`IA local · ${OLLAMA_MODEL}`);
+    renderStatus(`Donam Bauxa · ${OLLAMA_MODEL}`);
     return;
   }
 
@@ -868,9 +942,14 @@ function bindEvents() {
   const form = document.getElementById(FORM_ID);
   const input = document.getElementById(INPUT_ID);
   const closeBtn = win?.querySelector('.chatbot-close');
+  const resetBtn = win?.querySelector('.chatbot-reset');
 
   launcher?.addEventListener('click', openWindow);
   closeBtn?.addEventListener('click', closeWindow);
+  resetBtn?.addEventListener('click', () => {
+    if (generating) currentAbort?.abort();
+    resetChat();
+  });
 
   form?.addEventListener('submit', (e) => {
     e.preventDefault();

@@ -3,11 +3,39 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description"
     content="Dona'm Bauxa - Descobreix la musica i els esdeveniments en directe de Mallorca. Concerts, festivals i festes populars.">
   <title>Dona'm Bauxa - Musica i Esdeveniments de Mallorca</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- PWA manifest + theming -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0c0c14" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f1f0eb" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+  <meta name="application-name" content="Dona'm Bauxa">
+
+  <!-- Icons -->
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon-180.png">
+  <link rel="mask-icon" href="/assets/icons/icon.svg" color="#b5ff4d">
+
+  <!-- iOS standalone app polish -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dona'm Bauxa">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Social / link unfurls -->
+  <meta property="og:title" content="Dona'm Bauxa">
+  <meta property="og:description" content="Música i esdeveniments en directe a Mallorca.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/icons/icon-512.png">
+  <meta name="twitter:card" content="summary">
 
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,6 +79,7 @@
   <link rel="modulepreload" href="js/router.js">
   <link rel="modulepreload" href="js/modules/joc.js">
   <link rel="modulepreload" href="js/modules/chatbot.js">
+  <link rel="modulepreload" href="js/pwa.js">
 
   <style>
     /* Map marker custom styles */
@@ -635,6 +664,39 @@
 
       <div class="section-padding">
         <div class="container">
+
+          <!-- Mobile-only settings: theme + language. On desktop these live in the sidebar footer. -->
+          <div class="card-bauxa mobile-settings d-lg-none mb-4" style="padding:1.25rem;">
+            <h3 class="h6 fw-semibold mb-3"><i class="bi bi-sliders" aria-hidden="true"></i> <span data-i18n="profile.preferences">Preferències</span></h3>
+
+            <!-- Theme row -->
+            <div class="mobile-settings__row">
+              <div>
+                <div class="mobile-settings__label"><i class="bi bi-moon-stars" aria-hidden="true"></i> <span data-i18n="profile.themeLabel">Tema</span></div>
+                <div class="mobile-settings__hint" id="mobileThemeHint" data-i18n="profile.themeHint">Clar o fosc</div>
+              </div>
+              <button class="toggle-track" id="mobileThemeToggle" aria-label="Canviar tema" type="button">
+                <span class="toggle-knob"></span>
+              </button>
+            </div>
+
+            <hr class="my-3" style="opacity:.4;">
+
+            <!-- Language row -->
+            <div class="mobile-settings__row mobile-settings__row--stack">
+              <div>
+                <div class="mobile-settings__label"><i class="bi bi-translate" aria-hidden="true"></i> <span data-i18n="profile.languageLabel">Idioma</span></div>
+                <div class="mobile-settings__hint" data-i18n="profile.languageHint">Tria la teva llengua</div>
+              </div>
+              <div class="mobile-settings__langs" role="group" aria-label="Selecciona idioma">
+                <button class="mobile-lang-btn lang-btn" data-lang="ca" type="button" aria-label="Català"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt=""><span>CA</span></button>
+                <button class="mobile-lang-btn lang-btn" data-lang="en" type="button" aria-label="English"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt=""><span>EN</span></button>
+                <button class="mobile-lang-btn lang-btn" data-lang="de" type="button" aria-label="Deutsch"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt=""><span>DE</span></button>
+                <button class="mobile-lang-btn lang-btn" data-lang="es" type="button" aria-label="Castellano"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt=""><span>ES</span></button>
+              </div>
+            </div>
+          </div>
+
           <div id="profileNotAuth" style="display:none;">
             <div class="empty-state">
               <i class="bi bi-shield-lock"></i>

@@ -3,8 +3,20 @@ name: Deploy Frontend a DonDominio
 on:
   push:
     branches: [main]
+    # Also rebuild when the build script, manifest, or service worker change,
+    # not only when raw frontend files change.
     paths:
       - 'frontend/**'
+      - 'scripts/build-version.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-frontend.yml'
+
+# Cancel an in-progress deploy when a newer commit arrives — never leave the
+# server in an intermediate state.
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -14,6 +26,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      # Writes frontend/version.json with the git SHA and the newest data mtime.
+      # The service worker uses this file to decide when to invalidate caches.
+      - name: Build PWA version stamp
+        env:
+          GIT_COMMIT_SHA: ${{ github.sha }}
+        run: npm run build:version
+
+      # The frontend learns the Vercel backend URL at runtime by fetching
+      # /api-config.json. Overwrite the committed placeholder with the real URL
+      # from the BACKEND_URL secret so the deployed bundle points at prod.
+      - name: Inject backend URL into api-config.json
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+        run: |
+          if [ -z "${BACKEND_URL:-}" ]; then
+            echo "::warning::BACKEND_URL secret is empty — api-config.json will keep its committed default (same-origin)."
+          fi
+          node -e '
+            const fs = require("fs");
+            const path = "frontend/api-config.json";
+            const url = process.env.BACKEND_URL || "";
+            const cfg = { backendUrl: url, generatedAt: new Date().toISOString() };
+            fs.writeFileSync(path, JSON.stringify(cfg, null, 2) + "\n");
+            console.log("[deploy] wrote " + path + " (backendUrl=" + (url || "<empty>") + ")");
+          '
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -22,6 +69,21 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./frontend/
           server-dir: /
+          # Mirror the directory so removed files vanish from the server too.
+          # If a deploy ever needs to be re-uploaded from scratch, flip the
+          # `dangerous-clean-slate` input (gated behind another secret).
           exclude: |
             **/.git*
+            **/.DS_Store
             data/**
+
+      # Tell admins the deploy went out and which versions are now live.
+      - name: Summary
+        run: |
+          echo "### Frontend deployed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "* commit: \`${GITHUB_SHA::7}\`" >> $GITHUB_STEP_SUMMARY
+          echo "* version.json:" >> $GITHUB_STEP_SUMMARY
+          echo '```json' >> $GITHUB_STEP_SUMMARY
+          cat frontend/version.json >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY

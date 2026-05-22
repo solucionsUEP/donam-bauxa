@@ -128,6 +128,11 @@
   "profile": {
     "title": "My Profile",
     "subtitle": "Manage your account",
+    "preferences": "Preferences",
+    "themeLabel": "Theme",
+    "themeHint": "Light or dark",
+    "languageLabel": "Language",
+    "languageHint": "Pick your language",
     "notAuth": "You must sign in to view your profile.",
     "loginBtn": "Sign In with Google",
     "emailLabel": "Email",
@@ -342,6 +347,7 @@
     "subtitle": "I can help you plan your weekend",
     "openAssistant": "Open assistant",
     "closeAssistant": "Close assistant",
+    "resetAssistant": "Start a new conversation",
     "placeholder": "Ask me for a plan, music…",
     "inputLabel": "Write a message",
     "send": "Send",
@@ -354,7 +360,11 @@
     "statusUnavailable": "Model not available on this device",
     "statusDownloadable": "Model ready to download (will start with your first message)",
     "statusDownloading": "Model is downloading in the background…",
-    "errorGeneric": "The assistant could not respond. Check the console for details."
+    "errorGeneric": "The assistant could not respond. Check the console for details.",
+    "signInRequired": "You need to sign in to chat with the assistant. Close this chat and click **Sign in** above.",
+    "assistantBusy": "The assistant is busy right now. Try again in {seconds} seconds.",
+    "backendError": "The chat service is not responding. Please try again in a few minutes.",
+    "networkError": "Couldn't reach the chat service. Check your connection and try again."
   },
   "auth": {
     "loginError": "Sign-in error: {{message}}",

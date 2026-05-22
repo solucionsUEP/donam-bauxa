@@ -11,32 +11,60 @@ import requestsRoutes from './routes/requests.js';
 import apiKeysRoutes from './routes/apiKeys.js';
 import analyzeRoutes from './routes/analyze.js';
 import chatRoutes from './routes/chat.js';
+import versionRoutes from './routes/version.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
-// CORS
-const allowedOrigins = [
+// CORS — production (Dondominio) frontend calls this Vercel backend cross-origin.
+// Allow-list:
+//   • Production Dondominio domain (and www subdomain)
+//   • Vercel preview deploys (*.vercel.app)
+//   • Local dev (any port via localhost / 127.0.0.1)
+//   • Tailnet (100.x.x.x and *.ts.net) for personal-network dev
+const PROD_ORIGINS = [
   'https://donambauxa.online',
   'https://www.donambauxa.online',
-  `http://localhost:${PORT}`
 ];
-// Tailnet origins: allow any http://100.x.x.x:PORT and any *.ts.net:PORT host.
-const tailnetOriginRe = new RegExp(`^http://(100\\.\\d+\\.\\d+\\.\\d+|[^/]+\\.ts\\.net):${PORT}$`);
+const localhostRe   = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+const vercelRe      = /^https:\/\/[^/]+\.vercel\.app$/;
+const tailnetRe     = /^http:\/\/(100\.\d+\.\d+\.\d+|[^/]+\.ts\.net)(:\d+)?$/;
+
+function isAllowedOrigin(origin) {
+  if (!origin) return false;
+  if (PROD_ORIGINS.includes(origin)) return true;
+  return localhostRe.test(origin) || vercelRe.test(origin) || tailnetRe.test(origin);
+}
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin && (allowedOrigins.includes(origin) || tailnetOriginRe.test(origin))) {
+  if (isAllowedOrigin(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-API-Key');
+    res.setHeader('Vary', 'Origin');
   }
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
 
 app.use(express.json({ limit: '1mb' }));
+
+// PWA freshness check — must be mounted BEFORE static so the file (if it ever
+// exists in /frontend) can't shadow the dynamic endpoint, and must never be
+// cached by any layer.
+app.use('/version.json', versionRoutes);
+
+// Service worker must be served from the root scope with no caching so updates
+// propagate immediately. (The static handler below sets default caching.)
+app.get('/sw.js', (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+  res.setHeader('Service-Worker-Allowed', '/');
+  next();
+});
+
 app.use(express.static(join(__dirname, 'frontend')));
 
 // Auth: retorna el perfil de l'usuari autenticat via Supabase JWT

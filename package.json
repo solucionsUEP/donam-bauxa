@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "build:version": "node scripts/build-version.mjs",
+    "build": "npm run build:version"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.104.1",
