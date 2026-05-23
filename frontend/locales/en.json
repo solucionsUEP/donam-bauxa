@@ -152,7 +152,17 @@
     "requestPromotorPending": "You have a promotor request pending review.",
     "requestPromotorAlready": "You are already a promotor or administrator.",
     "requestPromotorErrorMotiv": "Please write the reason for the request.",
-    "developersTitle": "Developers"
+    "developersTitle": "Developers",
+    "notifTitle": "Notifications",
+    "notifDesc": "Get alerts when we publish a new event, a new artist, news, or when a saved event is starting soon.",
+    "notifToggle": "Enable push notifications",
+    "notifOn": "Notifications enabled on this device.",
+    "notifOff": "Notifications disabled on this device.",
+    "notifBlocked": "You have blocked notifications in your browser. Re-enable them in the site settings to turn this back on.",
+    "notifEnabled": "Notifications enabled.",
+    "notifDisabled": "Notifications disabled.",
+    "notifPermissionDenied": "You did not grant permission to receive notifications.",
+    "notifError": "Could not change notification settings."
   },
   "solicituds": {
     "title": "Edit Requests",

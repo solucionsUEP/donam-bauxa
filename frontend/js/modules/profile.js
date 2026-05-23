@@ -6,6 +6,13 @@
 import { getAuthState } from './admin.js';
 import { apiFetch } from '../config.js';
 import { t } from '../i18n.js';
+import {
+  pushSupported,
+  getPushPermission,
+  getPushSubscription,
+  subscribePush,
+  unsubscribePush,
+} from '../pwa.js';
 
 function showProfileAlert(message, type) {
   const el = document.getElementById('profileAlert');
@@ -22,6 +29,80 @@ function showPromotorAlert(message, type) {
   el.className = `alert alert-${type} mb-3`;
   el.textContent = message;
   el.style.display = 'block';
+}
+
+function showNotifAlert(message, type) {
+  const el = document.getElementById('notifAlert');
+  if (!el) return;
+  el.className = `alert alert-${type} mb-3`;
+  el.textContent = message;
+  el.style.display = 'block';
+  if (type === 'success') setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+/**
+ * Hide the notifications card on unsupported browsers; otherwise reflect the
+ * current subscription state in the toggle and wire change handler.
+ *
+ * Permission states this card has to handle:
+ *   - 'default':  show toggle off; toggling on triggers the OS prompt.
+ *   - 'granted' + has subscription: toggle on.
+ *   - 'granted' + no subscription:  toggle off (user revoked at app level).
+ *   - 'denied':                     disable the toggle, tell the user to fix
+ *                                   it in browser settings — we can't re-prompt
+ *                                   once they've said no.
+ */
+async function initNotificationToggle() {
+  const row    = document.getElementById('notifPrefsRow');
+  const toggle = document.getElementById('notifToggle');
+  const status = document.getElementById('notifStatus');
+  if (!row || !toggle) return;
+
+  if (!pushSupported()) {
+    // Card stays hidden — nothing actionable to show.
+    return;
+  }
+  row.style.display = '';
+
+  async function refreshState() {
+    const permission = getPushPermission();
+    const sub        = await getPushSubscription();
+    const on         = permission === 'granted' && !!sub;
+
+    toggle.checked  = on;
+    toggle.disabled = permission === 'denied';
+
+    if (status) {
+      if (permission === 'denied')      status.textContent = t('profile.notifBlocked');
+      else if (on)                      status.textContent = t('profile.notifOn');
+      else                              status.textContent = t('profile.notifOff');
+    }
+  }
+
+  await refreshState();
+
+  toggle.addEventListener('change', async () => {
+    toggle.disabled = true;
+    try {
+      if (toggle.checked) {
+        await subscribePush();
+        showNotifAlert(t('profile.notifEnabled'), 'success');
+      } else {
+        await unsubscribePush();
+        showNotifAlert(t('profile.notifDisabled'), 'info');
+      }
+    } catch (err) {
+      // Revert the visual state — the actual subscription didn't change.
+      toggle.checked = !toggle.checked;
+      const code = err?.message || '';
+      let msg;
+      if (code === 'PERMISSION_DENIED') msg = t('profile.notifPermissionDenied');
+      else                              msg = t('profile.notifError');
+      showNotifAlert(msg, 'danger');
+    } finally {
+      await refreshState(); // refresh recomputes disabled state
+    }
+  });
 }
 
 export async function initProfile() {
@@ -113,6 +194,8 @@ export async function initProfile() {
       showPromotorAlert(err.message, 'danger');
     }
   });
+
+  initNotificationToggle();
 
   // Form submit
   document.getElementById('profileForm')?.addEventListener('submit', async (e) => {

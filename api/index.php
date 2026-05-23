@@ -63,6 +63,10 @@ if ($uri === '/version.json' && $method === 'GET') {
 } elseif ($uri === '/api/chat/health' || $uri === '/api/chat') {
     require __DIR__ . '/routes/chat.php';
 
+// Web Push: GET /api/push/vapid | POST /api/push/subscribe | POST /api/push/unsubscribe
+} elseif ($uri === '/api/push/vapid' || $uri === '/api/push/subscribe' || $uri === '/api/push/unsubscribe') {
+    require __DIR__ . '/routes/push.php';
+
 // GET|PUT /api/profile
 } elseif ($uri === '/api/profile') {
     require __DIR__ . '/routes/profile.php';

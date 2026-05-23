@@ -152,7 +152,17 @@
     "requestPromotorPending": "Tienes una solicitud de promotor pendiente de revisión.",
     "requestPromotorAlready": "Ya eres promotor o administrador.",
     "requestPromotorErrorMotiv": "Escribe el motivo de la solicitud.",
-    "developersTitle": "Desarrolladores"
+    "developersTitle": "Desarrolladores",
+    "notifTitle": "Notificaciones",
+    "notifDesc": "Recibe avisos cuando publiquemos un nuevo evento, un nuevo artista, una noticia, o tienes un evento guardado que empieza pronto.",
+    "notifToggle": "Activar notificaciones push",
+    "notifOn": "Notificaciones activas en este dispositivo.",
+    "notifOff": "Notificaciones desactivadas en este dispositivo.",
+    "notifBlocked": "Has bloqueado las notificaciones en el navegador. Cámbialo en los ajustes del sitio para volver a activarlas.",
+    "notifEnabled": "Notificaciones activadas correctamente.",
+    "notifDisabled": "Notificaciones desactivadas.",
+    "notifPermissionDenied": "No has dado permiso para recibir notificaciones.",
+    "notifError": "No se ha podido cambiar la configuración de notificaciones."
   },
   "solicituds": {
     "title": "Solicitudes de Edición",

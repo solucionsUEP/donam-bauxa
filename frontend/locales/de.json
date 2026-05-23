@@ -152,7 +152,17 @@
     "requestPromotorPending": "Sie haben eine ausstehende Promotor-Anfrage.",
     "requestPromotorAlready": "Sie sind bereits Promoter oder Administrator.",
     "requestPromotorErrorMotiv": "Bitte schreiben Sie den Grund Ihrer Anfrage.",
-    "developersTitle": "Entwickler"
+    "developersTitle": "Entwickler",
+    "notifTitle": "Benachrichtigungen",
+    "notifDesc": "Erhalte Benachrichtigungen, wenn wir ein neues Event, einen neuen Künstler oder Nachrichten veröffentlichen — oder wenn ein gespeichertes Event bald beginnt.",
+    "notifToggle": "Push-Benachrichtigungen aktivieren",
+    "notifOn": "Benachrichtigungen auf diesem Gerät aktiv.",
+    "notifOff": "Benachrichtigungen auf diesem Gerät deaktiviert.",
+    "notifBlocked": "Sie haben Benachrichtigungen im Browser blockiert. Aktivieren Sie sie in den Website-Einstellungen, um sie wieder einzuschalten.",
+    "notifEnabled": "Benachrichtigungen aktiviert.",
+    "notifDisabled": "Benachrichtigungen deaktiviert.",
+    "notifPermissionDenied": "Sie haben keine Erlaubnis zum Empfang von Benachrichtigungen erteilt.",
+    "notifError": "Benachrichtigungseinstellungen konnten nicht geändert werden."
   },
   "solicituds": {
     "title": "Bearbeitungsanfragen",

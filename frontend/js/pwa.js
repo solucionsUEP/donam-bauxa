@@ -140,7 +140,136 @@ export async function initPwa() {
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') probe(); });
   window.addEventListener('online', probe);
 
+  // Best-effort: ask for a daily background refresh. Chrome-only; resolves
+  // silently on browsers without the API or without the permission granted.
+  schedulePeriodicSync(registration).catch(() => {});
+
   return registration;
+}
+
+/* ─────────────────── Periodic Background Sync ─────────────────── */
+
+const PERIODIC_TAG = 'dnb-daily-refresh';
+const PERIODIC_INTERVAL_MS = 24 * 60 * 60 * 1000;
+
+async function schedulePeriodicSync(registration) {
+  // Feature-detect: only Chrome/Edge expose `periodicSync` on the registration.
+  if (!('periodicSync' in registration)) return;
+
+  // The site needs to be granted the `periodic-background-sync` permission;
+  // browsers grant it heuristically based on site engagement. We just *ask*.
+  try {
+    const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
+    if (status.state !== 'granted') return;
+  } catch { return; }
+
+  try {
+    const tags = await registration.periodicSync.getTags();
+    if (tags.includes(PERIODIC_TAG)) return; // already registered
+    await registration.periodicSync.register(PERIODIC_TAG, { minInterval: PERIODIC_INTERVAL_MS });
+  } catch { /* DOMException — browser declined. Nothing to do. */ }
+}
+
+/* ─────────────────────────── Web Push ─────────────────────────── */
+
+/**
+ * Public API for the profile UI:
+ *   pushSupported()          — boolean. Returns true on browsers that have
+ *                              ServiceWorker + Push + Notification + a usable
+ *                              permissions story. Used to hide the toggle on
+ *                              iOS Safari < 16.4 etc.
+ *   getPushPermission()      — 'default' | 'granted' | 'denied'.
+ *   getPushSubscription()    — current PushSubscription, or null. Source of
+ *                              truth for whether the toggle is "on".
+ *   subscribePush()          — prompts permission, calls PushManager.subscribe,
+ *                              POSTs to /api/push/subscribe. Throws on failure.
+ *   unsubscribePush()        — unsubscribes locally AND tells the backend so it
+ *                              stops trying to push to a dead endpoint.
+ *
+ * All four bail safely on browsers without support — callers don't need to
+ * feature-check beyond `pushSupported()`.
+ */
+export function pushSupported() {
+  return 'serviceWorker' in navigator
+      && 'PushManager'    in window
+      && 'Notification'   in window;
+}
+
+export function getPushPermission() {
+  return pushSupported() ? Notification.permission : 'denied';
+}
+
+export async function getPushSubscription() {
+  if (!pushSupported()) return null;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    return await reg.pushManager.getSubscription();
+  } catch { return null; }
+}
+
+function base64UrlToUint8Array(b64url) {
+  // RFC 4648 §5 → standard base64, then atob.
+  const pad = '='.repeat((4 - b64url.length % 4) % 4);
+  const std = (b64url + pad).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(std);
+  const out = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+
+/**
+ * `apiFetch` is imported lazily so this module stays free of the auth
+ * dependency for non-push consumers (the SW registration path runs before
+ * the Supabase client is created).
+ */
+async function postPush(path, body) {
+  const { apiFetch } = await import('./config.js');
+  return apiFetch(path, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}
+
+export async function subscribePush() {
+  if (!pushSupported()) throw new Error('PUSH_UNSUPPORTED');
+
+  const permission = await Notification.requestPermission();
+  if (permission !== 'granted') throw new Error('PERMISSION_DENIED');
+
+  const reg = await navigator.serviceWorker.ready;
+
+  // Re-use any existing subscription rather than creating a duplicate the
+  // backend would then have to dedupe.
+  let sub = await reg.pushManager.getSubscription();
+  if (!sub) {
+    const vapidRes = await fetch('/api/push/vapid', { cache: 'no-store' });
+    if (!vapidRes.ok) throw new Error('VAPID_FETCH_FAILED');
+    const { publicKey } = await vapidRes.json();
+    if (!publicKey) throw new Error('VAPID_MISSING');
+    sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: base64UrlToUint8Array(publicKey),
+    });
+  }
+
+  // Send the subscription JSON to the backend. `toJSON()` already produces the
+  // shape the backend expects: { endpoint, keys: { p256dh, auth } }.
+  await postPush('/api/push/subscribe', { subscription: sub.toJSON() });
+  return sub;
+}
+
+export async function unsubscribePush() {
+  if (!pushSupported()) return;
+  const reg = await navigator.serviceWorker.ready;
+  const sub = await reg.pushManager.getSubscription();
+  if (!sub) return;
+  // Tell the backend first — if the local unsubscribe succeeds but the API
+  // call fails, the server keeps trying to push to a dead endpoint. Doing the
+  // API first means a network blip leaves the user opted-in (recoverable),
+  // not orphaned (silent breakage).
+  try { await postPush('/api/push/unsubscribe', { endpoint: sub.endpoint }); }
+  catch { /* surface the local unsubscribe failure instead */ }
+  await sub.unsubscribe();
 }
 
 async function probeVersion(registration) {

@@ -152,7 +152,17 @@
     "requestPromotorPending": "Tens una sol·licitud de promotor pendent de revisió.",
     "requestPromotorAlready": "Ya ets promotor o administrador.",
     "requestPromotorErrorMotiv": "Escriu el motiu de la sol·licitud.",
-    "developersTitle": "Desenvolupadors"
+    "developersTitle": "Desenvolupadors",
+    "notifTitle": "Notificacions",
+    "notifDesc": "Rep avisos quan publiquem un nou esdeveniment, un nou artista, una notícia, o tens un esdeveniment guardat que comença aviat.",
+    "notifToggle": "Activar notificacions push",
+    "notifOn": "Notificacions actives en aquest dispositiu.",
+    "notifOff": "Notificacions desactivades en aquest dispositiu.",
+    "notifBlocked": "Has bloquejat les notificacions al navegador. Canvia-ho als ajustaments del lloc per tornar-les a activar.",
+    "notifEnabled": "Notificacions activades correctament.",
+    "notifDisabled": "Notificacions desactivades.",
+    "notifPermissionDenied": "No has donat permís per rebre notificacions.",
+    "notifError": "No s'ha pogut canviar la configuració de notificacions."
   },
   "solicituds": {
     "title": "Solicituds d'Edició",

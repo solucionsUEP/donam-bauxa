@@ -270,3 +270,97 @@ async function renameCache(from, to) {
   }));
   await caches.delete(from);
 }
+
+/* ─────────────────────────── Web Push ─────────────────────────── */
+
+/**
+ * Payload shape we expect from the push-sender (batch 2). Kept loose so the
+ * service worker degrades gracefully if a future field is missing.
+ *   { title, body, url?, tag?, icon?, badge? }
+ *
+ * We always coerce to a sensible default — a payload-less push (some browsers
+ * deliver one on initial subscribe) still shows a generic notification rather
+ * than silently failing, which would cause the browser to revoke the
+ * permission ("you promised to notify, you didn't").
+ */
+self.addEventListener('push', (event) => {
+  let payload = {};
+  if (event.data) {
+    try { payload = event.data.json(); }
+    catch { payload = { title: 'Dona\'m Bauxa', body: event.data.text() }; }
+  }
+  const title = payload.title || 'Dona\'m Bauxa';
+  const options = {
+    body:  payload.body  || '',
+    icon:  payload.icon  || '/assets/icons/icon-192.png',
+    badge: payload.badge || '/assets/icons/icon-192.png',
+    tag:   payload.tag   || undefined,
+    data:  { url: payload.url || '/' },
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+/**
+ * Click handler: focus an existing tab on the right URL, or open a new one.
+ * The match is by origin (not exact URL) so clicks land on the existing SPA
+ * tab even if the user is on a different route — and the SPA's hash router
+ * then navigates to the deep link.
+ */
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const target = new URL(event.notification.data?.url || '/', self.location.origin).href;
+
+  event.waitUntil((async () => {
+    const all = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of all) {
+      // Prefer focusing an already-open tab on the same origin.
+      if (new URL(client.url).origin === self.location.origin && 'focus' in client) {
+        client.navigate?.(target).catch(() => {});
+        return client.focus();
+      }
+    }
+    if (self.clients.openWindow) return self.clients.openWindow(target);
+  })());
+});
+
+/* ─────────────────── Periodic background sync ─────────────────── */
+
+/**
+ * Once-a-day catalog warm-up. Only fires on Chromium-derived browsers where
+ * the user has granted the `periodic-background-sync` permission AND the site
+ * has high "site engagement" — there is no way for us to force it.
+ *
+ * Strategy: refresh /version.json, then opportunistically re-fetch the data
+ * JSON catalogs into the stale-while-revalidate bucket. We don't block on any
+ * single fetch; offline or throttled networks just mean the next visit picks
+ * the latest catalog as usual.
+ */
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag !== 'dnb-daily-refresh') return;
+  event.waitUntil(periodicRefresh());
+});
+
+async function periodicRefresh() {
+  // Step 1: probe version.json so the SW can rotate buckets if anything moved.
+  let version = null;
+  try {
+    const res = await fetch('/version.json', { cache: 'no-store' });
+    if (res.ok) version = await res.json();
+  } catch { /* offline — leave caches alone */ }
+  if (version) await handleVersion(version);
+
+  // Step 2: warm the data bucket. List comes from the precache + any cached
+  // /data/*.json the user has already touched in this profile.
+  try {
+    const dataCache = await caches.open(DATA());
+    const known = (await dataCache.keys()).map((r) => r.url);
+    const seeds = ['/data/artists.json', '/data/events.json', '/data/news.json'];
+    const urls = Array.from(new Set([...known, ...seeds.map((p) => new URL(p, self.location.origin).href)]));
+    await Promise.all(urls.map(async (url) => {
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (res && res.ok) await dataCache.put(new Request(url), res.clone());
+      } catch { /* per-URL failures are non-fatal */ }
+    }));
+  } catch { /* opening the cache failed — nothing to do */ }
+}

@@ -1,0 +1,8 @@
+Options -Indexes
+
+# Belt-and-braces: deny direct access to anything that isn't a .php route file.
+# Internal rewrites to api/index.php (the only entry point) still pass because
+# Apache evaluates this match against the *original* on-disk filename.
+<FilesMatch "\.(json|md|sql|log|env|ini|sh)$">
+  Require all denied
+</FilesMatch>
