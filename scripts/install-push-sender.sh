@@ -34,8 +34,8 @@ PUSH_SHARED_SECRET=1609437c516a6a13a8cf4eba878ea8163d5537aba17ecf197ea8c84dcbe41
 
 # VAPID identity. Public key matches the one served by /api/push/vapid; private
 # key never leaves this file.
-VAPID_PUBLIC_KEY=BH-QFosPQKnEoE-xgBLHI82o6Q7678ppHxcJaC_ifzMku1HwV_-hV4z9euKKumMqsqmTiF799_ZBq5rkVH83xiE
-VAPID_PRIVATE_KEY=cMkDPOSNC2NUEpfdvuGFgYwMWwuvJtQLx38ENtXapwQ
+VAPID_PUBLIC_KEY=BOHgiEXx6FyM7W5d6qi-S8JmqCdN8l1GRCDHymmUN9DFy2HmDMH-ZD3LpnY2H7UBZcVYN4ewpMoE9YoB9j9v2A8
+VAPID_PRIVATE_KEY=DrUzQz7wliOyHf8-CbRMXBdmHMeAljrIvp7mSR0nN2E
 VAPID_SUBJECT=mailto:dylanluigicg@gmail.com
 
 # Tuning.
