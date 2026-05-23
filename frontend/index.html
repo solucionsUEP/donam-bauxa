@@ -1173,6 +1173,10 @@
                 <button class="nav-link" id="tab-social" data-bs-toggle="tab" data-bs-target="#panel-social"
                   type="button" role="tab"><i class="bi bi-share"></i> <span data-i18n="admin.tabSocial">Xarxes Socials</span></button>
               </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-announce" data-bs-toggle="tab" data-bs-target="#panel-announce"
+                  type="button" role="tab"><i class="bi bi-megaphone"></i> <span data-i18n="admin.tabAnnounce">Anunci</span></button>
+              </li>
             </ul>
 
             <!-- Tab Content -->
@@ -1855,6 +1859,37 @@
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <!-- Announcement Panel -->
+              <div class="tab-pane fade" id="panel-announce" role="tabpanel">
+                <div class="card-bauxa p-4">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <i class="bi bi-megaphone fs-4 text-secondary"></i>
+                    <div>
+                      <div class="fw-semibold" data-i18n="admin.announceTitle">Enviar anunci push</div>
+                      <div class="text-muted small" data-i18n="admin.announceDesc">Envia una notificació a tots els usuaris subscrits.</div>
+                    </div>
+                  </div>
+                  <div id="announceAlert" style="display:none;" class="mb-3"></div>
+                  <form id="announceForm" class="d-flex flex-column gap-3" style="max-width:640px;">
+                    <div>
+                      <label for="announceFieldTitle" class="form-label small fw-semibold" data-i18n="admin.announceFieldTitle">Títol</label>
+                      <input type="text" id="announceFieldTitle" class="form-control form-control-bauxa" maxlength="80" required>
+                    </div>
+                    <div>
+                      <label for="announceFieldBody" class="form-label small fw-semibold" data-i18n="admin.announceFieldBody">Missatge</label>
+                      <textarea id="announceFieldBody" class="form-control form-control-bauxa" rows="3" maxlength="200" required></textarea>
+                    </div>
+                    <div>
+                      <label for="announceFieldUrl" class="form-label small fw-semibold" data-i18n="admin.announceFieldUrl">URL de destí (opcional)</label>
+                      <input type="text" id="announceFieldUrl" class="form-control form-control-bauxa" placeholder="/#events">
+                    </div>
+                    <button type="submit" class="btn btn-bauxa align-self-start">
+                      <i class="bi bi-send"></i> <span data-i18n="admin.announceSend">Enviar a tothom</span>
+                    </button>
+                  </form>
                 </div>
               </div>
 

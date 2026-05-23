@@ -5,6 +5,8 @@
 // PUT   /api/admin/requests/{id}/approve
 // PUT   /api/admin/requests/{id}/reject
 
+require_once __DIR__ . '/../helpers/push.php';
+
 $STATUS = [
     'pending'  => 'https://schema.org/PotentialActionStatus',
     'approved' => 'https://schema.org/CompletedActionStatus',
@@ -113,6 +115,32 @@ if ($method === 'PUT' && $id && $action === 'approve') {
     }
 
     sbUpdate('requests', ['id' => 'eq.' . $id], ['status' => 'approved', 'resolved_at' => date('c')]);
+
+    // Fire-and-forget push when new content lands. Update approvals don't
+    // trigger pushes — too noisy, often just a typo fix. Role grants are
+    // private to the user, so no push.
+    if ($entityType !== $ROLE_ENTITY_TYPE
+        && $row['type'] === 'CreateAction'
+        && is_array($proposedData)) {
+        $name = $proposedData['name']
+              ?? $proposedData['headline']
+              ?? $proposedData['title']
+              ?? '';
+        $entityToCopy = [
+            'artist' => ['title' => 'Nou artista a Dona\'m Bauxa', 'tag' => 'new-artist', 'url' => '/#artists'],
+            'event'  => ['title' => 'Nou esdeveniment publicat',  'tag' => 'new-event',  'url' => '/#events'],
+            'news'   => ['title' => 'Nova notícia',                'tag' => 'new-news',   'url' => '/#home'],
+        ];
+        if (isset($entityToCopy[$entityType])) {
+            pushBroadcast([
+                'title' => $entityToCopy[$entityType]['title'],
+                'body'  => $name !== '' ? $name : 'Mira-ho a l\'app',
+                'tag'   => $entityToCopy[$entityType]['tag'],
+                'url'   => $entityToCopy[$entityType]['url'],
+            ]);
+        }
+    }
+
     echo json_encode(['success' => true, 'message' => 'Solicitud aprovada']);
 
 // PUT /api/admin/requests/{id}/reject

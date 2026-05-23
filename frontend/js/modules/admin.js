@@ -938,6 +938,7 @@ export async function initAdmin() {
 
   initDownloadAgenda();
   initInstagramAnalyzer();
+  initAnnounce();
 
   // Load content lists
   loadContentList('artists', 'adminArtistsList');
@@ -1137,6 +1138,44 @@ export async function initAdmin() {
 }
 
 const ANALYZE_API = '/api/analyze-instagram';
+
+function initAnnounce() {
+  const form = document.getElementById('announceForm');
+  if (!form) return;
+  const alertEl = document.getElementById('announceAlert');
+  const show = (msg, type) => {
+    if (!alertEl) return;
+    alertEl.className = `alert alert-${type} mb-3`;
+    alertEl.textContent = msg;
+    alertEl.style.display = 'block';
+    if (type === 'success') setTimeout(() => { alertEl.style.display = 'none'; }, 5000);
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('announceFieldTitle').value.trim();
+    const body  = document.getElementById('announceFieldBody').value.trim();
+    const url   = document.getElementById('announceFieldUrl').value.trim() || '/';
+    if (!title || !body) {
+      show(t('admin.announceMissing'), 'danger');
+      return;
+    }
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    try {
+      const res = await apiFetch('/api/admin/announce', {
+        method: 'POST',
+        body: JSON.stringify({ title, body, url }),
+      });
+      show(`${t('admin.announceSent')} (${res.sent}/${res.total})`, 'success');
+      form.reset();
+    } catch (err) {
+      show(err.message || t('admin.announceError'), 'danger');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
 
 function initInstagramAnalyzer() {
   let pastedImageBase64 = null;

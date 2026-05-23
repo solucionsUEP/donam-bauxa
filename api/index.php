@@ -67,6 +67,10 @@ if ($uri === '/version.json' && $method === 'GET') {
 } elseif ($uri === '/api/push/vapid' || $uri === '/api/push/subscribe' || $uri === '/api/push/unsubscribe') {
     require __DIR__ . '/routes/push.php';
 
+// POST /api/admin/announce — broadcast push to every subscriber (admin only)
+} elseif ($uri === '/api/admin/announce') {
+    require __DIR__ . '/routes/announce.php';
+
 // GET|PUT /api/profile
 } elseif ($uri === '/api/profile') {
     require __DIR__ . '/routes/profile.php';
