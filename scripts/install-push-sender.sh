@@ -2,8 +2,27 @@
 # Installs /etc/donam-bauxa/push-sender.env and /etc/systemd/system/push-sender.service,
 # then starts the service. Run with sudo.
 #
-# Required: this script is run from the repo root (or any directory that lets
-# this path resolve, since the .env values are static).
+# Secrets are NEVER committed. Supply them in one of three ways:
+#
+#   A. Environment variables (good for one-off provisioning):
+#        sudo VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... \
+#             VAPID_SUBJECT=mailto:you@example.com \
+#             PUSH_SHARED_SECRET=... \
+#             bash scripts/install-push-sender.sh
+#
+#   B. An env file path as the first argument (good for re-installs):
+#        echo 'VAPID_PUBLIC_KEY=...' > /root/dnb-push.env
+#        echo 'VAPID_PRIVATE_KEY=...' >> /root/dnb-push.env
+#        echo 'VAPID_SUBJECT=mailto:you@example.com' >> /root/dnb-push.env
+#        echo 'PUSH_SHARED_SECRET=...' >> /root/dnb-push.env
+#        sudo bash scripts/install-push-sender.sh /root/dnb-push.env
+#
+#   C. Re-using values already pinned in /etc/donam-bauxa/push-sender.env (just
+#      restarts the unit). Useful after `git pull` of the .mjs only:
+#        sudo bash scripts/install-push-sender.sh --reuse
+#
+# Values must match api/config.php on the Dondominio side. If you rotate, the
+# only correct thing to do is rotate *both* sides in lockstep.
 
 set -euo pipefail
 
@@ -26,25 +45,43 @@ UNIT_FILE=/etc/systemd/system/push-sender.service
 mkdir -p "$ENV_DIR"
 chmod 700 "$ENV_DIR"
 
-# Values must match api/config.php on Dondominio. If you rotate the secret,
-# update both sides.
-cat > "$ENV_FILE" <<'EOF'
-# Shared bearer — must match PUSH_SENDER_SECRET in api/config.php.
-PUSH_SHARED_SECRET=1609437c516a6a13a8cf4eba878ea8163d5537aba17ecf197ea8c84dcbe41fbf
+MODE="${1:-}"
 
-# VAPID identity. Public key matches the one served by /api/push/vapid; private
-# key never leaves this file.
-VAPID_PUBLIC_KEY=BOHgiEXx6FyM7W5d6qi-S8JmqCdN8l1GRCDHymmUN9DFy2HmDMH-ZD3LpnY2H7UBZcVYN4ewpMoE9YoB9j9v2A8
-VAPID_PRIVATE_KEY=DrUzQz7wliOyHf8-CbRMXBdmHMeAljrIvp7mSR0nN2E
-VAPID_SUBJECT=mailto:dylanluigicg@gmail.com
+if [ "$MODE" = "--reuse" ]; then
+  if [ ! -f "$ENV_FILE" ]; then
+    echo "[install-push-sender] --reuse requested but $ENV_FILE does not exist yet." >&2
+    exit 1
+  fi
+  echo "[install-push-sender] keeping existing $ENV_FILE"
+elif [ -n "$MODE" ] && [ -f "$MODE" ]; then
+  # Source the file in a subshell so we don't leak its vars into our env.
+  # shellcheck disable=SC1090
+  set -a; source "$MODE"; set +a
+fi
 
-# Tuning.
-PUSH_PORT=11600
-PUSH_MAX_CONCURRENT=20
-PUSH_TTL_SECONDS=86400
+if [ "$MODE" != "--reuse" ]; then
+  : "${VAPID_PUBLIC_KEY:?Missing VAPID_PUBLIC_KEY (env var or env file)}"
+  : "${VAPID_PRIVATE_KEY:?Missing VAPID_PRIVATE_KEY (env var or env file)}"
+  : "${VAPID_SUBJECT:?Missing VAPID_SUBJECT (env var or env file)}"
+  : "${PUSH_SHARED_SECRET:?Missing PUSH_SHARED_SECRET (env var or env file)}"
+  PUSH_PORT="${PUSH_PORT:-11600}"
+  PUSH_MAX_CONCURRENT="${PUSH_MAX_CONCURRENT:-20}"
+  PUSH_TTL_SECONDS="${PUSH_TTL_SECONDS:-86400}"
+
+  umask 077
+  cat > "$ENV_FILE" <<EOF
+PUSH_SHARED_SECRET=$PUSH_SHARED_SECRET
+VAPID_PUBLIC_KEY=$VAPID_PUBLIC_KEY
+VAPID_PRIVATE_KEY=$VAPID_PRIVATE_KEY
+VAPID_SUBJECT=$VAPID_SUBJECT
+PUSH_PORT=$PUSH_PORT
+PUSH_MAX_CONCURRENT=$PUSH_MAX_CONCURRENT
+PUSH_TTL_SECONDS=$PUSH_TTL_SECONDS
 EOF
-chmod 600 "$ENV_FILE"
-echo "[install-push-sender] wrote $ENV_FILE"
+  chmod 600 "$ENV_FILE"
+  umask 022
+  echo "[install-push-sender] wrote $ENV_FILE (mode 600)"
+fi
 
 cat > "$UNIT_FILE" <<EOF
 [Unit]
@@ -74,8 +111,9 @@ echo "[install-push-sender] wrote $UNIT_FILE"
 
 systemctl daemon-reload
 systemctl enable --now push-sender.service
+systemctl restart push-sender.service
 
-echo "[install-push-sender] active. Probing 127.0.0.1:11600/healthz..."
+echo "[install-push-sender] active. Probing 127.0.0.1:${PUSH_PORT:-11600}/healthz..."
 sleep 1
-curl -sS --max-time 3 http://127.0.0.1:11600/healthz || echo "(probe failed — check journalctl -u push-sender)"
+curl -sS --max-time 3 "http://127.0.0.1:${PUSH_PORT:-11600}/healthz" || echo "(probe failed — check journalctl -u push-sender)"
 echo

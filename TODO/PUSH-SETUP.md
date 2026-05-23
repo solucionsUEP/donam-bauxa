@@ -65,17 +65,27 @@ sudo systemctl restart cloudflared
 
 ## 3. Install env file + systemd unit
 
-The repo ships an installer that drops both files and starts the service. Run:
+The installer never embeds secrets — supply them at install time. The values
+must match the corresponding `define()`s in `api/config.php` on Dondominio.
 
 ```bash
-sudo bash scripts/install-push-sender.sh
+sudo VAPID_PUBLIC_KEY='B...' \
+     VAPID_PRIVATE_KEY='...' \
+     VAPID_SUBJECT='mailto:you@example.com' \
+     PUSH_SHARED_SECRET='...' \
+     bash scripts/install-push-sender.sh
 ```
 
-The script will:
-- write `/etc/donam-bauxa/push-sender.env` (chmod 600) using the secret +
-  VAPID keypair pinned in `api/config.php` on the Dondominio side;
-- write `/etc/systemd/system/push-sender.service`;
-- `systemctl daemon-reload`, `enable --now push-sender`.
+After the env file at `/etc/donam-bauxa/push-sender.env` exists, future
+re-installs (e.g. just to pick up a code change in `push-sender.mjs`) can use:
+
+```bash
+sudo bash scripts/install-push-sender.sh --reuse
+```
+
+The script writes `/etc/donam-bauxa/push-sender.env` (chmod 600) and
+`/etc/systemd/system/push-sender.service`, then `systemctl daemon-reload`
++ `enable --now`.
 
 ## 4. Verify
 
