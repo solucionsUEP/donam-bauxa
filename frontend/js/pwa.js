@@ -234,27 +234,54 @@ export async function subscribePush() {
   if (!pushSupported()) throw new Error('PUSH_UNSUPPORTED');
 
   const permission = await Notification.requestPermission();
+  console.info('[push] Notification.requestPermission →', permission);
   if (permission !== 'granted') throw new Error('PERMISSION_DENIED');
 
   const reg = await navigator.serviceWorker.ready;
+  console.info('[push] SW ready, scope=', reg.scope);
 
   // Re-use any existing subscription rather than creating a duplicate the
   // backend would then have to dedupe.
   let sub = await reg.pushManager.getSubscription();
   if (!sub) {
-    const vapidRes = await fetch('/api/push/vapid', { cache: 'no-store' });
-    if (!vapidRes.ok) throw new Error('VAPID_FETCH_FAILED');
+    let vapidRes;
+    try {
+      vapidRes = await fetch('/api/push/vapid', { cache: 'no-store' });
+    } catch (err) {
+      console.error('[push] /api/push/vapid fetch threw:', err);
+      throw new Error('VAPID_FETCH_FAILED');
+    }
+    if (!vapidRes.ok) {
+      console.error('[push] /api/push/vapid HTTP', vapidRes.status);
+      throw new Error('VAPID_FETCH_FAILED');
+    }
     const { publicKey } = await vapidRes.json();
+    console.info('[push] VAPID public key len=', publicKey?.length);
     if (!publicKey) throw new Error('VAPID_MISSING');
-    sub = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: base64UrlToUint8Array(publicKey),
-    });
+
+    try {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: base64UrlToUint8Array(publicKey),
+      });
+      console.info('[push] pushManager.subscribe OK, endpoint=', sub.endpoint);
+    } catch (err) {
+      console.error('[push] pushManager.subscribe threw:', err?.name, err?.message, err);
+      throw new Error('SUBSCRIBE_FAILED:' + (err?.name || 'unknown'));
+    }
+  } else {
+    console.info('[push] re-using existing subscription, endpoint=', sub.endpoint);
   }
 
   // Send the subscription JSON to the backend. `toJSON()` already produces the
   // shape the backend expects: { endpoint, keys: { p256dh, auth } }.
-  await postPush('/api/push/subscribe', { subscription: sub.toJSON() });
+  try {
+    await postPush('/api/push/subscribe', { subscription: sub.toJSON() });
+    console.info('[push] backend subscribe OK');
+  } catch (err) {
+    console.error('[push] /api/push/subscribe POST failed:', err?.message, err);
+    throw new Error('BACKEND_SUBSCRIBE_FAILED:' + (err?.message || 'unknown'));
+  }
   return sub;
 }
 
@@ -268,7 +295,7 @@ export async function unsubscribePush() {
   // API first means a network blip leaves the user opted-in (recoverable),
   // not orphaned (silent breakage).
   try { await postPush('/api/push/unsubscribe', { endpoint: sub.endpoint }); }
-  catch { /* surface the local unsubscribe failure instead */ }
+  catch (err) { console.warn('[push] backend unsubscribe failed (continuing):', err?.message); }
   await sub.unsubscribe();
 }
 

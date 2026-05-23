@@ -92,12 +92,13 @@ async function initNotificationToggle() {
         showNotifAlert(t('profile.notifDisabled'), 'info');
       }
     } catch (err) {
+      console.error('[profile] notification toggle failed:', err);
       // Revert the visual state — the actual subscription didn't change.
       toggle.checked = !toggle.checked;
       const code = err?.message || '';
       let msg;
       if (code === 'PERMISSION_DENIED') msg = t('profile.notifPermissionDenied');
-      else                              msg = t('profile.notifError');
+      else                              msg = t('profile.notifError') + ' (' + (code || 'unknown') + ')';
       showNotifAlert(msg, 'danger');
     } finally {
       await refreshState(); // refresh recomputes disabled state
