@@ -557,6 +557,17 @@ img { max-width: 100%; }
   opacity: 1;
 }
 
+[data-theme="light"] .btn-bauxa-outline {
+  border-color: var(--accent);
+  color: var(--accent-text);
+  background: transparent;
+}
+[data-theme="light"] .btn-bauxa-outline:hover {
+  background: var(--accent);
+  color: var(--accent-fg);
+  opacity: 1;
+}
+
 .btn-bauxa-secondary {
   background: var(--surface-3);
   color: var(--text);
@@ -2136,6 +2147,50 @@ img { max-width: 100%; }
     gap: 1.5rem;
   }
   .profile-identity { flex: none; width: 100%; }
+}
+
+/* --------------------------------------------------------------------------
+   CTA Section
+   -------------------------------------------------------------------------- */
+.section-cta {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.section-cta__title {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  text-transform: uppercase;
+  color: var(--accent-fg);
+}
+
+.section-cta__desc {
+  color: var(--accent-fg);
+  opacity: 0.88;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+[data-theme="light"] .section-cta {
+  background: var(--accent);
+  color: #fff;
+}
+
+[data-theme="light"] .section-cta__title,
+[data-theme="light"] .section-cta__desc {
+  color: #fff;
+}
+
+[data-theme="light"] .section-cta .btn-bauxa {
+  background: #fff;
+  color: var(--accent-text);
+  border-color: #fff;
+}
+
+[data-theme="light"] .section-cta .btn-bauxa:hover {
+  background: rgba(255,255,255,0.88);
 }
 
 /* --------------------------------------------------------------------------
