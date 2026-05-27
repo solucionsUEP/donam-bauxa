@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Dona'm Bauxa">
+  <!-- Maskable: design fits within the central 80% safe zone -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#0c0c14"/>
+      <stop offset="100%" stop-color="#191925"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%"   stop-color="#b5ff4d" stop-opacity="0.4"/>
+      <stop offset="70%"  stop-color="#b5ff4d" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#b5ff4d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Full bleed background -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect width="512" height="512" fill="url(#glow)"/>
+  <!-- Monogram inside safe zone (centred ~320px tall) -->
+  <g font-family="'Inter','Helvetica Neue',Arial,sans-serif" font-weight="900" text-anchor="middle">
+    <text x="256" y="310" font-size="180" fill="#ffffff">D<tspan fill="#b5ff4d">B</tspan></text>
+  </g>
+  <g stroke="#b5ff4d" stroke-width="5" stroke-linecap="round" opacity="0.9">
+    <circle cx="190" cy="358" r="11" fill="#b5ff4d" stroke="none"/>
+    <path d="M201 358 L201 312" fill="none"/>
+    <path d="M201 312 Q236 302 252 326" fill="none"/>
+  </g>
+</svg>

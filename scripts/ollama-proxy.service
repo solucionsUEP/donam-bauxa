@@ -1,0 +1,30 @@
+[Unit]
+Description=Dona'm Bauxa — Ollama public proxy
+After=network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Edit these paths to match where you cloned the repo on the home server.
+WorkingDirectory=/opt/donam-bauxa
+ExecStart=/usr/bin/node /opt/donam-bauxa/scripts/ollama-proxy.mjs
+Restart=on-failure
+RestartSec=3
+# Secrets in /etc/donam-bauxa/proxy.env (chmod 600). At minimum set:
+#   OLLAMA_SHARED_SECRET=<long random string>
+# Optional overrides:
+#   OLLAMA_URL=http://127.0.0.1:11434
+#   PROXY_PORT=11500
+#   PROXY_MAX_CONCURRENT=2
+EnvironmentFile=/etc/donam-bauxa/proxy.env
+StandardOutput=journal
+StandardError=journal
+# Light hardening — proxy only needs loopback access.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

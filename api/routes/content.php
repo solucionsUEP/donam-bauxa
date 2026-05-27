@@ -2,6 +2,8 @@
 // CRUD genèric per a: artists, events, news, questionnaires, questions
 // $params['entityType'], $params['id'], $params['archive']
 
+require_once __DIR__ . '/../helpers/push.php';
+
 $PREFIXES = [
     'artists'        => 'artist',
     'events'         => 'event',
@@ -63,6 +65,24 @@ if ($method === 'PUT' && $id && $isArchive) {
         $data['numberOfItems'] = count($data['itemListElement']);
         return $item;
     });
+
+    // Fire-and-forget push for direct-admin creates. Mirrors the auto-push in
+    // requests.php on approve so promotor-via-request and admin-direct paths
+    // both notify. Questions/questionnaires are admin-internal — no push.
+    $pushMap = [
+        'artists' => ['title' => 'Nou artista a Dona\'m Bauxa', 'tag' => 'new-artist', 'url' => '/#artists'],
+        'events'  => ['title' => 'Nou esdeveniment publicat',  'tag' => 'new-event',  'url' => '/#events'],
+        'news'    => ['title' => 'Nova notícia',                'tag' => 'new-news',   'url' => '/#home'],
+    ];
+    if ($newItem && isset($pushMap[$entityType])) {
+        $name = $newItem['name'] ?? $newItem['headline'] ?? $newItem['title'] ?? '';
+        pushBroadcast([
+            'title' => $pushMap[$entityType]['title'],
+            'body'  => $name !== '' ? $name : 'Mira-ho a l\'app',
+            'tag'   => $pushMap[$entityType]['tag'],
+            'url'   => $pushMap[$entityType]['url'],
+        ]);
+    }
 
     http_response_code(201);
     echo json_encode(['success' => true, 'item' => $newItem]);

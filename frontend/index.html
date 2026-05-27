@@ -3,11 +3,39 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description"
     content="Dona'm Bauxa - Descobreix la musica i els esdeveniments en directe de Mallorca. Concerts, festivals i festes populars.">
   <title>Dona'm Bauxa - Musica i Esdeveniments de Mallorca</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- PWA manifest + theming -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0c0c14" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f1f0eb" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+  <meta name="application-name" content="Dona'm Bauxa">
+
+  <!-- Icons -->
+  <link rel="icon" type="image/svg+xml" href="/assets/icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon-180.png">
+  <link rel="mask-icon" href="/assets/icons/icon.svg" color="#b5ff4d">
+
+  <!-- iOS standalone app polish -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Dona'm Bauxa">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Social / link unfurls -->
+  <meta property="og:title" content="Dona'm Bauxa">
+  <meta property="og:description" content="Música i esdeveniments en directe a Mallorca.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/icons/icon-512.png">
+  <meta name="twitter:card" content="summary">
 
   <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,6 +79,7 @@
   <link rel="modulepreload" href="js/router.js">
   <link rel="modulepreload" href="js/modules/joc.js">
   <link rel="modulepreload" href="js/modules/chatbot.js">
+  <link rel="modulepreload" href="js/pwa.js">
 
   <style>
     /* Map marker custom styles */
@@ -204,7 +233,14 @@
     <div data-view="home">
 
       <!-- Hero Section -->
-      <header class="hero">
+      <header class="hero" id="homeHero">
+        <div class="hero-fx" aria-hidden="true">
+          <span class="hero-fx__blob hero-fx__blob--1"></span>
+          <span class="hero-fx__blob hero-fx__blob--2"></span>
+          <span class="hero-fx__blob hero-fx__blob--3"></span>
+          <span class="hero-fx__blob hero-fx__blob--4"></span>
+          <span class="hero-fx__blob hero-fx__blob--5"></span>
+        </div>
         <div class="container">
           <div class="row align-items-center">
             <div class="col-lg-7">
@@ -384,7 +420,7 @@
     <div data-view="artists" style="display:none;">
 
       <!-- Page Header -->
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-music-note-list"></i> <span data-i18n="view.artists.title">Artistes de Mallorca</span></h1>
           <p data-i18n="view.artists.subtitle">Explora el directori complet de grups i músics de l'escena mallorquina</p>
@@ -439,7 +475,7 @@
     <div data-view="events" style="display:none;">
 
       <!-- Page Header -->
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-calendar-event"></i> <span data-i18n="view.events.title">Agenda Musical</span></h1>
           <p data-i18n="view.events.subtitle">Tots els concerts, festivals i festes populars de Mallorca</p>
@@ -513,7 +549,7 @@
     <div data-view="map" style="display:none;">
 
       <!-- Page Header -->
-      <header class="hero" style="padding:2.5rem 0 2rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-map"></i> <span data-i18n="view.map.title">Mapa de Bauxa</span></h1>
           <p data-i18n="view.map.subtitle">Troba els concerts i festes més propers a tu a l'illa de Mallorca</p>
@@ -598,7 +634,7 @@
     <div data-view="favorits" style="display:none;">
 
       <!-- Page Header -->
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-heart"></i> <span data-i18n="favorites.title">Els Meus Favorits</span></h1>
           <p data-i18n="favorites.subtitle">Els teus artistes i esdeveniments guardats</p>
@@ -618,7 +654,7 @@
     <!-- ===================== PROFILE VIEW ===================== -->
     <div data-view="profile" style="display:none;">
 
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-person"></i> <span data-i18n="profile.title">El Meu Perfil</span></h1>
           <p data-i18n="profile.subtitle">Gestiona el teu compte</p>
@@ -627,6 +663,39 @@
 
       <div class="section-padding">
         <div class="container">
+
+          <!-- Mobile-only settings: theme + language. On desktop these live in the sidebar footer. -->
+          <div class="card-bauxa mobile-settings d-lg-none mb-4" style="padding:1.25rem;">
+            <h3 class="h6 fw-semibold mb-3"><i class="bi bi-sliders" aria-hidden="true"></i> <span data-i18n="profile.preferences">Preferències</span></h3>
+
+            <!-- Theme row -->
+            <div class="mobile-settings__row">
+              <div>
+                <div class="mobile-settings__label"><i class="bi bi-moon-stars" aria-hidden="true"></i> <span data-i18n="profile.themeLabel">Tema</span></div>
+                <div class="mobile-settings__hint" id="mobileThemeHint" data-i18n="profile.themeHint">Clar o fosc</div>
+              </div>
+              <button class="toggle-track" id="mobileThemeToggle" aria-label="Canviar tema" type="button">
+                <span class="toggle-knob"></span>
+              </button>
+            </div>
+
+            <hr class="my-3" style="opacity:.4;">
+
+            <!-- Language row -->
+            <div class="mobile-settings__row mobile-settings__row--stack">
+              <div>
+                <div class="mobile-settings__label"><i class="bi bi-translate" aria-hidden="true"></i> <span data-i18n="profile.languageLabel">Idioma</span></div>
+                <div class="mobile-settings__hint" data-i18n="profile.languageHint">Tria la teva llengua</div>
+              </div>
+              <div class="mobile-settings__langs" role="group" aria-label="Selecciona idioma">
+                <button class="mobile-lang-btn lang-btn" data-lang="ca" type="button" aria-label="Català"><img src="/assets/flags/flag-ca.svg" class="flag-icon" alt=""><span>CA</span></button>
+                <button class="mobile-lang-btn lang-btn" data-lang="en" type="button" aria-label="English"><img src="/assets/flags/flag-en.svg" class="flag-icon" alt=""><span>EN</span></button>
+                <button class="mobile-lang-btn lang-btn" data-lang="de" type="button" aria-label="Deutsch"><img src="/assets/flags/flag-de.svg" class="flag-icon" alt=""><span>DE</span></button>
+                <button class="mobile-lang-btn lang-btn" data-lang="es" type="button" aria-label="Castellano"><img src="/assets/flags/flag-es.svg" class="flag-icon" alt=""><span>ES</span></button>
+              </div>
+            </div>
+          </div>
+
           <div id="profileNotAuth" style="display:none;">
             <div class="empty-state">
               <i class="bi bi-shield-lock"></i>
@@ -698,6 +767,31 @@
               </div>
             </div>
 
+            <!-- Notification preferences — only shown on browsers that support Web Push -->
+            <div class="row g-4 mt-1" id="notifPrefsRow" style="display:none;">
+              <div class="col-12">
+                <div class="card-bauxa" style="padding:2rem;">
+                  <h3 class="h6 mb-2 fw-semibold">
+                    <i class="bi bi-bell" aria-hidden="true"></i>
+                    <span data-i18n="profile.notifTitle">Notificacions</span>
+                  </h3>
+                  <p class="text-muted small mb-3" data-i18n="profile.notifDesc">
+                    Rep avisos quan publiquem un nou esdeveniment, un nou artista, una notícia o tens un esdeveniment guardat que comença aviat.
+                  </p>
+                  <div id="notifAlert" style="display:none;" class="mb-3"></div>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="notifToggle" disabled>
+                    <label class="form-check-label" for="notifToggle" data-i18n="profile.notifToggle">Activar notificacions push</label>
+                  </div>
+                  <small class="text-muted d-block mt-2" id="notifStatus"></small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Developers Section -->
+            <div id="developersSection" class="mt-5 pt-5 border-top">
+              <!-- Dynamically loaded -->
+            </div>
           </div>
         </div>
       </div>
@@ -707,7 +801,7 @@
     <!-- ===================== SOLICITUDS VIEW (PROMOTORS) ===================== -->
     <div data-view="solicituds" style="display:none;">
 
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-pencil-square"></i> <span data-i18n="solicituds.title">Les Meves Solicituds</span></h1>
           <p data-i18n="solicituds.subtitle">Envia sol·licituds d'edició per artistes, events o notícies</p>
@@ -1014,7 +1108,7 @@
     <!-- ===================== ADMIN VIEW ===================== -->
     <div data-view="admin" style="display:none;">
 
-      <header class="hero" style="padding:3rem 0 2.5rem;">
+      <header class="hero hero--inner">
         <div class="container">
           <h1><i class="bi bi-gear"></i> Panel d'<span>Administracio</span></h1>
           <p>Gestiona contingut, solicituds i usuaris</p>
@@ -1077,6 +1171,10 @@
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-social" data-bs-toggle="tab" data-bs-target="#panel-social"
                   type="button" role="tab"><i class="bi bi-share"></i> <span data-i18n="admin.tabSocial">Xarxes Socials</span></button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-announce" data-bs-toggle="tab" data-bs-target="#panel-announce"
+                  type="button" role="tab"><i class="bi bi-megaphone"></i> <span data-i18n="admin.tabAnnounce">Anunci</span></button>
               </li>
             </ul>
 
@@ -1447,7 +1545,7 @@
                       </div>
                       <div class="col-md-3">
                         <label for="quizColor2" class="form-label small fw-semibold">Color 2</label>
-                        <input type="color" class="form-control form-control-color" id="quizColor2" value="#2D6A8F">
+                        <input type="color" class="form-control font-control-color" id="quizColor2" value="#2D6A8F">
                       </div>
                       <div class="col-md-6">
                         <label for="quizImageJpg" class="form-label small fw-semibold">Imatge JPG (path)</label>
@@ -1763,13 +1861,42 @@
                 </div>
               </div>
 
+              <!-- Announcement Panel -->
+              <div class="tab-pane fade" id="panel-announce" role="tabpanel">
+                <div class="card-bauxa p-4">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <i class="bi bi-megaphone fs-4 text-secondary"></i>
+                    <div>
+                      <div class="fw-semibold" data-i18n="admin.announceTitle">Enviar anunci push</div>
+                      <div class="text-muted small" data-i18n="admin.announceDesc">Envia una notificació a tots els usuaris subscrits.</div>
+                    </div>
+                  </div>
+                  <div id="announceAlert" style="display:none;" class="mb-3"></div>
+                  <form id="announceForm" class="d-flex flex-column gap-3" style="max-width:640px;">
+                    <div>
+                      <label for="announceFieldTitle" class="form-label small fw-semibold" data-i18n="admin.announceFieldTitle">Títol</label>
+                      <input type="text" id="announceFieldTitle" class="form-control form-control-bauxa" maxlength="80" required>
+                    </div>
+                    <div>
+                      <label for="announceFieldBody" class="form-label small fw-semibold" data-i18n="admin.announceFieldBody">Missatge</label>
+                      <textarea id="announceFieldBody" class="form-control form-control-bauxa" rows="3" maxlength="200" required></textarea>
+                    </div>
+                    <div>
+                      <label for="announceFieldUrl" class="form-label small fw-semibold" data-i18n="admin.announceFieldUrl">URL de destí (opcional)</label>
+                      <input type="text" id="announceFieldUrl" class="form-control form-control-bauxa" placeholder="/#events">
+                    </div>
+                    <button type="submit" class="btn btn-bauxa align-self-start">
+                      <i class="bi bi-send"></i> <span data-i18n="admin.announceSend">Enviar a tothom</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+
             </div>
           </div>
 
         </div>
       </div>
-
-    </div>
 
     <!-- ===================== JOC VIEW ===================== -->
     <div data-view="joc" style="display:none;">
@@ -1796,6 +1923,7 @@
 
     </div>
 
+  </main><!-- /main-content -->
 
   <!-- Footer -->
   <footer class="footer-bauxa">
@@ -1833,6 +1961,10 @@
         </div>
       </div>
       <hr>
+      <!-- Developer Attribution Section -->
+      <div id="footerDevelopers" class="mb-4">
+        <!-- Dynamically loaded -->
+      </div>
       <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
         <p class="small mb-0" data-i18n="footer.copyright">2026 Dona'm Bauxa. Projecte acadèmic UIB - Tecnologia Multimèdia.</p>
         <p class="small mb-0"><span data-i18n="footer.madeWith">Fet amb</span> <i class="bi bi-heart-fill" style="color:var(--accent-text);"></i> a Mallorca</p>
@@ -1840,7 +1972,6 @@
     </div>
   </footer>
 
-  </main><!-- /main-content -->
   </div><!-- /app -->
 
   <!-- Artist Detail Modal -->
@@ -1879,6 +2010,27 @@
   <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Tornar a dalt">
     <i class="bi bi-chevron-up"></i>
   </button>
+
+  <!-- Mobile multi-action FAB (favorites, profile, top, chat) -->
+  <div class="mobile-fab" id="mobileFab">
+    <div class="mobile-fab__actions">
+      <a href="#favorits" class="mobile-fab__action" data-i18n-aria="nav.favorites" aria-label="Favorits">
+        <i class="bi bi-heart-fill" aria-hidden="true"></i>
+      </a>
+      <a href="#profile" class="mobile-fab__action" data-i18n-aria="nav.profile" aria-label="El meu Perfil">
+        <i class="bi bi-person-fill" aria-hidden="true"></i>
+      </a>
+      <button type="button" class="mobile-fab__action" id="mobileFabTop" aria-label="Tornar a dalt">
+        <i class="bi bi-arrow-up" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="mobile-fab__action" id="mobileFabChat" aria-label="Xat">
+        <i class="bi bi-chat-dots-fill" aria-hidden="true"></i>
+      </button>
+    </div>
+    <button type="button" class="mobile-fab__toggle" id="mobileFabToggle" aria-expanded="false" aria-label="Accions">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+    </button>
+  </div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>

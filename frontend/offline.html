@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ca" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0c0c14">
+  <title>Sense connexió · Dona'm Bauxa</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon-180.png">
+  <style>
+    :root { color-scheme: dark; }
+    html,body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: linear-gradient(160deg, #09090e 0%, #111118 100%);
+      color: #e8e8ef;
+      display: grid;
+      place-items: center;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+    main {
+      max-width: 32rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .35rem .75rem;
+      border-radius: 999px;
+      background: rgba(181,255,77,.12);
+      color: #b5ff4d;
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .badge::before {
+      content: '';
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #b5ff4d; box-shadow: 0 0 8px #b5ff4d;
+    }
+    h1 {
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      font-weight: 900;
+      letter-spacing: -.01em;
+      margin: 0 0 .6rem;
+    }
+    p { color: #a1a1b2; line-height: 1.55; margin: 0 0 1.5rem; }
+    button {
+      appearance: none;
+      border: none;
+      background: #b5ff4d;
+      color: #0c0c14;
+      font-weight: 700;
+      padding: .8rem 1.4rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: .95rem;
+      transition: transform .15s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="badge" aria-hidden="true">Offline</span>
+    <h1>No tens connexió</h1>
+    <p>L'aplicació funciona sense xarxa per al contingut que ja has visitat. Quan tornis a tenir connexió, recarrega per veure les novetats de l'agenda.</p>
+    <button type="button" onclick="location.reload()">Tornar a provar</button>
+  </main>
+  <script>
+    // Auto-retry when the network returns.
+    window.addEventListener('online', () => location.reload());
+  </script>
+</body>
+</html>

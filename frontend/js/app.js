@@ -7,19 +7,20 @@
 import { loadArtists, loadEvents, loadNews, loadExternEvents } from './modules/dataLoader.js';
 import {
   renderFeaturedEvent, renderEventCard, renderNewsCard, renderArtistCard,
-  renderLoading, renderEmptyState, renderArtistDetail, renderEventDetail
+  renderLoading, renderEmptyState, renderArtistDetail, renderEventDetail,
+  renderDeveloperProfiles
 } from './modules/renderer.js';
 import {
   filterArtists, filterEvents, sortEventsByDate, getUpcomingEvents,
   getUniqueGenres, getUniqueZones, getUniqueCategories
 } from './modules/filters.js';
 import {
-  initScrollToTop, updateFavoriteBadge, initGlobalEventHandlers,
+  initScrollToTop, initMobileFab, updateFavoriteBadge, initGlobalEventHandlers,
   setActiveNavLink, populateSelect
 } from './modules/ui.js';
 import { initMap, addEventMarkers, fitToMarkers } from './modules/mapModule.js';
 import { initRouter, registerRoutes, registerMapCleanup, refreshView } from './router.js';
-import { initI18n, setLang, t, applyTranslations } from './i18n.js';
+import { initI18n, setLang, getLang, t, applyTranslations } from './i18n.js';
 import { getFavorites as getFavoritesForType } from './modules/favorites.js';
 import { initAdmin, checkAuth } from './modules/admin.js';
 import { supabase } from './config.js';
@@ -27,6 +28,7 @@ import { initProfile } from './modules/profile.js';
 import { initSolicituds } from './modules/solicituds.js';
 import { initJoc } from './modules/joc.js';
 import { initChatbot, setDataContext as setChatbotData } from './modules/chatbot.js';
+import { initPwa } from './pwa.js';
 
 /* ------------------------------------------------------------------ */
 /*  Shared state                                                       */
@@ -53,6 +55,49 @@ let markerLayer = null;
 /** @type {Set<string>} Views that have been initialized */
 const initializedViews = new Set();
 
+/**
+ * Spawns a colourful particle burst (firework) on the home hero and toggles
+ * the active state for the ambient blob pulse on touch/hover.
+ */
+function initHeroFx() {
+  const hero = document.getElementById('homeHero');
+  if (!hero) return;
+  const COLORS = ['#b5ff4d', '#4dd0ff', '#ff4d8d', '#ffce4d', '#a14dff'];
+
+  const spawn = (clientX, clientY) => {
+    const rect = hero.getBoundingClientRect();
+    const cx = clientX - rect.left;
+    const cy = clientY - rect.top;
+    const n = 18;
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement('span');
+      const color = COLORS[i % COLORS.length];
+      const angle = (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+      const dist = 70 + Math.random() * 90;
+      s.className = 'hero-spark';
+      s.style.left = `${cx}px`;
+      s.style.top = `${cy}px`;
+      s.style.background = color;
+      s.style.boxShadow = `0 0 12px 2px ${color}`;
+      s.style.setProperty('--dx', `${Math.cos(angle) * dist}px`);
+      s.style.setProperty('--dy', `${Math.sin(angle) * dist}px`);
+      hero.appendChild(s);
+      setTimeout(() => s.remove(), 950);
+    }
+  };
+
+  hero.addEventListener('click', (e) => {
+    if (e.target.closest('a, button')) return;
+    spawn(e.clientX, e.clientY);
+  });
+  hero.addEventListener('touchstart', (e) => {
+    hero.classList.add('is-active');
+    const t = e.touches[0];
+    if (t && !e.target.closest('a, button')) spawn(t.clientX, t.clientY);
+  }, { passive: true });
+  hero.addEventListener('touchend', () => hero.classList.remove('is-active'));
+}
+
 /* ------------------------------------------------------------------ */
 /*  Data loading                                                       */
 /* ------------------------------------------------------------------ */
@@ -60,8 +105,11 @@ const initializedViews = new Set();
 /**
  * Loads all JSON data once and caches it.
  */
+let dataLoadingPromise = null;
 async function ensureDataLoaded() {
   if (dataLoaded) return;
+  if (dataLoadingPromise) return dataLoadingPromise;
+  dataLoadingPromise = (async () => {
   try {
     const [artists, events, news, externEvents] = await Promise.all([
       loadArtists(), loadEvents(), loadNews(), loadExternEvents()
@@ -98,6 +146,29 @@ async function ensureDataLoaded() {
 
   } catch (error) {
     console.error('[app] Error loading data:', error);
+  }
+  })();
+  return dataLoadingPromise;
+}
+
+/**
+ * Loads developer profiles from GitHub and renders them in the footer.
+ */
+async function initFooterDevelopers() {
+  const footerContainer = document.getElementById('footerDevelopers');
+  const profileContainer = document.getElementById('developersSection');
+  if (!footerContainer && !profileContainer) return;
+
+  try {
+    const usernames = ['dylanluigi', 'JoFeF08'];
+    const devData = await Promise.all(usernames.map(user =>
+      fetch(`https://api.github.com/users/${user}`).then(r => r.json())
+    ));
+    const html = renderDeveloperProfiles(devData);
+    if (footerContainer) footerContainer.innerHTML = html;
+    if (profileContainer) profileContainer.innerHTML = html;
+  } catch (err) {
+    console.error('[app] Error loading developer profiles:', err);
   }
 }
 
@@ -424,27 +495,47 @@ function initTheme() {
   const stored = localStorage.getItem('bauxa_theme');
   const sysDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true;
   applyTheme(stored || (sysDark ? 'dark' : 'light'));
-  document.getElementById('themeToggle')?.addEventListener('click', () => {
+
+  // Desktop sidebar toggle + mobile Profile-card toggle share one behaviour.
+  const toggleTheme = () => {
     const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     applyTheme(next);
     localStorage.setItem('bauxa_theme', next);
-  });
+  };
+  document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
+  document.getElementById('mobileThemeToggle')?.addEventListener('click', toggleTheme);
 }
 
 initTheme();
 // --- Fi theme management ---
 
-document.addEventListener('DOMContentLoaded', async () => {
+// `config.js` uses top-level await to resolve the backend URL, which can
+// delay app.js evaluation past DOMContentLoaded. Run boot immediately when
+// the document is already interactive; otherwise wait for the event.
+const onReady = (cb) => {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', cb, { once: true });
+  } else {
+    cb();
+  }
+};
+
+onReady(async () => {
   // Load translations before rendering anything
   await initI18n();
   applyTranslations();
 
   // Initialize shared UI
   initScrollToTop();
+  initMobileFab();
+  initHeroFx();
   updateFavoriteBadge();
 
   // Check auth state for admin nav
   checkAuth();
+
+  // Load footer developers
+  initFooterDevelopers();
 
   // Actualitza el navbar automàticament quan canvia la sessió de Supabase
   supabase.auth.onAuthStateChange((event, session) => {
@@ -492,9 +583,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
+  // Highlight the active language on the mobile Profile-card buttons.
+  const markActiveLang = () => {
+    const current = (typeof getLang === 'function') ? getLang() : document.documentElement.lang || 'ca';
+    document.querySelectorAll('.mobile-lang-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === current);
+      b.setAttribute('aria-pressed', String(b.dataset.lang === current));
+    });
+  };
+  markActiveLang();
+
   // Re-render dynamic content when language changes
   document.addEventListener('langChanged', () => {
     applyTranslations();
+    markActiveLang();
+    // Update footer developers title translation
+    initFooterDevelopers();
     // Update filter select default options (first option, no listener re-binding)
     const selectDefaults = [
       ['artistsFilterGenre', 'filter.allGenres'],
@@ -546,4 +650,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Start router
   initRouter();
+
+  // Register service worker + freshness coordinator. Done last so it never
+  // blocks first paint or interactive readiness.
+  initPwa();
+
+  // Background refresh of catalogs when the SW reports new data.
+  window.addEventListener('bauxa:data-updated', () => {
+    // Force the next ensureDataLoaded() call to actually re-fetch.
+    dataLoaded = false;
+    dataLoadingPromise = null;
+    ensureDataLoaded().then(() => refreshView()).catch(() => {});
+  });
 });

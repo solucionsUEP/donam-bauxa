@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "build:version": "node scripts/build-version.mjs",
+    "build": "npm run build:version"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.104.1",
@@ -13,6 +15,7 @@
     "dotenv": "^16.4.0",
     "express": "^4.21.0",
     "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "web-push": "^3.6.7"
   }
 }

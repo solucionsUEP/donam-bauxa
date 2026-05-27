@@ -51,9 +51,25 @@ if (in_array($method, ['POST', 'PUT', 'PATCH'])) {
 
 // --- Router ---
 
+// GET /version.json (PWA freshness check — never cached)
+if ($uri === '/version.json' && $method === 'GET') {
+    require __DIR__ . '/routes/version.php';
+
 // GET /auth/me
-if ($uri === '/auth/me' && $method === 'GET') {
+} elseif ($uri === '/auth/me' && $method === 'GET') {
     require __DIR__ . '/routes/auth.php';
+
+// GET /api/chat/health  |  POST /api/chat
+} elseif ($uri === '/api/chat/health' || $uri === '/api/chat') {
+    require __DIR__ . '/routes/chat.php';
+
+// Web Push: GET /api/push/vapid | POST /api/push/subscribe | POST /api/push/unsubscribe
+} elseif ($uri === '/api/push/vapid' || $uri === '/api/push/subscribe' || $uri === '/api/push/unsubscribe') {
+    require __DIR__ . '/routes/push.php';
+
+// POST /api/admin/announce — broadcast push to every subscriber (admin only)
+} elseif ($uri === '/api/admin/announce') {
+    require __DIR__ . '/routes/announce.php';
 
 // GET|PUT /api/profile
 } elseif ($uri === '/api/profile') {

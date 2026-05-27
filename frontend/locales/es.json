@@ -128,6 +128,11 @@
   "profile": {
     "title": "Mi Perfil",
     "subtitle": "Gestiona tu cuenta",
+    "preferences": "Preferencias",
+    "themeLabel": "Tema",
+    "themeHint": "Claro u oscuro",
+    "languageLabel": "Idioma",
+    "languageHint": "Elige tu idioma",
     "notAuth": "Debes iniciar sesión para ver tu perfil.",
     "loginBtn": "Iniciar Sesión con Google",
     "emailLabel": "Email",
@@ -146,7 +151,18 @@
     "requestPromotorSent": "Solicitud enviada correctamente. El administrador la revisará pronto.",
     "requestPromotorPending": "Tienes una solicitud de promotor pendiente de revisión.",
     "requestPromotorAlready": "Ya eres promotor o administrador.",
-    "requestPromotorErrorMotiv": "Escribe el motivo de la solicitud."
+    "requestPromotorErrorMotiv": "Escribe el motivo de la solicitud.",
+    "developersTitle": "Desarrolladores",
+    "notifTitle": "Notificaciones",
+    "notifDesc": "Recibe avisos cuando publiquemos un nuevo evento, un nuevo artista, una noticia, o tienes un evento guardado que empieza pronto.",
+    "notifToggle": "Activar notificaciones push",
+    "notifOn": "Notificaciones activas en este dispositivo.",
+    "notifOff": "Notificaciones desactivadas en este dispositivo.",
+    "notifBlocked": "Has bloqueado las notificaciones en el navegador. Cámbialo en los ajustes del sitio para volver a activarlas.",
+    "notifEnabled": "Notificaciones activadas correctamente.",
+    "notifDisabled": "Notificaciones desactivadas.",
+    "notifPermissionDenied": "No has dado permiso para recibir notificaciones.",
+    "notifError": "No se ha podido cambiar la configuración de notificaciones."
   },
   "solicituds": {
     "title": "Solicitudes de Edición",
@@ -181,8 +197,18 @@
     "subtitle": "Gestión del contenido de la plataforma",
     "notAuth": "Debes iniciar sesión con una cuenta de administrador.",
     "loginBtn": "Iniciar Sesión con Google",
-    "tabContent": "Contenidos",
+    "tabContent": "Contingutos",
     "tabSocial": "Redes Sociales",
+    "tabAnnounce": "Anuncio",
+    "announceTitle": "Enviar anuncio push",
+    "announceDesc": "Envía una notificación a todos los usuarios suscritos.",
+    "announceFieldTitle": "Título",
+    "announceFieldBody": "Mensaje",
+    "announceFieldUrl": "URL de destino (opcional)",
+    "announceSend": "Enviar a todos",
+    "announceMissing": "Debes escribir título y mensaje.",
+    "announceSent": "Anuncio enviado",
+    "announceError": "No se ha podido enviar el anuncio.",
     "tabArtists": "Artistas",
     "tabEvents": "Eventos",
     "tabNews": "Noticias",
@@ -290,11 +316,11 @@
     "instagramAnalyzingBody": "Analizando la publicación...",
     "instagramSentOk": "Solicitudes enviadas correctamente.",
     "instagramAnalyze": "Analizar",
-    "agendaPosterTitle": "Generar Cartel",
-    "agendaPosterDesc": "Genera una imagen póster de la agenda para un día o fin de semana",
-    "agendaPosterBtn": "Generar Cartel",
-    "instagramTitle": "Analizar Post de Instagram",
-    "instagramDesc": "Pega la imagen del cartel y añade el link para extraer el caption"
+    "agendaPosterTitle": "Generar Cartell",
+    "agendaPosterDesc": "Genera una imagen pòster de l'agenda per a un dia o cap de setmana",
+    "agendaPosterBtn": "Generar Cartell",
+    "instagramTitle": "Analitzar Post d'Instagram",
+    "instagramDesc": "Enganxa la imatge del cartell i afegeix el link per extreure el caption"
   },
   "joc": {
     "title": "Juego Musical",
@@ -341,6 +367,7 @@
     "subtitle": "Puedo ayudarte a planificar tu fin de semana",
     "openAssistant": "Abrir asistente",
     "closeAssistant": "Cerrar asistente",
+    "resetAssistant": "Empezar conversación nueva",
     "placeholder": "Pídeme un plan, música…",
     "inputLabel": "Escribe un mensaje",
     "send": "Enviar",
@@ -353,7 +380,11 @@
     "statusUnavailable": "Modelo no disponible en este dispositivo",
     "statusDownloadable": "Modelo listo para descargar (empezará con el primer mensaje)",
     "statusDownloading": "El modelo se está descargando en segundo plano…",
-    "errorGeneric": "El asistente no pudo responder. Consulta la consola para más detalles."
+    "errorGeneric": "El asistente no pudo responder. Consulta la consola para más detalles.",
+    "signInRequired": "Para hablar con el asistente necesitas iniciar sesión. Cierra el chat y pulsa **Iniciar sesión** arriba.",
+    "assistantBusy": "El asistente está ocupado ahora mismo. Inténtalo de nuevo en {seconds} segundos.",
+    "backendError": "El servicio de chat no responde. Inténtalo en unos minutos.",
+    "networkError": "No se ha podido conectar con el servicio de chat. Comprueba tu conexión e inténtalo de nuevo."
   },
   "auth": {
     "loginError": "Error al iniciar sesión: {{message}}",
@@ -365,7 +396,8 @@
     "zones": "Zonas de Mallorca",
     "contact": "Contacto",
     "copyright": "2026 Dona'm Bauxa. Proyecto académico UIB - Tecnología Multimedia.",
-    "madeWith": "Hecho con"
+    "madeWith": "Hecho con",
+    "developersTitle": "Creado por:"
   },
   "common": {
     "loading": "Cargando...",

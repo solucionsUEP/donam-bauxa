@@ -5,3 +5,7 @@ node_modules/
 .env
 server-data/*.bak
 api/config.php
+
+# CI-generated on every push, contents depend on env vars at build time:
+frontend/api-config.json
+frontend/version.json

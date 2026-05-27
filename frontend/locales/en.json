@@ -128,6 +128,11 @@
   "profile": {
     "title": "My Profile",
     "subtitle": "Manage your account",
+    "preferences": "Preferences",
+    "themeLabel": "Theme",
+    "themeHint": "Light or dark",
+    "languageLabel": "Language",
+    "languageHint": "Pick your language",
     "notAuth": "You must sign in to view your profile.",
     "loginBtn": "Sign In with Google",
     "emailLabel": "Email",
@@ -146,7 +151,18 @@
     "requestPromotorSent": "Request sent successfully. The administrator will review it soon.",
     "requestPromotorPending": "You have a promotor request pending review.",
     "requestPromotorAlready": "You are already a promotor or administrator.",
-    "requestPromotorErrorMotiv": "Please write the reason for your request."
+    "requestPromotorErrorMotiv": "Please write the reason for the request.",
+    "developersTitle": "Developers",
+    "notifTitle": "Notifications",
+    "notifDesc": "Get alerts when we publish a new event, a new artist, news, or when a saved event is starting soon.",
+    "notifToggle": "Enable push notifications",
+    "notifOn": "Notifications enabled on this device.",
+    "notifOff": "Notifications disabled on this device.",
+    "notifBlocked": "You have blocked notifications in your browser. Re-enable them in the site settings to turn this back on.",
+    "notifEnabled": "Notifications enabled.",
+    "notifDisabled": "Notifications disabled.",
+    "notifPermissionDenied": "You did not grant permission to receive notifications.",
+    "notifError": "Could not change notification settings."
   },
   "solicituds": {
     "title": "Edit Requests",
@@ -183,6 +199,16 @@
     "loginBtn": "Sign In with Google",
     "tabContent": "Content",
     "tabSocial": "Social Networks",
+    "tabAnnounce": "Announcement",
+    "announceTitle": "Send push announcement",
+    "announceDesc": "Send a notification to every subscribed user.",
+    "announceFieldTitle": "Title",
+    "announceFieldBody": "Message",
+    "announceFieldUrl": "Target URL (optional)",
+    "announceSend": "Send to everyone",
+    "announceMissing": "Title and message are required.",
+    "announceSent": "Announcement sent",
+    "announceError": "Could not send the announcement.",
     "tabArtists": "Artists",
     "tabEvents": "Events",
     "tabNews": "News",
@@ -251,7 +277,7 @@
     "saveError": "Error saving: {{error}}",
     "archiveToggleOk": "Item {{action}} successfully",
     "archiveAction": "archived",
-    "unarchiveAction": "unarchived",
+    "unarchiveAction": "ununarchived",
     "noRequests": "No requests.",
     "noUsers": "No registered users.",
     "noApiKeys": "No API keys created.",
@@ -341,6 +367,7 @@
     "subtitle": "I can help you plan your weekend",
     "openAssistant": "Open assistant",
     "closeAssistant": "Close assistant",
+    "resetAssistant": "Start a new conversation",
     "placeholder": "Ask me for a plan, music…",
     "inputLabel": "Write a message",
     "send": "Send",
@@ -353,7 +380,11 @@
     "statusUnavailable": "Model not available on this device",
     "statusDownloadable": "Model ready to download (will start with your first message)",
     "statusDownloading": "Model is downloading in the background…",
-    "errorGeneric": "The assistant could not respond. Check the console for details."
+    "errorGeneric": "The assistant could not respond. Check the console for details.",
+    "signInRequired": "You need to sign in to chat with the assistant. Close this chat and click **Sign in** above.",
+    "assistantBusy": "The assistant is busy right now. Try again in {seconds} seconds.",
+    "backendError": "The chat service is not responding. Please try again in a few minutes.",
+    "networkError": "Couldn't reach the chat service. Check your connection and try again."
   },
   "auth": {
     "loginError": "Sign-in error: {{message}}",
@@ -365,7 +396,8 @@
     "zones": "Zones of Mallorca",
     "contact": "Contact",
     "copyright": "2026 Dona'm Bauxa. Academic project UIB - Multimedia Technology.",
-    "madeWith": "Made with"
+    "madeWith": "Made with",
+    "developersTitle": "Created by:"
   },
   "common": {
     "loading": "Loading...",

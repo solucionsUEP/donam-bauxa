@@ -23,6 +23,47 @@ export function initScrollToTop() {
 }
 
 /**
+ * Initializes the mobile multi-action FAB (Favorites / Profile / Top / Chat).
+ * Toggles the action stack and wires the Top + Chat buttons. Navigation
+ * actions (Profile, Favorites) are plain anchors and handled by the router.
+ */
+export function initMobileFab() {
+  const fab = document.getElementById('mobileFab');
+  if (!fab) return;
+  const toggle = fab.querySelector('#mobileFabToggle');
+  const topBtn = fab.querySelector('#mobileFabTop');
+  const chatBtn = fab.querySelector('#mobileFabChat');
+
+  const close = () => {
+    fab.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = fab.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  topBtn?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    close();
+  });
+
+  chatBtn?.addEventListener('click', () => {
+    document.querySelector('.chatbot-launcher')?.click();
+    close();
+  });
+
+  fab.querySelectorAll('a.mobile-fab__action').forEach(a => {
+    a.addEventListener('click', close);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (fab.classList.contains('open') && !fab.contains(e.target)) close();
+  });
+}
+
+/**
  * Updates the favorites badge count in the navbar.
  */
 export function updateFavoriteBadge() {
