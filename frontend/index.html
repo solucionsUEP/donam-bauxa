@@ -43,6 +43,7 @@
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <!-- DNS prefetch fallback -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
   <link rel="dns-prefetch" href="https://unpkg.com">
 
   <!-- Bootstrap CSS: synchronous local copy (layout-critical, async causes CLS) -->
@@ -122,6 +123,18 @@
   }
   </script>
 
+  <!-- Sync language detection: if the user's language is not Catalan (the HTML
+       default), hide the hero container before first paint so the i18n text
+       replacement is an insertion (not a shift), eliminating CLS. -->
+  <script>
+  (function(){
+    var s=['ca','es','en','de'];
+    var l=localStorage.getItem('bauxa_lang')||(navigator.language||'').slice(0,2).toLowerCase();
+    if(s.indexOf(l)<0)l='ca';
+    if(l!=='ca')document.documentElement.classList.add('i18n-loading');
+  })();
+  </script>
+
   <style>
     /* Map marker custom styles */
     .custom-map-marker {
@@ -150,6 +163,12 @@
     body {
       font-synthesis: none;
     }
+
+    /* CLS fix: hide the hero text container for non-Catalan users until
+       applyTranslations() has run. Going from display:none → visible is
+       an "insertion" (not a shift) so Chrome does not score it as CLS.
+       The hero's min-height:65vh is preserved so elements below never shift. */
+    html.i18n-loading #homeHero > .container { display: none; }
   </style>
 </head>
 

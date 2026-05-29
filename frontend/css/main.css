@@ -513,6 +513,18 @@ img { max-width: 100%; }
 .hero .col-lg-5 { display: none !important; }
 .hero .col-lg-7 { flex: 0 0 100%; max-width: 100%; }
 
+/* Prevent CLS from async i18n text replacement.
+   Stretching the container to fill the hero height means content-height
+   changes (language swaps) don't shift the container's position. */
+#homeHero {
+  align-items: stretch;
+}
+#homeHero > .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
 /* ── Hero FX: blurred light blobs + click fireworks (home only) ── */
 .hero-fx {
   position: absolute;
