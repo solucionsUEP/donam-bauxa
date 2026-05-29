@@ -2239,7 +2239,7 @@ img { max-width: 100%; }
 .mobile-fab.open .mobile-fab__toggle { transform: rotate(45deg); }
 .mobile-fab__actions {
   position: absolute;
-  bottom: calc(100% + 0.5rem);
+  bottom: calc(52px + 0.5rem); /* 52px = toggle height; avoids column-reverse+bottom:% Chrome bug */
   right: 0;
   display: flex;
   flex-direction: column-reverse;
