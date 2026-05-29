@@ -37,49 +37,90 @@
   <meta property="og:image" content="/assets/icons/icon-512.png">
   <meta name="twitter:card" content="summary">
 
-  <!-- Preconnect -->
+  <!-- Preconnect: only CDNs still needed at runtime -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <!-- DNS prefetch fallback -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
   <link rel="dns-prefetch" href="https://unpkg.com">
 
   <!-- Bootstrap CSS: synchronous local copy (layout-critical, async causes CLS) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" data-bootstrap-dir="ltr">
+  <link rel="stylesheet" href="css/bootstrap.min.css" data-bootstrap-dir="ltr">
 
-  <!-- Bootstrap Icons: async (non-layout-critical) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    media="print" onload="this.media='all'">
-  <noscript>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  </noscript>
+  <!-- Bootstrap Icons: async local copy (non-layout-critical) -->
+  <link rel="stylesheet" href="css/bootstrap-icons.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="css/bootstrap-icons.min.css"></noscript>
 
   <!-- Google Fonts: async with display=swap -->
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=optional"
     media="print" onload="this.media='all'">
   <noscript>
     <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,800&family=Space+Grotesk:wght@300;400;500;600;700&display=optional">
   </noscript>
 
   <!-- Critical CSS: synchronous (own styles only) -->
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/main.min.css">
 
   <!-- Modulepreload: start downloading JS modules early -->
   <link rel="modulepreload" href="js/i18n.js">
   <link rel="modulepreload" href="js/app.js">
+  <link rel="modulepreload" href="js/config.js">
   <link rel="modulepreload" href="js/modules/dataLoader.js">
   <link rel="modulepreload" href="js/modules/renderer.js">
   <link rel="modulepreload" href="js/modules/filters.js">
   <link rel="modulepreload" href="js/modules/ui.js">
+  <link rel="modulepreload" href="js/modules/favorites.js">
   <link rel="modulepreload" href="js/router.js">
-  <link rel="modulepreload" href="js/modules/joc.js">
-  <link rel="modulepreload" href="js/modules/chatbot.js">
+  <link rel="modulepreload" href="js/modules/auth.js">
+  <link rel="modulepreload" href="js/modules/jsonld.js">
   <link rel="modulepreload" href="js/pwa.js">
+  <!-- Preload data catalogs so ensureDataLoaded() has them ready immediately -->
+  <link rel="preload" href="/data/events.json" as="fetch" crossorigin>
+  <link rel="preload" href="/data/artists.json" as="fetch" crossorigin>
+  <!-- Preload Bootstrap Icons font to prevent icon reflow / CLS -->
+  <link rel="preload" href="/css/fonts/bootstrap-icons.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- Preload critical Barlow Condensed 900 (hero H1 = LCP element) -->
+  <link rel="preload" href="https://fonts.gstatic.com/s/barlowcondensed/v13/HTxwL3I-JCGChYJ8VI-L6OO_au7B45L0z3bWuYMBYro.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- Preload LCP image (first featured event) -->
+  <link rel="preload" as="image" href="/assets/images/events/antonia-font-concert-de-reunio.avif" type="image/avif" fetchpriority="high">
+
+  <!-- Structured data: WebSite + Organization (static, always present) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://donambauxa.online/#website",
+        "url": "https://donambauxa.online/",
+        "name": "Dona'm Bauxa",
+        "description": "Música i esdeveniments en directe a Mallorca",
+        "inLanguage": ["ca", "es", "en", "de"],
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://donambauxa.online/#events?search={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://donambauxa.online/#organization",
+        "name": "Dona'm Bauxa",
+        "url": "https://donambauxa.online/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://donambauxa.online/assets/icons/icon-512.png"
+        }
+      }
+    ]
+  }
+  </script>
 
   <style>
     /* Map marker custom styles */
@@ -132,11 +173,11 @@
       <!-- Navigation -->
       <nav class="sidebar-nav" id="mainNav" aria-label="Navegació principal">
         <p class="sidebar-section-label">Descobreix</p>
-        <a href="#home"     class="sidebar-link active"><i class="bi bi-house-door" aria-hidden="true"></i> <span data-i18n="nav.home">Inici</span></a>
-        <a href="#artists"  class="sidebar-link"><i class="bi bi-music-note-list" aria-hidden="true"></i>  <span data-i18n="nav.artists">Artistes</span></a>
-        <a href="#events"   class="sidebar-link"><i class="bi bi-calendar-event" aria-hidden="true"></i>   <span data-i18n="nav.events">Agenda</span></a>
-        <a href="#map"      class="sidebar-link"><i class="bi bi-map" aria-hidden="true"></i>              <span data-i18n="nav.map">Mapa</span></a>
-        <a href="#joc"      class="sidebar-link"><i class="bi bi-controller" aria-hidden="true"></i>       <span data-i18n="nav.game">Joc</span></a>
+        <a href="#home"     class="sidebar-link active" data-i18n-aria="nav.home"    aria-label="Inici"><i class="bi bi-house-door" aria-hidden="true"></i> <span data-i18n="nav.home">Inici</span></a>
+        <a href="#artists"  class="sidebar-link"        data-i18n-aria="nav.artists" aria-label="Artistes"><i class="bi bi-music-note-list" aria-hidden="true"></i>  <span data-i18n="nav.artists">Artistes</span></a>
+        <a href="#events"   class="sidebar-link"        data-i18n-aria="nav.events"  aria-label="Agenda"><i class="bi bi-calendar-event" aria-hidden="true"></i>   <span data-i18n="nav.events">Agenda</span></a>
+        <a href="#map"      class="sidebar-link"        data-i18n-aria="nav.map"     aria-label="Mapa"><i class="bi bi-map" aria-hidden="true"></i>              <span data-i18n="nav.map">Mapa</span></a>
+        <a href="#joc"      class="sidebar-link"        data-i18n-aria="nav.game"    aria-label="Joc"><i class="bi bi-controller" aria-hidden="true"></i>       <span data-i18n="nav.game">Joc</span></a>
       </nav>
 
       <!-- Footer del sidebar -->
@@ -278,22 +319,51 @@
         <div class="container">
           <h2 class="section-title" data-i18n="section.featuredEvents">Esdeveniments Destacats</h2>
           <p class="section-subtitle" data-i18n="section.featuredEventsSubtitle">Els concerts i festivals que no et pots perdre</p>
-          <div class="row" id="featuredEvents">
-            <div class="col-md-6 mb-4" aria-hidden="true">
-              <div class="skeleton-block"
-                style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
+          <div class="row" id="featuredEventsRow">
+            <!-- Static first card (LCP anchor): always in the DOM, never replaced.
+                 Image is preloaded above — paints at FCP = low LCP. -->
+            <div class="col-md-6 mb-4" id="featuredEventStatic">
+              <article class="featured-event">
+                <picture>
+                  <source srcset="assets/images/events/antonia-font-concert-de-reunio.avif" type="image/avif">
+                  <source srcset="assets/images/events/antonia-font-concert-de-reunio.webp" type="image/webp">
+                  <img src="assets/images/events/antonia-font-concert-de-reunio.jpg"
+                       alt="Antònia Font - Concert de Reunió"
+                       width="800" height="482"
+                       fetchpriority="high" decoding="async"
+                       class="featured-event__img">
+                </picture>
+                <div class="featured-event__overlay"></div>
+                <div class="featured-event__content">
+                  <span class="featured-event__badge featured-event__badge--concert">concert</span>
+                  <h3>Antònia Font - Concert de Reunió</h3>
+                  <p><i class="bi bi-calendar3" aria-hidden="true"></i> dissabte, 4 de juliol de 2026 — 21:00</p>
+                  <p><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Trui Teatre, Palma</p>
+                  <p><i class="bi bi-music-note-beamed" aria-hidden="true"></i> Antònia Font</p>
+                  <div class="featured-event__actions">
+                    <span class="badge-price">35 EUR</span>
+                    <a href="https://www.truiteatre.es" class="btn btn-sm btn-bauxa" target="_blank" rel="noopener noreferrer">
+                      <i class="bi bi-ticket-perforated" aria-hidden="true"></i> Entrades
+                    </a>
+                  </div>
+                </div>
+              </article>
             </div>
-            <div class="col-md-6 mb-4" aria-hidden="true">
-              <div class="skeleton-block"
-                style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
-            </div>
-            <div class="col-md-6 mb-4" aria-hidden="true">
-              <div class="skeleton-block"
-                style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
-            </div>
-            <div class="col-md-6 mb-4" aria-hidden="true">
-              <div class="skeleton-block"
-                style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
+            <!-- Dynamic events 1-3: JS sets innerHTML on this container.
+                 display:contents makes col-md-6 children lay out directly in the row. -->
+            <div id="featuredEvents" style="display:contents">
+              <div class="col-md-6 mb-4" aria-hidden="true">
+                <div class="skeleton-block"
+                  style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
+              </div>
+              <div class="col-md-6 mb-4" aria-hidden="true">
+                <div class="skeleton-block"
+                  style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
+              </div>
+              <div class="col-md-6 mb-4" aria-hidden="true">
+                <div class="skeleton-block"
+                  style="min-height:350px;background:var(--surface-2);border-radius:var(--r-card);"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -2033,7 +2103,7 @@
   </div>
 
   <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="js/bootstrap.bundle.min.js" defer></script>
 
   <!-- Data prefetch: start fetching JSON before module parses -->
   <script>
@@ -2045,7 +2115,7 @@
   </script>
 
   <!-- Supabase UMD (carregat abans dels mòduls) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.min.js" defer></script>
   <!-- Agenda Poster Modal -->
   <div class="modal fade modal-bauxa" id="agendaModal" tabindex="-1" role="dialog" aria-labelledby="agendaModalLabel"
     aria-hidden="true">

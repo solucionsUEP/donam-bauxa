@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import compression from 'compression';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { supabase } from './helpers/supabase.js';
@@ -15,6 +16,7 @@ import versionRoutes from './routes/version.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
+app.use(compression());
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 // CORS — production (Dondominio) frontend calls this Vercel backend cross-origin.
@@ -65,7 +67,17 @@ app.get('/sw.js', (req, res, next) => {
   next();
 });
 
-app.use(express.static(join(__dirname, 'frontend')));
+// Static assets — mirror production Apache (.htaccess) caching so local
+// Lighthouse runs reflect real cache/compression behavior.
+app.use(express.static(join(__dirname, 'frontend'), {
+  setHeaders(res, path) {
+    if (/\.(js|mjs|css|avif|webp|jpg|jpeg|png|svg|ico|woff2)$/.test(path)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    } else if (path.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
 
 // Auth: retorna el perfil de l'usuari autenticat via Supabase JWT
 app.get('/auth/me', async (req, res) => {
