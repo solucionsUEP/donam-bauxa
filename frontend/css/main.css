@@ -33,7 +33,7 @@
   --accent-text:   #b5ff4d;
   --sidebar-bg:    #0c0c14;
   --tag-bg:        rgba(255,255,255,0.07);
-  --tag-text:      rgba(255,255,255,0.5);
+  --tag-text:      rgba(255,255,255,0.65);
   --hero-overlay:  linear-gradient(to bottom, rgba(9,9,14,0.1) 0%, rgba(9,9,14,0) 25%, rgba(9,9,14,0.65) 65%, rgba(9,9,14,0.97) 100%);
   --btn-ghost-bg:  rgba(255,255,255,0.08);
   --btn-ghost-border: rgba(255,255,255,0.14);
@@ -59,7 +59,7 @@
   --accent-text:   #1a4db5;
   --sidebar-bg:    #f7f6f1;
   --tag-bg:        rgba(0,0,0,0.06);
-  --tag-text:      rgba(0,0,0,0.5);
+  --tag-text:      rgba(0,0,0,0.65);
   --hero-overlay:  linear-gradient(to bottom, rgba(241,240,235,0.05) 0%, rgba(241,240,235,0) 25%, rgba(241,240,235,0.55) 65%, rgba(241,240,235,0.97) 100%);
   --btn-ghost-bg:  rgba(0,0,0,0.05);
   --btn-ghost-border: rgba(0,0,0,0.13);
@@ -1243,6 +1243,12 @@ img { max-width: 100%; }
   border-color: rgba(77,255,150,0.2);
 }
 
+[data-theme="light"] .badge-price--free {
+  color: #1a6b38;
+  background: rgba(77,255,150,0.15);
+  border-color: rgba(26,107,56,0.3);
+}
+
 .badge-category {
   background: var(--surface-3);
   color: var(--text-muted);
@@ -2086,12 +2092,6 @@ img { max-width: 100%; }
 
 [data-theme="light"] .section-cta {
   background: var(--accent);
-  color: #fff;
-}
-
-[data-theme="light"] .section-cta__title,
-[data-theme="light"] .section-cta__desc {
-  color: #fff;
 }
 
 [data-theme="light"] .section-cta .btn-bauxa {
