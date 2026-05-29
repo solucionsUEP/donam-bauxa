@@ -548,9 +548,24 @@ img { max-width: 100%; }
 .hero-fx__blob--4 { width: 220px; height: 220px; left: 75%; top: 50%; background: radial-gradient(circle, #ffce4d 0%, transparent 70%); animation-delay: -4.5s; }
 .hero-fx__blob--5 { width: 200px; height: 200px; left: 40%; top: 35%; background: radial-gradient(circle, #a14dff 0%, transparent 70%); animation-delay: -2.0s; }
 
+/* Variant A — Breathe (enhanced: bigger pulse, brighter). Default. */
 @keyframes heroBlobBreathe {
-  0%,100% { transform: translate(0,0) scale(1);   opacity: 0.30; }
-  50%     { transform: translate(8px,-12px) scale(1.05); opacity: 0.45; }
+  0%,100% { transform: translate(0,0) scale(1);          opacity: 0.42; }
+  50%     { transform: translate(16px,-22px) scale(1.14); opacity: 0.66; }
+}
+
+/* Variant B — Drift: wide orbital motion + rotation. Chosen at random in JS
+   via the .hero-fx--drift class added to the .hero-fx container. */
+.hero-fx--drift .hero-fx__blob {
+  animation-name: heroBlobDrift;
+  animation-duration: 11s;
+}
+@keyframes heroBlobDrift {
+  0%   { transform: translate(0,0) scale(1) rotate(0deg);          opacity: 0.45; }
+  25%  { transform: translate(42px,20px) scale(1.12) rotate(5deg);  opacity: 0.64; }
+  50%  { transform: translate(12px,44px) scale(0.96) rotate(0deg);  opacity: 0.52; }
+  75%  { transform: translate(-34px,18px) scale(1.14) rotate(-5deg); opacity: 0.66; }
+  100% { transform: translate(0,0) scale(1) rotate(0deg);          opacity: 0.45; }
 }
 
 /* Active state — triggered on hover (desktop) or .is-active (touch/click) */
@@ -578,7 +593,8 @@ img { max-width: 100%; }
   100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-fx__blob { animation: none; }
+  .hero-fx__blob,
+  .hero-fx--drift .hero-fx__blob { animation: none; }
   .hero-spark { display: none; }
 }
 
