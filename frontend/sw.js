@@ -105,7 +105,11 @@ self.addEventListener('activate', (event) => {
     // Take control immediately so the very first navigation after install is
     // routed through this worker (avoids a refresh requirement).
     await self.clients.claim();
-    await purgeStaleCaches();
+    // NOTE: don't purge here. At activate `appVersion` is still the fallback,
+    // so a blind purge would delete the real shell-v<sha>/data-v<ts> buckets
+    // warmed in a previous session. handleVersion() purges with the real
+    // versions once the page reports in via CHECK_VERSION.
+    if (appVersion !== APP_VERSION_FALLBACK) await purgeStaleCaches();
     // Enable navigation preload where supported — speeds up the first paint
     // when we fall through to network for navigations.
     if (self.registration.navigationPreload) {
