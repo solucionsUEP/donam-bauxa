@@ -87,7 +87,8 @@
     "since": "Desde",
     "members": "Miembros:",
     "discography": "Discografía:",
-    "links": "Enlaces:"
+    "links": "Enlaces:",
+    "readDescription": "Leer descripción"
   },
   "event": {
     "count_one": "{{n}} evento",
@@ -109,6 +110,11 @@
     "title": "Mapa de Eventos",
     "subtitle": "Descubre dónde ir",
     "eventsCount": "{{count}} eventos en el mapa",
+    "locateMe": "Mi ubicación",
+    "youAreHere": "Estás aquí",
+    "geoUnsupported": "Tu navegador no admite la geolocalización.",
+    "geoDenied": "No has dado permiso para acceder a tu ubicación.",
+    "geoError": "No se ha podido obtener tu ubicación.",
     "emptyState": "No hay eventos en esta zona.",
     "legend": {
       "title": "Leyenda",
@@ -371,6 +377,7 @@
     "placeholder": "Pídeme un plan, música…",
     "inputLabel": "Escribe un mensaje",
     "send": "Enviar",
+    "readAloud": "Leer en voz alta",
     "cancelledMsg": "Respuesta cancelada.",
     "downloadingModel": "Descargando el modelo…",
     "deviceStatus": "IA en el dispositivo",
@@ -388,7 +395,30 @@
   },
   "auth": {
     "loginError": "Error al iniciar sesión: {{message}}",
-    "genericError": "Error: {{message}}"
+    "genericError": "Error: {{message}}",
+    "title": "Acceso",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "google": "Continuar con Google",
+    "or": "o con el correo electrónico",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "passwordConfirm": "Confirmar contraseña",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+    "emailRequired": "Introduce un correo electrónico válido",
+    "forgot": "¿Has olvidado la contraseña?",
+    "checkEmail": "¡Cuenta creada! Revisa el correo para confirmarla antes de iniciar sesión.",
+    "resetSent": "Te hemos enviado un correo para restablecer la contraseña.",
+    "loginOk": "Sesión iniciada correctamente.",
+    "loading": "Procesando…",
+    "submitLogin": "Entrar",
+    "submitRegister": "Crear cuenta",
+    "close": "Cerrar"
+  },
+  "chart": {
+    "genreTitle": "Distribución de artistas por género",
+    "genreAria": "Gráfico de barras con el número de artistas por género musical"
   },
   "footer": {
     "tagline": "La plataforma de música y eventos en directo de Mallorca. Descubre el talento de la isla.",

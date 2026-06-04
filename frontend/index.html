@@ -34,13 +34,28 @@
   <meta property="og:title" content="Dona'm Bauxa">
   <meta property="og:description" content="Música i esdeveniments en directe a Mallorca.">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="/assets/icons/icon-512.png">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://donambauxa.online/assets/icons/icon-512.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Logo de Dona'm Bauxa">
+  <meta property="og:url" content="https://donambauxa.online/">
+  <meta property="og:locale" content="ca_ES">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="en_GB">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:site_name" content="Dona'm Bauxa">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dona'm Bauxa — Música i festes a Mallorca">
+  <meta name="twitter:description" content="Música i esdeveniments en directe a Mallorca.">
+  <meta name="twitter:image" content="https://donambauxa.online/assets/icons/icon-512.png">
+  <meta name="author" content="Dylan Canning, Josep Ferriol">
+  <link rel="canonical" href="https://donambauxa.online/">
 
   <!-- Preconnect: only CDNs still needed at runtime -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <!-- unpkg (Leaflet) is only fetched lazily when the map view opens, so a
+       startup preconnect goes unused. dns-prefetch below still warms DNS. -->
   <!-- DNS prefetch fallback -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
   <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -74,6 +89,7 @@
   <link rel="modulepreload" href="js/modules/filters.js">
   <link rel="modulepreload" href="js/modules/ui.js">
   <link rel="modulepreload" href="js/modules/favorites.js">
+  <link rel="modulepreload" href="js/modules/tts.js">
   <link rel="modulepreload" href="js/router.js">
   <link rel="modulepreload" href="js/modules/auth.js">
   <link rel="modulepreload" href="js/modules/jsonld.js">
@@ -170,6 +186,94 @@
        an "insertion" (not a shift) so Chrome does not score it as CLS.
        The hero's min-height:65vh is preserved so elements below never shift. */
     html.i18n-loading #homeHero > .container { display: none; }
+
+    /* <figure> wrappers around card images. `display:contents` removes the
+       figure's own box from the layout tree so the existing image-wrapper CSS
+       (height:100%, object-fit, absolute positioning) keeps working exactly as
+       before while the figure/figcaption stay in the accessibility tree. */
+    .artist-card__figure,
+    .news-card__figure,
+    .featured-event__figure {
+      display: contents;
+      margin: 0;
+    }
+
+    /* Read-aloud (TTS) button inside chatbot assistant messages */
+    .chatbot-tts-btn {
+      margin-top: 0.25rem;
+      background: transparent;
+      border: 1px solid var(--clr-accent, #b5ff4d);
+      color: var(--clr-accent, #b5ff4d);
+      border-radius: 999px;
+      width: 1.9rem;
+      height: 1.9rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .chatbot-tts-btn:hover,
+    .chatbot-tts-btn[aria-pressed="true"] {
+      background: var(--clr-accent, #b5ff4d);
+      color: #0c0c14;
+    }
+
+    /* Auth modal "or" divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: var(--clr-muted, #9aa0aa);
+      font-size: 0.8rem;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.3;
+    }
+    .auth-divider span { padding: 0 0.75rem; }
+
+    /* Genre distribution chart (dependency-free bars) */
+    .genre-chart { padding: 1.25rem; }
+    .genre-bar {
+      display: grid;
+      grid-template-columns: minmax(80px, 28%) 1fr auto;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.55rem;
+      font-size: 0.85rem;
+    }
+    .genre-bar__label {
+      text-transform: capitalize;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .genre-bar__track {
+      background: var(--surface-2, rgba(255,255,255,0.08));
+      border-radius: 999px;
+      height: 0.6rem;
+      overflow: hidden;
+    }
+    .genre-bar__fill {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--clr-accent, #b5ff4d), #4dd0ff);
+      transition: width 0.6s ease;
+    }
+    .genre-bar__value {
+      font-variant-numeric: tabular-nums;
+      color: var(--clr-muted, #9aa0aa);
+      min-width: 1.5rem;
+      text-align: right;
+    }
   </style>
 </head>
 
@@ -551,6 +655,16 @@
           <!-- Results Count -->
           <p class="text-muted-custom small mb-3" id="artistsResultsCount"></p>
 
+          <!-- Genre distribution (data visualization) -->
+          <section class="genre-chart card-bauxa mb-4" id="genreChartSection" aria-labelledby="genreChartTitle" hidden>
+            <h2 class="h6 fw-semibold mb-3" id="genreChartTitle">
+              <i class="bi bi-bar-chart-line" aria-hidden="true"></i>
+              <span data-i18n="chart.genreTitle">Distribució d'artistes per gènere</span>
+            </h2>
+            <div id="genreChart" role="img" data-i18n-aria="chart.genreAria"
+              aria-label="Gràfic de distribució d'artistes per gènere"></div>
+          </section>
+
           <!-- Artists Grid -->
           <h2 class="visually-hidden" data-i18n="view.artists.resultsLabel">Resultats d'artistes</h2>
           <div class="row" id="artistsGrid">
@@ -676,6 +790,15 @@
                     </button>
                   </div>
                 </div>
+              </div>
+
+              <!-- Geolocation -->
+              <div class="d-flex justify-content-end mb-2">
+                <button class="btn btn-sm btn-bauxa-outline" id="mapGeolocateBtn" type="button"
+                  data-i18n-aria="map.locateMe" aria-label="Centrar el mapa en la meva ubicació">
+                  <i class="bi bi-crosshair2" aria-hidden="true"></i>
+                  <span data-i18n="map.locateMe">La meva ubicació</span>
+                </button>
               </div>
 
               <!-- Map Container -->
@@ -2093,6 +2216,74 @@
         </div>
         <div class="modal-body">
           <!-- Dynamically loaded -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Modal (Google + email/password) -->
+  <div class="modal fade modal-bauxa" id="authModal" role="dialog" tabindex="-1" aria-labelledby="authModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="authModalLabel" data-i18n="auth.title">Accés</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" data-i18n-aria="auth.close"
+            aria-label="Tancar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Login / register tabs -->
+          <ul class="nav nav-tabs mb-3" role="tablist" aria-label="Login o registre">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="authTabLogin" role="tab" type="button" data-auth-tab="login"
+                aria-selected="true" data-i18n="auth.login">Iniciar Sessió</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="authTabRegister" role="tab" type="button" data-auth-tab="register"
+                aria-selected="false" data-i18n="auth.register">Registrar-se</button>
+            </li>
+          </ul>
+
+          <!-- Google -->
+          <button id="authGoogleBtn" type="button" class="btn-bauxa w-100">
+            <i class="bi bi-google" aria-hidden="true"></i>
+            <span data-i18n="auth.google">Continuar amb Google</span>
+          </button>
+
+          <div class="auth-divider my-3" aria-hidden="true">
+            <span data-i18n="auth.or">o amb el correu electrònic</span>
+          </div>
+
+          <!-- Email / password -->
+          <form id="emailAuthForm" novalidate>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="authEmail" data-i18n="auth.email">Correu
+                electrònic</label>
+              <input type="email" id="authEmail" class="form-control form-control-bauxa" required
+                autocomplete="email" aria-required="true" data-i18n-aria="auth.email" aria-label="Correu electrònic">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="authPassword" data-i18n="auth.password">Contrasenya</label>
+              <input type="password" id="authPassword" class="form-control form-control-bauxa" required minlength="8"
+                autocomplete="current-password" aria-required="true" data-i18n-aria="auth.password"
+                aria-label="Contrasenya">
+            </div>
+            <div id="authRegisterOnly" hidden>
+              <div class="mb-3">
+                <label class="form-label small fw-semibold" for="authPasswordConfirm"
+                  data-i18n="auth.passwordConfirm">Confirmar contrasenya</label>
+                <input type="password" id="authPasswordConfirm" class="form-control form-control-bauxa"
+                  autocomplete="new-password" data-i18n-aria="auth.passwordConfirm" aria-label="Confirmar contrasenya">
+              </div>
+            </div>
+            <p id="authError" class="text-danger small mb-2" role="alert" aria-live="assertive" hidden></p>
+            <button type="submit" class="btn-bauxa w-100" id="emailAuthBtn">
+              <span data-i18n="auth.submitLogin">Entrar</span>
+            </button>
+          </form>
+
+          <button class="btn btn-link w-100 mt-2 p-0 small" id="forgotPasswordBtn" type="button"
+            data-i18n="auth.forgot">Has oblidat la contrasenya?</button>
         </div>
       </div>
     </div>

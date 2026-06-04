@@ -87,7 +87,8 @@
     "since": "Since",
     "members": "Members:",
     "discography": "Discography:",
-    "links": "Links:"
+    "links": "Links:",
+    "readDescription": "Read description"
   },
   "event": {
     "count_one": "{{n}} event",
@@ -109,6 +110,11 @@
     "title": "Events Map",
     "subtitle": "Discover where to go",
     "eventsCount": "{{count}} events on the map",
+    "locateMe": "My location",
+    "youAreHere": "You are here",
+    "geoUnsupported": "Your browser does not support geolocation.",
+    "geoDenied": "You did not grant location permission.",
+    "geoError": "Could not get your location.",
     "emptyState": "No events in this zone.",
     "legend": {
       "title": "Legend",
@@ -371,6 +377,7 @@
     "placeholder": "Ask me for a plan, music…",
     "inputLabel": "Write a message",
     "send": "Send",
+    "readAloud": "Read aloud",
     "cancelledMsg": "Response cancelled.",
     "downloadingModel": "Downloading model…",
     "deviceStatus": "On-device AI",
@@ -388,7 +395,30 @@
   },
   "auth": {
     "loginError": "Sign-in error: {{message}}",
-    "genericError": "Error: {{message}}"
+    "genericError": "Error: {{message}}",
+    "title": "Access",
+    "login": "Sign In",
+    "register": "Sign Up",
+    "google": "Continue with Google",
+    "or": "or with email",
+    "email": "Email",
+    "password": "Password",
+    "passwordConfirm": "Confirm password",
+    "passwordMismatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "emailRequired": "Enter a valid email address",
+    "forgot": "Forgot your password?",
+    "checkEmail": "Account created! Check your email to confirm it before signing in.",
+    "resetSent": "We've sent you an email to reset your password.",
+    "loginOk": "Signed in successfully.",
+    "loading": "Processing…",
+    "submitLogin": "Sign in",
+    "submitRegister": "Create account",
+    "close": "Close"
+  },
+  "chart": {
+    "genreTitle": "Artists by genre",
+    "genreAria": "Bar chart of the number of artists per music genre"
   },
   "footer": {
     "tagline": "The platform for live music and events in Mallorca. Discover the island's talent.",

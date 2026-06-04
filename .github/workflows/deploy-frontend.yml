@@ -35,6 +35,10 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
+      # Static analysis of the browser-side ES modules before shipping.
+      - name: Lint JS
+        run: npm run lint
+
       # Writes frontend/version.json with the git SHA and the newest data mtime.
       # The service worker uses this file to decide when to invalidate caches.
       - name: Build PWA version stamp

@@ -87,7 +87,8 @@
     "since": "Seit",
     "members": "Mitglieder:",
     "discography": "Diskografie:",
-    "links": "Links:"
+    "links": "Links:",
+    "readDescription": "Beschreibung vorlesen"
   },
   "event": {
     "count_one": "{{n}} Veranstaltung",
@@ -109,6 +110,11 @@
     "title": "Veranstaltungskarte",
     "subtitle": "Entdecken Sie, wo Sie hingehen können",
     "eventsCount": "{{count}} Events auf der Karte",
+    "locateMe": "Mein Standort",
+    "youAreHere": "Du bist hier",
+    "geoUnsupported": "Dein Browser unterstützt keine Geolokalisierung.",
+    "geoDenied": "Du hast keine Standortberechtigung erteilt.",
+    "geoError": "Dein Standort konnte nicht ermittelt werden.",
     "emptyState": "Noch keine Veranstaltungen in dieser Zone.",
     "legend": {
       "title": "Legende",
@@ -371,6 +377,7 @@
     "placeholder": "Fragen Sie mich nach einem Plan, Musik…",
     "inputLabel": "Nachricht schreiben",
     "send": "Senden",
+    "readAloud": "Vorlesen",
     "cancelledMsg": "Antwort abgebrochen.",
     "downloadingModel": "Modell wird heruntergeladen…",
     "deviceStatus": "KI auf dem Gerät",
@@ -388,7 +395,30 @@
   },
   "auth": {
     "loginError": "Anmeldefehler: {{message}}",
-    "genericError": "Error: {{message}}"
+    "genericError": "Error: {{message}}",
+    "title": "Zugang",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "google": "Mit Google fortfahren",
+    "or": "oder mit E-Mail",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "passwordConfirm": "Passwort bestätigen",
+    "passwordMismatch": "Die Passwörter stimmen nicht überein",
+    "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen haben",
+    "emailRequired": "Gib eine gültige E-Mail-Adresse ein",
+    "forgot": "Passwort vergessen?",
+    "checkEmail": "Konto erstellt! Bestätige es per E-Mail, bevor du dich anmeldest.",
+    "resetSent": "Wir haben dir eine E-Mail zum Zurücksetzen des Passworts gesendet.",
+    "loginOk": "Erfolgreich angemeldet.",
+    "loading": "Wird verarbeitet…",
+    "submitLogin": "Anmelden",
+    "submitRegister": "Konto erstellen",
+    "close": "Schließen"
+  },
+  "chart": {
+    "genreTitle": "Künstler nach Genre",
+    "genreAria": "Balkendiagramm der Anzahl der Künstler pro Musikgenre"
   },
   "footer": {
     "tagline": "Die Plattform für Live-Musik und Veranstaltungen auf Mallorca. Entdecke das Talent der Insel.",

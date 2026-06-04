@@ -87,7 +87,8 @@
     "since": "Des de",
     "members": "Membres:",
     "discography": "Discografia:",
-    "links": "Enllaços:"
+    "links": "Enllaços:",
+    "readDescription": "Llegir descripció"
   },
   "event": {
     "count_one": "{{n}} esdeveniment",
@@ -109,6 +110,11 @@
     "title": "Mapa d'Esdeveniments",
     "subtitle": "Descobreix on s'han d'anar",
     "eventsCount": "{{count}} events al mapa",
+    "locateMe": "La meva ubicació",
+    "youAreHere": "Ets aquí",
+    "geoUnsupported": "El teu navegador no suporta la geolocalització.",
+    "geoDenied": "No has donat permís per accedir a la teva ubicació.",
+    "geoError": "No s'ha pogut obtenir la teva ubicació.",
     "emptyState": "No hi ha esdeveniments en aquesta zona.",
     "legend": {
       "title": "Llegenda",
@@ -371,6 +377,7 @@
     "placeholder": "Demana'm un pla, música…",
     "inputLabel": "Escriu un missatge",
     "send": "Enviar",
+    "readAloud": "Llegir en veu alta",
     "cancelledMsg": "Resposta cancel·lada.",
     "downloadingModel": "Descarregant el model…",
     "deviceStatus": "IA al dispositiu",
@@ -388,7 +395,30 @@
   },
   "auth": {
     "loginError": "Error inici de sessió: {{message}}",
-    "genericError": "Error: {{message}}"
+    "genericError": "Error: {{message}}",
+    "title": "Accés",
+    "login": "Iniciar Sessió",
+    "register": "Registrar-se",
+    "google": "Continuar amb Google",
+    "or": "o amb el correu electrònic",
+    "email": "Correu electrònic",
+    "password": "Contrasenya",
+    "passwordConfirm": "Confirmar contrasenya",
+    "passwordMismatch": "Les contrasenyes no coincideixen",
+    "passwordTooShort": "La contrasenya ha de tenir almenys 8 caràcters",
+    "emailRequired": "Introdueix un correu electrònic vàlid",
+    "forgot": "Has oblidat la contrasenya?",
+    "checkEmail": "Compte creat! Comprova el correu per confirmar-lo abans d'iniciar sessió.",
+    "resetSent": "T'hem enviat un correu per restablir la contrasenya.",
+    "loginOk": "Sessió iniciada correctament.",
+    "loading": "Processant…",
+    "submitLogin": "Entrar",
+    "submitRegister": "Crear compte",
+    "close": "Tancar"
+  },
+  "chart": {
+    "genreTitle": "Distribució d'artistes per gènere",
+    "genreAria": "Gràfic de barres amb el nombre d'artistes per gènere musical"
   },
   "footer": {
     "tagline": "La plataforma de musica i esdeveniments en directe de Mallorca. Descobreix el talent de l'illa.",
